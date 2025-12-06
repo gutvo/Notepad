@@ -12,17 +12,16 @@ permissions:
 jobs:
   add_label:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/github-script@v7
+      - name: Assign Label based on branch
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
-            const branch = pr.head.ref;
+            const branch = pr.head.ref.toLowerCase();
 
             let label = "";
-
             if (branch.startsWith("feature/")) label = "feature";
             if (branch.startsWith("fix/")) label = "fix";
             if (branch.startsWith("refactor/")) label = "refactor";
@@ -33,6 +32,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: pr.number,
-                labels: [label],
+                labels: [label]
               });
+              console.log(`Label adicionada: ${label}`);
             }

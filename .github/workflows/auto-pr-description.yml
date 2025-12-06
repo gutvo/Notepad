@@ -1,78 +1,57 @@
-name: Auto PR Description by Labels
+name: Auto PR Description
 
 on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
-  pr_description:
+  set_description:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Update PR description based on labels
+      - name: Set automatic PR description
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
 
-            // 1️⃣ Lista de tipos
-            const types = ["feature", "fix", "improvement", "refactor", "chore"];
-            const checkboxes = {
-              feature: "🚀 Feature",
-              fix: "🐛 Fix",
-              improvement: "✨ Improvement",
-              refactor: "🔧 Refactor",
-              chore: "🧹 Chore"
+            // Não sobrescrever se o autor já escreveu algo
+            if (pr.body && pr.body.trim().length > 10) {
+              console.log("Descrição já existe — ignorando.");
+              return;
+            }
+
+            const branch = pr.head.ref.toLowerCase();
+            const type = {
+              feature: branch.startsWith("feature/"),
+              fix: branch.startsWith("fix/"),
+              improvement: branch.startsWith("improvement/"),
+              refactor: branch.startsWith("refactor/"),
+              chore: branch.startsWith("chore/")
             };
 
-            // 2️⃣ Inicializa como falso
-            const typeStatus = {};
-            types.forEach(t => typeStatus[t] = false);
+            const description = `## 📝 O que foi feito?
 
-            // 3️⃣ Ativa os tipos conforme labels da PR
-            pr.labels.forEach(label => {
-              const name = label.name.toLowerCase();
-              if (types.includes(name)) typeStatus[name] = true;
-            });
+Descreva resumidamente o que esta PR implementa.
 
-            // 4️⃣ Separa descrição do usuário
-            let userContent = "";
-            if (pr.body) {
-              const split = pr.body.split("## 📦 Tipo da mudança");
-              userContent = split[0].trim();
-            } else {
-              userContent = "## 📝 O que foi feito?\n\nDescreva resumidamente o que esta PR implementa.";
-            }
+## 📦 Tipo da mudança
 
-            // 5️⃣ Cria seção de Tipo da mudança
-            let typeSection = "## 📦 Tipo da mudança\n\n";
-            types.forEach(t => {
-              typeSection += `- [${typeStatus[t] ? "x" : " "}] ${checkboxes[t]}\n`;
-            });
+- [${type.feature ? "x" : " "}] 🚀 Feature
+- [${type.fix ? "x" : " "}] 🐛 Fix
+- [${type.improvement ? "x" : " "}] ✨ Improvement
+- [${type.refactor ? "x" : " "}] 🔧 Refactor
+- [${type.chore ? "x" : " "}] 🧹 Chore
 
-            // 6️⃣ Mantém seção de screenshots
-            let screenshots = "";
-            if (pr.body && pr.body.includes("## 📸 Screenshots")) {
-              const parts = pr.body.split("## 📸 Screenshots");
-              screenshots = "## 📸 Screenshots" + parts[1];
-            } else {
-              screenshots = "\n## 📸 Screenshots (se necessário)\nAnexe imagens aqui.\n";
-            }
+## 📸 Screenshots (se necessário)
 
-            // 7️⃣ Monta descrição final
-            const description = `
-${userContent}
+Anexe imagens aqui.
+`;
 
-${typeSection}
-
-${screenshots}
-`.trim();
-
-            // 8️⃣ Atualiza PR
             await github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -80,4 +59,4 @@ ${screenshots}
               body: description
             });
 
-            console.log("Descrição da PR atualizada automaticamente com base nos labels.");
+            console.log("Descrição preenchida automaticamente.");
