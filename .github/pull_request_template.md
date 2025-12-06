@@ -2,7 +2,6 @@
 
 Descreva resumidamente o que esta PR resolve.
 
-
 ## 📦 Tipo da mudança
 
 - [ ] 🚀 Feature
@@ -11,21 +10,6 @@ Descreva resumidamente o que esta PR resolve.
 - [ ] 🔧 Refactor
 - [ ] 🧹 Chore
 
-
-## 🔍 Como testar?
-
-Passos para validar esta PR.
-
-
 ## 📸 Screenshots (se necessário)
 
 Anexe imagens aqui.
-
-
-## ✔ Checklist
-
-- [ ] Código revisado por mim
-- [ ] Build passando
-- [ ] Testes adicionados (se aplicável)
-- [ ] Sem warnings no console
-- [ ] Nome da branch correto

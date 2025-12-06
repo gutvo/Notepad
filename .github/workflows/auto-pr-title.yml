@@ -2,21 +2,21 @@ name: Auto PR Title
 
 on:
   pull_request:
-    types: [opened, synchronize, edited]
+    types: [opened]   # ⚠️ somente na criação
 
 jobs:
   set_title:
     runs-on: ubuntu-latest
-
     steps:
       - name: Set PR Title From Branch
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }}
           script: |
             const pr = context.payload.pull_request;
             const branch = pr.head.ref;
 
+            // Emoji por prefixo
             const emojiMap = {
               "feature/": "🚀",
               "fix/": "🐛",
@@ -25,6 +25,9 @@ jobs:
             };
 
             let emoji = "";
+            let title = branch;
+
+            // Descobrir o emoji correto
             for (const prefix in emojiMap) {
               if (branch.startsWith(prefix)) {
                 emoji = emojiMap[prefix];
@@ -32,10 +35,16 @@ jobs:
               }
             }
 
-            let title = branch.replace(/-/g, " ");
+            // Trocar "-" por espaço
+            title = title.replace(/-/g, " ");
+
+            // Primeira letra maiúscula
             title = title.charAt(0).toUpperCase() + title.slice(1);
 
-            if (emoji) title = `${emoji} ${title}`;
+            // Montar título final
+            if (emoji) {
+              title = `${emoji} ${title}`;
+            }
 
             await github.rest.pulls.update({
               owner: context.repo.owner,
