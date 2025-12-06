@@ -1,0 +1,14 @@
+echo "🔍 Rodando TypeScript Check..."
+npx tsc --noEmit
+TS_EXIT=$?
+
+echo "🔍 Rodando ESLint..."
+npx eslint . --ext .ts,.tsx
+ESLINT_EXIT=$?
+
+if [ $TS_EXIT -ne 0 ] || [ $ESLINT_EXIT -ne 0 ]; then
+  echo "❌ O push foi bloqueado! Corrija os erros antes de enviar."
+  exit 1
+fi
+
+echo "✔️ Tudo certo! Enviando push…"
