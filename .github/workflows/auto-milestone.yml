@@ -7,22 +7,24 @@ on:
 jobs:
   milestone:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/github-script@v7
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Assign Milestone based on package.json version
+        uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }} # Use seu Personal Access Token aqui
           script: |
             const fs = require("fs");
 
-            // 1) Lê version do package.json
+            // 1️⃣ Lê versão do package.json
             const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
             const version = pkg.version;
-
             console.log("Versão do projeto:", version);
 
-            // 2) Buscar milestones abertas
+            // 2️⃣ Buscar milestones abertas
             const { data: openMilestones } = await github.rest.issues.listMilestones({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -32,7 +34,7 @@ jobs:
             let milestone = openMilestones.find(m => m.title === version);
 
             if (!milestone) {
-              // 3) Buscar milestones fechadas
+              // 3️⃣ Buscar milestones fechadas
               const { data: closedMilestones } = await github.rest.issues.listMilestones({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -53,9 +55,8 @@ jobs:
                 });
 
                 milestone = reopened.data;
-
               } else {
-                // 4) Se não existir nenhuma, criar nova
+                // 4️⃣ Se não existir nenhuma, criar nova
                 console.log(`Milestone não encontrada. Criando: ${version}`);
 
                 const created = await github.rest.issues.createMilestone({
@@ -69,7 +70,7 @@ jobs:
               }
             }
 
-            // 5) Atribui o milestone à PR
+            // 5️⃣ Atribui o milestone à PR
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -77,4 +78,4 @@ jobs:
               milestone: milestone.number
             });
 
-            console.log(`Milestone aplicado: ${milestone.title}`);
+            console.log(`Milestone aplicada: ${milestone.title}`);
