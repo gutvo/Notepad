@@ -2,7 +2,11 @@ name: Auto PR Title
 
 on:
   pull_request:
-    types: [opened]   # ⚠️ somente na criação
+    types: [opened] # ⚠️ somente na criação
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   set_title:
@@ -16,7 +20,13 @@ jobs:
             const pr = context.payload.pull_request;
             const branch = pr.head.ref;
 
-            // Emoji por prefixo
+            // ⚠️ Ignorar PRs de forks
+            if (pr.head.repo.full_name !== pr.base.repo.full_name) {
+              console.log("PR de fork detectada — título automático não será atualizado.");
+              return;
+            }
+
+            // Mapeamento de prefixo para emoji
             const emojiMap = {
               "feature/": "🚀",
               "fix/": "🐛",
@@ -49,6 +59,7 @@ jobs:
               title = `${emoji} ${title}`;
             }
 
+            // Atualizar o título da PR
             await github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
