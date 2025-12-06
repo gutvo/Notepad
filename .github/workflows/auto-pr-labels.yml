@@ -1,12 +1,18 @@
-name: Auto PR Labels
+name: Auto PR Label
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
-  add_labels:
+  add_label:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/github-script@v7
         with:
@@ -15,18 +21,18 @@ jobs:
             const pr = context.payload.pull_request;
             const branch = pr.head.ref;
 
-            const labels = [];
+            let label = "";
 
-            if (branch.startsWith("feature/")) labels.push("feature");
-            if (branch.startsWith("fix/")) labels.push("bug");
-            if (branch.startsWith("improvement/")) labels.push("improvement");
-            if (branch.startsWith("refactor/")) labels.push("refactor");
+            if (branch.startsWith("feature/")) label = "feature";
+            if (branch.startsWith("fix/")) label = "fix";
+            if (branch.startsWith("refactor/")) label = "refactor";
+            if (branch.startsWith("improvement/")) label = "improvement";
 
-            if (labels.length > 0) {
+            if (label) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: pr.number,
-                labels
+                labels: [label],
               });
             }
