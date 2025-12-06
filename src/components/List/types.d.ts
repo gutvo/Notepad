@@ -1,0 +1,3 @@
+interface ListItemDataProps {
+  name: string;
+}

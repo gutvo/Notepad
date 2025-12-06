@@ -3,7 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@Components/*": ["./src/components/*"],
+      "@Pages/*": ["./src/pages/*"],
+      // "@Routes":["src/app/index.tsx"]
     }
   },
   "include": ["src", ".expo/types/**/*.ts", "expo-env.d.ts","tsconfig.json" ,"app.config.ts"]
