@@ -1,0 +1,82 @@
+name: Auto PR Description
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  set_description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            if (pr.body && pr.body.trim().length > 0) {
+              console.log("Descrição já existe — ignorando.");
+              return;
+            }
+
+            const commits = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const groups = {
+              feat: [],
+              fix: [],
+              refactor: [],
+              improvement: [],
+              chore: [],
+              other: []
+            };
+
+            for (const c of commits.data) {
+              const msg = c.commit.message.split("\n")[0];
+
+              if (
+                msg.startsWith("Merge") ||
+                msg.startsWith("Revert") ||
+                msg.toLowerCase().includes("dependabot")
+              ) continue;
+
+              const lower = msg.toLowerCase();
+
+              if (lower.startsWith("feat")) groups.feat.push(msg);
+              else if (lower.startsWith("fix")) groups.fix.push(msg);
+              else if (lower.startsWith("refactor")) groups.refactor.push(msg);
+              else if (lower.startsWith("improvement")) groups.improvement.push(msg);
+              else if (lower.startsWith("chore")) groups.chore.push(msg);
+              else groups.other.push(msg);
+            }
+
+            let description = "## 📝 Descrição Automática\n\n";
+
+            const sections = [
+              ["feat", "🚀 *Features*"],
+              ["fix", "🐛 *Fixes*"],
+              ["improvement", "✨ *Improvements*"],
+              ["refactor", "🔧 *Refactors*"],
+              ["chore", "🧹 *Chores*"],
+              ["other", "📌 *Outros*"]
+            ];
+
+            for (const [key, title] of sections) {
+              if (groups[key].length > 0) {
+                description += `### ${title}\n`;
+                for (const msg of groups[key]) {
+                  description += `- ${msg}\n`;
+                }
+                description += "\n";
+              }
+            }
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              body: description
+            });
