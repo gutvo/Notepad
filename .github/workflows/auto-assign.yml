@@ -19,6 +19,7 @@ jobs:
             await github.rest.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: pr.number,
-              assignees: [author]
+              issue_number: context.payload.pull_request.number,
+              assignees: [context.payload.pull_request.user.login]
             });
+
