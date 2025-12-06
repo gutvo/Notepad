@@ -22,30 +22,54 @@ jobs:
 
             console.log("Versão do projeto:", version);
 
-            // 2) Busca milestones existentes
-            const { data: milestones } = await github.rest.issues.listMilestones({
+            // 2) Buscar milestones abertas
+            const { data: openMilestones } = await github.rest.issues.listMilestones({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: "open"
             });
 
-            let milestone = milestones.find(m => m.title === version);
+            let milestone = openMilestones.find(m => m.title === version);
 
-            // 3) Se não existe → criar
             if (!milestone) {
-              console.log(`Milestone ${version} não existe. Criando...`);
-
-              const created = await github.rest.issues.createMilestone({
+              // 3) Buscar milestones fechadas
+              const { data: closedMilestones } = await github.rest.issues.listMilestones({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: version,
-                description: `Milestone gerado automaticamente para a versão ${version}.`
+                state: "closed"
               });
 
-              milestone = created.data;
+              milestone = closedMilestones.find(m => m.title === version);
+
+              if (milestone) {
+                console.log(`Reabrindo milestone fechada: ${version}`);
+
+                // Reabrir milestone
+                const reopened = await github.rest.issues.updateMilestone({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  milestone_number: milestone.number,
+                  state: "open"
+                });
+
+                milestone = reopened.data;
+
+              } else {
+                // 4) Se não existir nenhuma, criar nova
+                console.log(`Milestone não encontrada. Criando: ${version}`);
+
+                const created = await github.rest.issues.createMilestone({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: version,
+                  description: `Milestone gerada automaticamente para a versão ${version}.`
+                });
+
+                milestone = created.data;
+              }
             }
 
-            // 4) Atribui o milestone à PR
+            // 5) Atribui o milestone à PR
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
