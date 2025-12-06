@@ -11,7 +11,7 @@ jobs:
       - name: Set PR Title From Branch
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             const branch = pr.head.ref;
@@ -35,6 +35,9 @@ jobs:
               }
             }
 
+            // Remover o prefixo da branch
+            title = title.replace(/^(feature\/|fix\/|improvement\/|refactor\/)/, "");
+
             // Trocar "-" por espaço
             title = title.replace(/-/g, " ");
 
@@ -52,3 +55,5 @@ jobs:
               pull_number: pr.number,
               title: title
             });
+
+            console.log(`Título atualizado para: ${title}`);
