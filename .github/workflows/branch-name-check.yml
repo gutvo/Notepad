@@ -1,18 +1,47 @@
-name: Branch Name Validator
+name: Auto PR Description Checks
 
 on:
   pull_request:
     types: [opened, synchronize, edited]
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
-  validate_branch:
+  mark_checks:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          BRANCH_NAME="${{ github.head_ref }}"
-          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|refactor|improvement)\/[a-z0-9-]+$ ]]; then
-            echo "❌ Nome da branch inválido: $BRANCH_NAME"
-            echo "Use: feature/nome-da-tarefa"
-            exit 1
-          fi
-        shell: bash
+      - name: Mark description checkboxes based on labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Pega labels da PR
+            const labels = pr.labels.map(l => l.name.toLowerCase());
+
+            let description = pr.body || "";
+
+            // Função para marcar/desmarcar checkbox
+            function markCheckbox(description, emoji, checked) {
+              const regex = new RegExp(`- \\[.\\] ${emoji}`, "g");
+              return description.replace(regex, `- [${checked ? "x" : " "}] ${emoji}`);
+            }
+
+            description = markCheckbox(description, "🚀 Feature", labels.includes("feature"));
+            description = markCheckbox(description, "🐛 Fix", labels.includes("fix"));
+            description = markCheckbox(description, "✨ Improvement", labels.includes("improvement"));
+            description = markCheckbox(description, "🔧 Refactor", labels.includes("refactor"));
+            description = markCheckbox(description, "🧹 Chore", labels.includes("chore"));
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              body: description
+            });
+
+            console.log("Checkboxes atualizados com base nos labels.");
