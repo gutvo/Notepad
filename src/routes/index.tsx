@@ -1,12 +1,20 @@
+import colors from "@Colors";
 import HomeList from "@Pages/Home/List";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  HomeList: undefined;
+  HomeDetail: { id: string };
+};
 
-export default function AppStack() {
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function Routes() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeList} />
+    <Stack.Navigator
+      screenOptions={{ headerStyle: { backgroundColor: colors.primary.main } }}
+    >
+      <Stack.Screen name="HomeList" component={HomeList} />
     </Stack.Navigator>
   );
 }
