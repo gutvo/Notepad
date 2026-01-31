@@ -10,6 +10,8 @@ interface ListItemProps {
 export default function ListItem({ item, onClick }: ListItemProps) {
   const formattedDate = format(item.created_at, "dd/MM/yyyy HH:mm");
 
+  const shortName = item.description.slice(0, 100);
+
   return (
     <Pressable
       style={({ pressed }) => [
@@ -29,7 +31,7 @@ export default function ListItem({ item, onClick }: ListItemProps) {
         ellipsizeMode="tail"
         style={{ fontSize: 16, flexShrink: 1, marginRight: 8, flex: 1 }}
       >
-        {item.name}
+        {shortName}
       </Text>
       <Text style={{ flexShrink: 0, fontSize: 12 }}>{formattedDate}</Text>
     </Pressable>
