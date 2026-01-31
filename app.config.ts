@@ -28,7 +28,7 @@ const config: ExpoConfig = {
     favicon: "./assets/images/favicon.png",
   },
   plugins: [
-    "expo-router",
+    ["expo-router", { root: "./src/routes" }],
     ["expo-sqlite", { useSQLCipher: true }],
     [
       "expo-splash-screen",
