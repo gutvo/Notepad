@@ -1,5 +1,5 @@
 interface GenericBaseModalFooterButtonProps {
-  onclick?: () => void;
+  onClick?: () => void;
   disabled?: boolean;
   hidden?: boolean;
   backgroundColor?: string;

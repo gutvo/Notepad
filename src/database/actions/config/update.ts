@@ -5,12 +5,17 @@ import { eq } from "drizzle-orm";
 import findConfig from "./find";
 
 export default async function updateConfig(
-  key: string,
+  key: ConfigKeyProps,
   data: UpdateConfigDataProps,
 ) {
+  const formattedData = {
+    ...data,
+    value: data.value !== undefined ? String(data.value) : undefined,
+  };
+
   await database
     .update(configSchema)
-    .set(data)
+    .set(formattedData)
     .where(eq(configSchema.key, key));
 
   dataEvents.emit();

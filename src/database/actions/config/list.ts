@@ -5,7 +5,7 @@ import _formatConfigData from "./_formatData";
 
 interface ListConfigsProps {
   findBy?: {
-    keys?: string[];
+    keys?: ConfigKeyProps[];
   };
 }
 

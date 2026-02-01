@@ -41,6 +41,7 @@ export default function BaseModalFooter({
             <BaseButton
               key={item.name}
               disabled={item.disabled}
+              onPress={item.onClick}
               style={[
                 { width: 100 },
                 item.backgroundColor && {

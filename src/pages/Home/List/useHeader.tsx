@@ -1,5 +1,5 @@
 import colors from "@Colors";
-import TextField from "@Components/TextField";
+import BaseTextField from "@Components/BaseTextField";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import { useCallback, useLayoutEffect, useState } from "react";
@@ -49,7 +49,7 @@ export default function useHeader() {
     () => (
       <View>
         {isSearching ? (
-          <TextField
+          <BaseTextField
             onChangeText={(value) => setInputSearch(value)}
             value={inputSearch}
             style={{

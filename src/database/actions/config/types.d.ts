@@ -1,9 +1,11 @@
 type ConfigTypeProps = "STRING" | "NUMBER" | "BOOLEAN";
 
+type ConfigKeyProps = "TEXT_FONT_SIZE";
+
 interface ConfigDataProps {
-  key: string;
+  key: ConfigKeyProps;
   type: ConfigTypeProps;
-  value: string;
+  value: string | number | boolean;
 }
 
 type CreateConfigDataProps = ConfigDataProps;
