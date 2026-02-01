@@ -2,6 +2,7 @@
   "name": "notepad",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "dev": "npx expo run:android",
     "prebuild": "expo prebuild",
@@ -63,12 +64,5 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "typescript": "~5.9.2"
-  },
-  "private": true,
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   }
 }
