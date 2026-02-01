@@ -6,7 +6,7 @@ import findNote from "./find";
 
 export default async function updateNote(
   id: number,
-  data: Partial<NoteDataProps>,
+  data: UpdateNoteDataProps,
 ) {
   const updated = await database
     .update(noteSchema)

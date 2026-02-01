@@ -3,7 +3,7 @@ import { dataEvents } from "@Lib/dataEvents";
 import { noteSchema } from "@Schemas";
 import findNote from "./find";
 
-export default async function createNote(data: NoteDataProps) {
+export default async function createNote(data: CreateNoteDataProps) {
   const noteData = { ...data, created_at: new Date() };
 
   const created = await database.insert(noteSchema).values(noteData);

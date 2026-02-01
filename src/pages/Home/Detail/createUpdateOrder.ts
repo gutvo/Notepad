@@ -9,6 +9,8 @@ export default async function createUpdateOrder({
   id,
   description,
 }: CreateUpdateOrderProps) {
+  if (!description) return;
+
   const data = { description };
 
   if (id) {
