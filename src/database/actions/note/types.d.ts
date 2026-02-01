@@ -1,0 +1,3 @@
+interface NoteDataProps {
+  description: string;
+}

@@ -1,6 +1,11 @@
+import colors from "@Colors";
+import FloatingButton from "@Components/FloatButton";
 import List from "@Components/List";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useActionList } from "@Hooks/useActionList";
 import useNavigation from "@Hooks/useNavigation";
 import { Dimensions, ScrollView } from "react-native";
+import actions from "src/database/actions";
 import useHeader from "./useHeader";
 
 const windowHeight = Dimensions.get("window").height;
@@ -11,24 +16,37 @@ export default function HomeList() {
 
   const date = new Date();
 
-  const notes: ListItemDataProps[] = [
-    { id: "1", description: "teste1", created_at: date },
-    { id: "2", description: "teste", created_at: date },
-    { id: "2", description: "teste", created_at: date },
-  ].filter(
+  const { data } = useActionList(actions.note.list);
+
+  const notes = data.filter(
     (note) =>
       !search.length ||
       note.description.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
-    <ScrollView style={{ height: windowHeight }}>
-      <List
-        data={notes}
-        onClick={(item) => {
-          navigation.navigate("HomeDetail", { id: item.id });
+    <>
+      <ScrollView style={{ height: windowHeight }}>
+        <List
+          data={notes}
+          onClick={(item) => {
+            navigation.navigate("HomeDetail", { id: item.id });
+          }}
+        />
+      </ScrollView>
+
+      <FloatingButton
+        onPress={() => {
+          navigation.navigate("HomeDetail");
         }}
+        icon={
+          <MaterialCommunityIcons
+            name="plus"
+            size={24}
+            color={colors.grey[200]}
+          />
+        }
       />
-    </ScrollView>
+    </>
   );
 }

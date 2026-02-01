@@ -3,15 +3,23 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import { useCallback, useLayoutEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import createUpdateOrder from "./createUpdateOrder";
 
-export default function useHeader() {
+interface UseHeaderProps {
+  id?: number;
+  description: string;
+}
+
+export default function useHeader({ description, id }: UseHeaderProps) {
   const navigation = useNavigation();
 
-  const handleGoBack = useCallback(() => {
+  const handleGoBack = useCallback(async () => {
     if (!navigation.canGoBack()) return;
 
+    await createUpdateOrder({ id, description });
+
     navigation.goBack();
-  }, [navigation]);
+  }, [description, id, navigation]);
 
   const headerLeft = useCallback(
     () => (
