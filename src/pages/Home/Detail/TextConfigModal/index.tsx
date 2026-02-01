@@ -1,6 +1,6 @@
 import actions from "@Actions";
 import BaseModal from "@Components/BaseModal";
-import { Picker } from "@react-native-picker/picker";
+import SelectInput from "@Components/SelectInput";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
@@ -22,7 +22,7 @@ export default function TextConfigModal({
     formState: { errors },
     reset,
   } = useForm<ConfigDefaultValueProps>({
-    defaultValues: getDefaultValues(configs),
+    defaultValues: getDefaultValues(),
   });
 
   useEffect(() => {
@@ -55,22 +55,21 @@ export default function TextConfigModal({
         <Controller
           control={control}
           name="textFontSize"
-          rules={{ required: "Senha é obrigatória" }}
-          render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
-            <Picker
+          rules={{ required: "Campo obrigatório" }}
+          render={({ field: { onChange, value, onBlur, disabled } }) => (
+            <SelectInput
               selectedValue={value}
               onValueChange={(itemValue) => onChange(itemValue)}
               onBlur={onBlur}
-              ref={ref}
-              enabled={!disabled}
-            >
-              {Array.from(
+              label="Tamanho da fonte"
+              disabled={disabled}
+              options={Array.from(
                 { length: (80 - 12) / 4 + 1 },
                 (_, index) => 12 + index * 4,
-              ).map((item) => (
-                <Picker.Item key={item} label={String(item)} value={item} />
-              ))}
-            </Picker>
+              ).map((option) => ({ label: String(option), value: option }))}
+              error={Boolean(errors.textFontSize?.message)}
+              helpText={errors.textFontSize?.message}
+            />
           )}
         />
       </BaseModal.Container>
