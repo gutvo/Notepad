@@ -4,7 +4,12 @@ import { configSchema } from "@Schemas";
 import findConfig from "./find";
 
 export default async function createConfig(data: CreateConfigDataProps) {
-  await database.insert(configSchema).values(data);
+  const formattedData = {
+    ...data,
+    value: String(data.value),
+  };
+
+  await database.insert(configSchema).values(formattedData);
 
   dataEvents.emit();
 
