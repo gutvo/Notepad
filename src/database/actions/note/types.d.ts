@@ -4,8 +4,6 @@ interface NoteDataProps {
   created_at: Date;
 }
 
-interface CreateNoteDataProps {
-  description: string;
-}
+type CreateNoteDataProps = Omit<NoteDataProps, "id", "created_at">;
 
 type UpdateNoteDataProps = Partial<CreateNoteDataProps>;
