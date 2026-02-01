@@ -1,61 +1,38 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
-import { useEffect, useRef, useState } from "react";
-import {
-  Dimensions,
-  ScrollView,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import actions from "src/database/actions";
+import { useEffect, useState } from "react";
+import { TextInput, View } from "react-native";
+import useGetNote from "./useGetNote";
 import useHeader from "./useHeader";
-
-const windowHeight = Dimensions.get("window").height;
 
 export default function HomeDetail() {
   const params = useGlobalSearchParams("HomeDetail");
-  const noteId = (params as { id: number })?.id;
+  const noteId = params?.id ? Number(params?.id) : undefined;
 
-  const inputRef = useRef<TextInput>(null);
+  const [note] = useGetNote({ noteId });
+
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    async function findNote() {
-      if (noteId) {
-        const currentNote = await actions.note.find(noteId);
-
-        setDescription(currentNote.description);
-      }
+    if (note) {
+      setDescription(note.description);
     }
-
-    findNote();
-  }, [noteId]);
-
-  function focusAtEnd() {
-    const length = description.length;
-
-    inputRef.current?.focus();
-    inputRef.current?.setNativeProps({
-      selection: { start: length, end: length },
-    });
-  }
+  }, [note]);
 
   useHeader({ id: noteId, description });
 
   return (
-    <TouchableWithoutFeedback onPress={focusAtEnd}>
-      <View style={{ flex: 1 }}>
-        <ScrollView style={{ height: windowHeight, padding: 10 }}>
-          <TextInput
-            ref={inputRef}
-            multiline
-            value={description}
-            onChangeText={setDescription}
-            textAlignVertical="top"
-            style={{ flex: 1 }}
-          />
-        </ScrollView>
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={{ flex: 1 }}>
+      <TextInput
+        multiline
+        value={description}
+        onChangeText={setDescription}
+        textAlignVertical="top"
+        style={{
+          flex: 1,
+          padding: 16,
+          fontSize: 16,
+        }}
+      />
+    </View>
   );
 }
