@@ -2,15 +2,20 @@ import colors from "@Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import { useCallback, useLayoutEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import createUpdateOrder from "./createUpdateOrder";
 
 interface UseHeaderProps {
   id?: number;
   description: string;
+  handleOpenModal: () => void;
 }
 
-export default function useHeader({ description, id }: UseHeaderProps) {
+export default function useHeader({
+  description,
+  id,
+  handleOpenModal,
+}: UseHeaderProps) {
   const navigation = useNavigation();
 
   const handleGoBack = useCallback(async () => {
@@ -23,33 +28,41 @@ export default function useHeader({ description, id }: UseHeaderProps) {
 
   const headerLeft = useCallback(
     () => (
-      <>
-        <TouchableOpacity onPress={handleGoBack} style={{ marginRight: 10 }}>
-          <MaterialCommunityIcons
-            name="arrow-left"
-            size={28}
-            color={colors.primary.contrast}
-            style={{ marginRight: 10 }}
-          />
-        </TouchableOpacity>
-      </>
+      <TouchableOpacity onPress={handleGoBack} style={{ marginRight: 10 }}>
+        <MaterialCommunityIcons
+          name="arrow-left"
+          size={24}
+          color={colors.primary.contrast}
+          style={{ marginRight: 10 }}
+        />
+      </TouchableOpacity>
     ),
     [handleGoBack],
   );
 
-  const headerCenter = useCallback(
-    () => (
-      <View>
-        <Text style={{ color: colors.primary.contrast }}>Detalhes</Text>
-      </View>
-    ),
+  const headerTitle = useCallback(
+    () => <Text style={{ color: colors.primary.contrast }}>Detalhes</Text>,
     [],
+  );
+
+  const headerRight = useCallback(
+    () => (
+      <TouchableOpacity onPress={handleOpenModal}>
+        <MaterialCommunityIcons
+          name="cog"
+          size={24}
+          color={colors.primary.contrast}
+        />
+      </TouchableOpacity>
+    ),
+    [handleOpenModal],
   );
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: headerCenter,
+      headerTitle,
       headerLeft,
+      headerRight,
     });
-  }, [navigation, headerCenter, headerLeft]);
+  }, [navigation, headerTitle, headerLeft, headerRight]);
 }

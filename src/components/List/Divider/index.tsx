@@ -7,7 +7,7 @@ interface DividerProps {
 export default function Divider({ style }: DividerProps) {
   return (
     <View
-      style={[{ height: 1, backgroundColor: "black", opacity: 0.1 }, style]}
+      style={[{ height: 1, backgroundColor: "black", opacity: 0.2 }, style]}
     />
   );
 }

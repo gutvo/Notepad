@@ -44,12 +44,17 @@ export default function MigrationModal({
         <ActivityIndicator size={50} />
 
         {error && (
-          <Text style={{ color: "red" }}>
-            Erro ao migrar os dados: {error?.message}
-          </Text>
+          <>
+            <Text style={{ color: "red", fontWeight: "bold", fontSize: 20 }}>
+              Erro ao migrar os dados:
+            </Text>
+            <Text style={{ color: "red" }}>{error?.message}</Text>
+          </>
         )}
 
-        {!error && !success && <Text>Fazendo a migração dos dados...</Text>}
+        {!error && !success && (
+          <Text style={{ fontSize: 20 }}>Fazendo a migração dos dados...</Text>
+        )}
       </View>
     </BaseModal>
   );

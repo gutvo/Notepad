@@ -1,16 +1,22 @@
 import colors from "@Colors";
-import { ReactNode, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import { Key, ReactNode, Ref, useState } from "react";
 import {
+  NativeSyntheticEvent,
   StyleProp,
+  TargetedEvent,
   Text,
-  TextInput,
-  TextInputProps,
   TextStyle,
   View,
   ViewStyle,
 } from "react-native";
 
-interface TextFieldProps extends TextInputProps {
+interface OptionProps<DataProps> {
+  label: string;
+  value: DataProps;
+}
+
+interface SelectInputProps<DataProps> {
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   label?: string;
@@ -19,9 +25,18 @@ interface TextFieldProps extends TextInputProps {
   error?: boolean;
   helpText?: string;
   helpTextStyle?: StyleProp<TextStyle>;
+  onFocus?: (event: NativeSyntheticEvent<TargetedEvent>) => void;
+  onBlur?: (event: NativeSyntheticEvent<TargetedEvent>) => void;
+  style?: StyleProp<TextStyle>;
+  selectedValue?: DataProps;
+  onValueChange?: (itemValue: DataProps, itemIndex: number) => void;
+  options: OptionProps<DataProps>[];
+  ref?: Ref<Picker<DataProps>>;
+  disabled?: boolean;
+  placeholder?: string;
 }
 
-export default function TextField({
+export default function SelectInput<DataProps>({
   endIcon,
   startIcon,
   label,
@@ -33,8 +48,13 @@ export default function TextField({
   helpText,
   error,
   helpTextStyle,
-  ...rest
-}: TextFieldProps) {
+  selectedValue,
+  onValueChange,
+  options,
+  ref,
+  disabled,
+  placeholder,
+}: SelectInputProps<DataProps>) {
   const [focused, setFocused] = useState(false);
 
   return (
@@ -67,7 +87,7 @@ export default function TextField({
             borderRadius: 4,
             flexDirection: "row",
             alignItems: "center",
-            paddingHorizontal: 8,
+            // paddingHorizontal: 8,
             height: 48,
           },
           containerStyle,
@@ -75,8 +95,11 @@ export default function TextField({
       >
         {startIcon}
 
-        <TextInput
-          style={[{ flex: 1, paddingHorizontal: 8 }, style]}
+        <Picker<DataProps>
+          selectedValue={selectedValue}
+          onValueChange={onValueChange}
+          enabled={!disabled}
+          ref={ref}
           onFocus={(event) => {
             onFocus?.(event);
             setFocused(true);
@@ -85,8 +108,17 @@ export default function TextField({
             onBlur?.(event);
             setFocused(false);
           }}
-          {...rest}
-        />
+          placeholder={placeholder}
+          style={[{ flex: 1 }, style]}
+        >
+          {options.map((item) => (
+            <Picker.Item
+              key={item.value as Key}
+              label={item.label}
+              value={item.value}
+            />
+          ))}
+        </Picker>
 
         {endIcon}
       </View>
