@@ -12,6 +12,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig([
+  {
+    ignores: ["dist/*", "src/database/drizzle/**/*"],
+  },
+
   expoConfig,
   eslintPluginPrettierRecommended,
 
@@ -29,9 +33,9 @@ export default defineConfig([
   },
 
   {
-    ignores: ["dist/*"],
     rules: {
       "prettier/prettier": ["error", { endOfLine: "auto" }],
+      "no-console": "error",
     },
   },
 ]);

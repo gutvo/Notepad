@@ -2,12 +2,17 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "baseUrl": ".",
     "paths": {
-      "@Components/*": ["./src/components/*"],
-      "@Pages/*": ["./src/pages/*"],
-      "@Hooks/*": ["./src/hooks/*"],
-      "@Colors": ["./src/theme/colors.ts"]
-      // "@Routes":["src/app/index.tsx"]
+      "@Components/*": ["src/components/*"],
+      "@Pages/*": ["src/pages/*"],
+      "@Hooks/*": ["src/hooks/*"],
+      "@Colors": ["src/theme/colors.ts"],
+      "@Migrations":["src/database/drizzle/migrations.js"],
+      "@Schemas":["src/database/schemas/index.ts"],
+      "@Database":["src/database/index.ts"],
+      "@Actions": ["src/database/"],
+      "@Lib/*": ["src/lib/*"]
     }
   },
   "include": ["src", ".expo/types/**/*.ts", "expo-env.d.ts","tsconfig.json" ,"app.config.ts"]

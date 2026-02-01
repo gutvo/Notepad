@@ -7,13 +7,16 @@ import ListItem from "./ListItem";
 interface ListProps {
   data: ListItemDataProps[];
   onClick?: (data: ListItemDataProps) => void;
+  onLongPress?: (data: ListItemDataProps) => void;
 }
 
-export default function List({ data, onClick }: ListProps) {
+export default function List({ data, onClick, onLongPress }: ListProps) {
   return (
     <FlashList
       data={data}
-      renderItem={({ item }) => <ListItem item={item} onClick={onClick} />}
+      renderItem={({ item }) => (
+        <ListItem item={item} onClick={onClick} onLongPress={onLongPress} />
+      )}
       ItemSeparatorComponent={() => <Divider />}
     />
   );

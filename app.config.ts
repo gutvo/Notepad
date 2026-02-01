@@ -14,6 +14,7 @@ const config: ExpoConfig = {
     supportsTablet: true,
   },
   android: {
+    package: "com.anonymous.notepad",
     adaptiveIcon: {
       backgroundColor: "#E6F4FE",
       foregroundImage: "./assets/images/android-icon-foreground.png",

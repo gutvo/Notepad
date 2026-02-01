@@ -36,6 +36,7 @@ export default function useHeader() {
               name="arrow-left"
               size={28}
               color={colors.primary.contrast}
+              style={{ marginRight: 10 }}
             />
           </TouchableOpacity>
         )}
@@ -52,7 +53,6 @@ export default function useHeader() {
             onChangeText={(value) => setInputSearch(value)}
             value={inputSearch}
             style={{
-              marginHorizontal: 10,
               borderColor: colors.primary.contrast,
               color: colors.primary.contrast,
             }}
@@ -74,6 +74,7 @@ export default function useHeader() {
           name="magnify"
           size={28}
           color={colors.primary.contrast}
+          style={{ marginLeft: 10 }}
         />
       </TouchableOpacity>
     ),

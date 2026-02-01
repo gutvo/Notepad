@@ -1,4 +1,5 @@
 interface ListItemDataProps {
-  name: string;
+  id: number;
+  description: string;
   created_at: Date;
 }
