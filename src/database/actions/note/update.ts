@@ -4,13 +4,9 @@ import { noteSchema } from "@Schemas";
 import { eq } from "drizzle-orm";
 import findNote from "./find";
 
-interface UpdateNoteDataProps {
-  description: string;
-}
-
 export default async function updateNote(
   id: number,
-  data: UpdateNoteDataProps,
+  data: Partial<NoteDataProps>,
 ) {
   const updated = await database
     .update(noteSchema)

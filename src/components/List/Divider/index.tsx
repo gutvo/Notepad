@@ -1,5 +1,13 @@
-import { View } from "react-native";
+import { StyleProp, View, ViewStyle } from "react-native";
 
-export default function Divider() {
-  return <View style={{ height: 1, backgroundColor: "black", opacity: 0.1 }} />;
+interface DividerProps {
+  style?: StyleProp<ViewStyle>;
+}
+
+export default function Divider({ style }: DividerProps) {
+  return (
+    <View
+      style={[{ height: 1, backgroundColor: "black", opacity: 0.1 }, style]}
+    />
+  );
 }

@@ -32,6 +32,7 @@ export default defineConfig([
     ignores: ["dist/*"],
     rules: {
       "prettier/prettier": ["error", { endOfLine: "auto" }],
+      "no-console": "error",
     },
   },
 ]);
