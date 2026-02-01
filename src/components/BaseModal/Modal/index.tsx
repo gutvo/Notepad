@@ -1,11 +1,14 @@
+import colors from "@Colors";
 import React from "react";
 import {
   Dimensions,
   Modal,
-  Text,
+  StyleProp,
   TouchableWithoutFeedback,
   View,
+  ViewStyle,
 } from "react-native";
+import BasemodalHeader from "../Header";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -14,13 +17,15 @@ export interface BaseModalProps {
   onClose?: () => void;
   title?: string;
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-export default function BaseModal({
+export default function BaseModalModal({
   visible,
   onClose,
   title,
   children,
+  style,
 }: BaseModalProps) {
   return (
     <Modal
@@ -41,29 +46,22 @@ export default function BaseModal({
         >
           <TouchableWithoutFeedback>
             <View
-              style={{
-                backgroundColor: "#fff",
-                borderRadius: 12,
-                padding: 16,
-                elevation: 5, // Android shadow
-                shadowColor: "#000", // iOS shadow
-                shadowOpacity: 0.2,
-                shadowRadius: 10,
-                shadowOffset: { width: 0, height: 4 },
-                minHeight: windowHeight / 3,
-              }}
+              style={[
+                {
+                  backgroundColor: colors.common.white,
+                  borderRadius: 4,
+                  elevation: 5, // Android shadow
+                  shadowColor: colors.common.black, // iOS shadow
+                  shadowOpacity: 0.2,
+                  shadowRadius: 10,
+                  shadowOffset: { width: 0, height: 4 },
+                  minHeight: windowHeight / 3,
+                },
+                style,
+              ]}
             >
-              {title && (
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "600",
-                    marginBottom: 12,
-                  }}
-                >
-                  {title}
-                </Text>
-              )}
+              <BasemodalHeader title={title} onClose={onClose} />
+
               {children}
             </View>
           </TouchableWithoutFeedback>

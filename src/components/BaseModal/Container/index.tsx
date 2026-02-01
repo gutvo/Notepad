@@ -1,6 +1,10 @@
 import { View, ViewProps } from "react-native";
 
-export default function BaseContainer({ children, style, ...rest }: ViewProps) {
+export default function BaseModalContainer({
+  children,
+  style,
+  ...rest
+}: ViewProps) {
   return (
     <View style={[{ flex: 1 }, style]} {...rest}>
       {children}

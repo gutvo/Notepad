@@ -1,7 +1,9 @@
-import BaseContainer from "./Container";
-import BaseModal from "./Modal";
+import BaseModalContainer from "./Container";
+import BaseModalFooter from "./Footer";
+import BaseModalModal from "./Modal";
 
 export default {
-  Modal: BaseModal,
-  Container: BaseContainer,
+  Modal: BaseModalModal,
+  Container: BaseModalContainer,
+  Footer: BaseModalFooter,
 };
