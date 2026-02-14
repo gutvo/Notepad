@@ -17,7 +17,7 @@ export default function ConfigModal() {
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<ConfigDefaultValueProps>({
     defaultValues: getDefaultValues(),
@@ -30,6 +30,11 @@ export default function ConfigModal() {
   }, [configs, reset]);
 
   async function handleConfirm(data: ConfigDefaultValueProps) {
+    if (!isDirty) {
+      closeModal();
+      return;
+    }
+
     await actions.config.update("TEXT_FONT_SIZE", { value: data.textFontSize });
     closeModal();
 
