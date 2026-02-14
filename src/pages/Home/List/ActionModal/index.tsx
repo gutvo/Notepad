@@ -41,16 +41,32 @@ export default function ActionModal({
     toast.success("Nota deletada com sucesso!");
   }
 
+  async function handleDuplicateNote() {
+    if (!selectedNote) return;
+
+    await actions.note.create({ description: selectedNote.description });
+
+    setSelectedNote(null);
+    handleCloseModal();
+
+    toast.success("Nota duplicada com sucesso!");
+  }
+
   const options: CustomItemProps[] = [
     {
       name: "Visualizar",
       onClick: handleVisualizeNote,
-      Icon: <MaterialCommunityIcons name="eye" size={24} />,
+      Icon: <MaterialCommunityIcons name="eye-outline" size={24} />,
+    },
+    {
+      name: "Duplicar",
+      onClick: handleDuplicateNote,
+      Icon: <MaterialCommunityIcons name="content-duplicate" size={24} />,
     },
     {
       name: "Deletar",
       onClick: handleDeleteNote,
-      Icon: <MaterialCommunityIcons name="delete" size={24} />,
+      Icon: <MaterialCommunityIcons name="delete-outline" size={24} />,
     },
   ];
 
