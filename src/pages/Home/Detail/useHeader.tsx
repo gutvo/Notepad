@@ -2,20 +2,17 @@ import colors from "@Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
+import useOpenModal from "@Hooks/useOpenModal";
 import { useCallback, useLayoutEffect } from "react";
 import { Text, TouchableOpacity } from "react-native";
 
 interface UseHeaderProps {
-  handleOpenModal: () => void;
   onSubmit: () => Promise<void>;
   isDirty: boolean;
 }
 
-export default function useHeader({
-  handleOpenModal,
-  onSubmit,
-  isDirty,
-}: UseHeaderProps) {
+export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
+  const openModal = useOpenModal();
   const navigation = useNavigation();
 
   const handleGoBack = useCallback(() => {
@@ -58,7 +55,7 @@ export default function useHeader({
 
   const headerRight = useCallback(
     () => (
-      <TouchableOpacity onPress={handleOpenModal}>
+      <TouchableOpacity onPress={() => openModal("CONFIG")}>
         <MaterialCommunityIcons
           name="cog"
           size={24}
@@ -66,7 +63,7 @@ export default function useHeader({
         />
       </TouchableOpacity>
     ),
-    [handleOpenModal],
+    [openModal],
   );
 
   useLayoutEffect(() => {

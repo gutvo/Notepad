@@ -1,10 +1,9 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
 import useToast from "@Hooks/useToast";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput, View } from "react-native";
 import defaultValues from "./defaultValues";
-import TextConfigModal from "./TextConfigModal";
 import useGetDefaultSettings from "./useGetDefaultSettings";
 import useGetNote from "./useGetNote";
 import useHeader from "./useHeader";
@@ -21,16 +20,6 @@ export default function HomeDetail() {
   const [note] = useGetNote({ noteId });
 
   const [defaultSettings] = useGetDefaultSettings();
-
-  const [isOpenedModal, setIsOpenedModal] = useState(false);
-
-  function handleOpenModal() {
-    setIsOpenedModal(true);
-  }
-
-  function handleCloseModal() {
-    setIsOpenedModal(false);
-  }
 
   const {
     control,
@@ -69,7 +58,7 @@ export default function HomeDetail() {
     }
   }, [note, reset]);
 
-  useHeader({ onSubmit, handleOpenModal, isDirty });
+  useHeader({ onSubmit, isDirty });
 
   return (
     <>
@@ -93,11 +82,6 @@ export default function HomeDetail() {
           )}
         />
       </View>
-
-      <TextConfigModal
-        isOpenedModal={isOpenedModal}
-        onClose={handleCloseModal}
-      />
     </>
   );
 }

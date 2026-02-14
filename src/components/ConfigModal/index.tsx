@@ -1,19 +1,17 @@
 import actions from "@Actions";
 import BaseModal from "@Components/BaseModal";
 import SelectInput from "@Components/SelectInput";
+import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useToast from "@Hooks/useToast";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
 import useGetConfigs from "./useGetConfigs";
-interface TextConfigModalProps {
-  isOpenedModal: boolean;
-  onClose: () => void;
-}
 
-export default function TextConfigModal({
-  onClose,
-  isOpenedModal,
-}: TextConfigModalProps) {
+export default function ConfigModal() {
+  const toast = useToast();
+  const { isOpen, closeModal } = useCurrentModal("CONFIG");
+
   const [configs] = useGetConfigs();
 
   const {
@@ -32,24 +30,22 @@ export default function TextConfigModal({
   }, [configs, reset]);
 
   async function handleConfirm(data: ConfigDefaultValueProps) {
-    const findConfig = configs.find(({ key }) => key === "TEXT_FONT_SIZE");
+    await actions.config.update("TEXT_FONT_SIZE", { value: data.textFontSize });
+    closeModal();
 
-    if (!findConfig) return;
-
-    await actions.config.update(findConfig.key, { value: data.textFontSize });
-    onClose();
+    toast.success("Configuração atualizadas com sucesso!");
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: onClose },
+    { name: "CANCEL", onClick: closeModal },
     { name: "CONFIRM", onClick: handleSubmit(handleConfirm) },
   ];
 
   return (
     <BaseModal.Modal
       title="Configurações"
-      visible={isOpenedModal}
-      onClose={onClose}
+      visible={isOpen}
+      onClose={closeModal}
     >
       <BaseModal.Container style={{ padding: 16 }}>
         <Controller

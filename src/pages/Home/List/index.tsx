@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
 import actions from "src/database/actions";
 import ActionModal from "./ActionModal";
+import Drawer from "./Drawer";
 import useHeader from "./useHeader";
 
 const windowHeight = Dimensions.get("window").height;
@@ -37,6 +38,8 @@ export default function HomeList() {
 
   return (
     <>
+      <Drawer />
+
       <ScrollView style={{ height: windowHeight }}>
         <List
           data={notes}
@@ -47,7 +50,6 @@ export default function HomeList() {
           }}
         />
       </ScrollView>
-
       <FloatingButton
         onPress={() => navigation.navigate("HomeDetail")}
         icon={
@@ -58,7 +60,6 @@ export default function HomeList() {
           />
         }
       />
-
       <ActionModal
         isOpenModal={isOpenModal}
         handleCloseModal={handleCloseModal}

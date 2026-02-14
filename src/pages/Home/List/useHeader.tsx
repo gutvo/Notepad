@@ -2,11 +2,13 @@ import colors from "@Colors";
 import BaseTextField from "@Components/BaseTextField";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
+import useOpenModal from "@Hooks/useOpenModal";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function useHeader() {
   const navigation = useNavigation();
+  const openModal = useOpenModal();
 
   const [search, setSearch] = useState("");
   const [inputSearch, setInputSearch] = useState("");
@@ -30,7 +32,7 @@ export default function useHeader() {
   const headerLeft = useCallback(
     () => (
       <>
-        {isSearching && (
+        {isSearching ? (
           <TouchableOpacity onPress={handleGoBack}>
             <MaterialCommunityIcons
               name="arrow-left"
@@ -39,10 +41,23 @@ export default function useHeader() {
               style={{ marginRight: 10 }}
             />
           </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              openModal("SIDEBAR");
+            }}
+          >
+            <MaterialCommunityIcons
+              name="menu"
+              size={28}
+              color={colors.primary.contrast}
+              style={{ marginRight: 10 }}
+            />
+          </TouchableOpacity>
         )}
       </>
     ),
-    [isSearching],
+    [isSearching, openModal],
   );
 
   const headerCenter = useCallback(
