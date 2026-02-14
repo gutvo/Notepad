@@ -1,8 +1,9 @@
 import BottomModal from "@Components/BottomModal";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import { Dispatch, SetStateAction } from "react";
 import actions from "src/database/actions";
-import CustomListItem from "./CustomListItem";
+import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {
   isOpenModal: boolean;
@@ -36,9 +37,17 @@ export default function ActionModal({
     handleCloseModal();
   }
 
-  const options = [
-    { name: "Visualizar", onClick: handleVisualizeNote },
-    { name: "Deletar", onClick: handleDeleteNote },
+  const options: CustomItemProps[] = [
+    {
+      name: "Visualizar",
+      onClick: handleVisualizeNote,
+      Icon: <MaterialCommunityIcons name="eye" size={24} />,
+    },
+    {
+      name: "Deletar",
+      onClick: handleDeleteNote,
+      Icon: <MaterialCommunityIcons name="delete" size={24} />,
+    },
   ];
 
   return (
