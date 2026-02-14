@@ -15,7 +15,8 @@
       "@Actions": ["src/database/actions/index.ts"],
       "@Lib/*": ["src/lib/*"],
       "@Utils/*": ["src/utils/*"],
-      "@Seeds": ["src/database/seeds/index.ts"]
+      "@Seeds": ["src/database/seeds/index.ts"],
+      "@Providers/*": ["src/providers/*"]
     }
   },
   "include": ["src", ".expo/types/**/*.ts", "expo-env.d.ts","tsconfig.json" ,"app.config.ts"]

@@ -6,6 +6,13 @@ const colors = {
     contrast: "#e5e7eb",
   },
 
+  info: {
+    light: "#6fd3ff",
+    main: "#0ea5e9",
+    dark: "#0369a1",
+    contrast: "#f9fafb",
+  },
+
   success: {
     light: "#5bd395",
     main: "#0ea85c",

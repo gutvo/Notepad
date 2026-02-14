@@ -1,9 +1,11 @@
 import colors from "@Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
+import useToast from "@Hooks/useToast";
 import { useCallback, useLayoutEffect } from "react";
 import { Text, TouchableOpacity } from "react-native";
-import createUpdateOrder from "./createUpdateOrder";
+import createNote from "./utils/createNote";
+import updateNote from "./utils/updateNote";
 
 interface UseHeaderProps {
   id?: number;
@@ -16,15 +18,26 @@ export default function useHeader({
   id,
   handleOpenModal,
 }: UseHeaderProps) {
+  const toast = useToast();
   const navigation = useNavigation();
 
   const handleGoBack = useCallback(async () => {
     if (!navigation.canGoBack()) return;
 
-    await createUpdateOrder({ id, description });
+    try {
+      if (id) {
+        updateNote({ description, toast, id });
+      } else {
+        createNote({ description, toast });
+      }
 
-    navigation.goBack();
-  }, [description, id, navigation]);
+      navigation.goBack();
+    } catch {
+      const isUpdate = Boolean(id);
+
+      toast.error(isUpdate ? "Erro ao atualizar nota!" : "Erro ao criar nota!");
+    }
+  }, [description, id, navigation, toast]);
 
   const headerLeft = useCallback(
     () => (

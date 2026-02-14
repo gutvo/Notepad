@@ -2,6 +2,7 @@ import MigrationModal from "@Components/MigrationModal";
 import database from "@Database";
 import useSaveSeeds from "@Hooks/useSaveSeeds";
 import migrations from "@Migrations";
+import ToastProvider from "@Providers/ToastProvider";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Slot } from "expo-router";
 import { LogBox } from "react-native";
@@ -20,7 +21,9 @@ export default function Layout() {
 
   return (
     <GestureHandlerRootView>
-      <Slot />
+      <ToastProvider>
+        <Slot />
+      </ToastProvider>
     </GestureHandlerRootView>
   );
 }

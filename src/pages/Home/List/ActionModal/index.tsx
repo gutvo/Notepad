@@ -1,6 +1,7 @@
 import BottomModal from "@Components/BottomModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
+import useToast from "@Hooks/useToast";
 import { Dispatch, SetStateAction } from "react";
 import actions from "src/database/actions";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
@@ -18,6 +19,7 @@ export default function ActionModal({
   selectedNote,
   setSelectedNote,
 }: ActionModalProps) {
+  const toast = useToast();
   const navigation = useNavigation();
 
   function handleVisualizeNote() {
@@ -35,6 +37,8 @@ export default function ActionModal({
 
     setSelectedNote(null);
     handleCloseModal();
+
+    toast.success("Nota deletada com sucesso!");
   }
 
   const options: CustomItemProps[] = [
