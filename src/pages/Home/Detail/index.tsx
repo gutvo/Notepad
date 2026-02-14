@@ -1,7 +1,6 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
 import useToast from "@Hooks/useToast";
-import { useNavigation } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput, View } from "react-native";
 import defaultValues from "./defaultValues";
@@ -15,7 +14,6 @@ import updateNote from "./utils/updateNote";
 
 export default function HomeDetail() {
   const toast = useToast();
-  const navigation = useNavigation();
 
   const params = useGlobalSearchParams("HomeDetail");
   const noteId = params?.id ? Number(params?.id) : undefined;
@@ -43,34 +41,24 @@ export default function HomeDetail() {
     defaultValues,
   });
 
-  const handleExitNote = useCallback(
-    async (description: string, id?: number) => {
-      if (!description.trim() && id) {
-        return deleteNote({ id, toast });
-      }
-
-      if (id) {
-        return updateNote({ id, description, toast });
-      }
-
-      return createNote({ description, toast });
-    },
-    [toast],
-  );
-
   const onSubmit = handleSubmit(async (data) => {
-    if (!navigation.canGoBack()) return;
-
-    if (!isDirty) {
-      navigation.goBack();
-      return;
-    }
+    const isDelete = !data.description.trim() && noteId;
+    const isUpdate = !!noteId;
 
     try {
-      await handleExitNote(data.description, noteId);
-
-      navigation.goBack();
+      if (isDelete) {
+        await deleteNote({ id: noteId, toast });
+      } else if (isUpdate) {
+        await updateNote({ id: noteId, description: data.description, toast });
+      } else {
+        await createNote({ description: data.description, toast });
+      }
     } catch {
+      if (isDelete) {
+        toast.error("Erro ao deletar nota!");
+        return;
+      }
+
       toast.error(noteId ? "Erro ao atualizar nota!" : "Erro ao criar nota!");
     }
   });
@@ -81,7 +69,7 @@ export default function HomeDetail() {
     }
   }, [note, reset]);
 
-  useHeader({ onSubmit, handleOpenModal });
+  useHeader({ onSubmit, handleOpenModal, isDirty });
 
   return (
     <>
