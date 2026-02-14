@@ -1,13 +1,22 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
-import { useEffect, useState } from "react";
+import useToast from "@Hooks/useToast";
+import { useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput, View } from "react-native";
+import defaultValues from "./defaultValues";
 import TextConfigModal from "./TextConfigModal";
 import useGetDefaultSettings from "./useGetDefaultSettings";
 import useGetNote from "./useGetNote";
 import useHeader from "./useHeader";
+import createNote from "./utils/createNote";
+import deleteNote from "./utils/deleteNote";
+import updateNote from "./utils/updateNote";
 
 export default function HomeDetail() {
+  const toast = useToast();
+  const navigation = useNavigation();
+
   const params = useGlobalSearchParams("HomeDetail");
   const noteId = params?.id ? Number(params?.id) : undefined;
 
@@ -28,10 +37,42 @@ export default function HomeDetail() {
   const {
     control,
     reset,
-    getValues,
+    handleSubmit,
     formState: { isDirty },
   } = useForm<{ description: string }>({
-    defaultValues: { description: note?.description || "" },
+    defaultValues,
+  });
+
+  const handleExitNote = useCallback(
+    async (description: string, id?: number) => {
+      if (!description.trim() && id) {
+        return deleteNote({ id, toast });
+      }
+
+      if (id) {
+        return updateNote({ id, description, toast });
+      }
+
+      return createNote({ description, toast });
+    },
+    [toast],
+  );
+
+  const onSubmit = handleSubmit(async (data) => {
+    if (!navigation.canGoBack()) return;
+
+    if (!isDirty) {
+      navigation.goBack();
+      return;
+    }
+
+    try {
+      await handleExitNote(data.description, noteId);
+
+      navigation.goBack();
+    } catch {
+      toast.error(noteId ? "Erro ao atualizar nota!" : "Erro ao criar nota!");
+    }
   });
 
   useEffect(() => {
@@ -40,7 +81,7 @@ export default function HomeDetail() {
     }
   }, [note, reset]);
 
-  useHeader({ id: noteId, getValues, isDirty, handleOpenModal });
+  useHeader({ onSubmit, handleOpenModal });
 
   return (
     <>

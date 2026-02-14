@@ -1,54 +1,23 @@
 import colors from "@Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
-import useToast from "@Hooks/useToast";
 import { useCallback, useLayoutEffect } from "react";
-import { UseFormGetValues } from "react-hook-form";
 import { Text, TouchableOpacity } from "react-native";
-import createNote from "./utils/createNote";
-import updateNote from "./utils/updateNote";
 
 interface UseHeaderProps {
-  id?: number;
   handleOpenModal: () => void;
-  getValues: UseFormGetValues<{ description: string }>;
-  isDirty: boolean;
+  onSubmit: () => Promise<void>;
 }
 
 export default function useHeader({
-  id,
   handleOpenModal,
-  getValues,
-  isDirty,
+  onSubmit,
 }: UseHeaderProps) {
-  const toast = useToast();
   const navigation = useNavigation();
-
-  const handleGoBack = useCallback(async () => {
-    if (!navigation.canGoBack()) return;
-
-    try {
-      const description = getValues("description");
-
-      if (isDirty && description) {
-        if (id) {
-          updateNote({ description, toast, id });
-        } else {
-          createNote({ description, toast });
-        }
-      }
-
-      navigation.goBack();
-    } catch {
-      const isUpdate = Boolean(id);
-
-      toast.error(isUpdate ? "Erro ao atualizar nota!" : "Erro ao criar nota!");
-    }
-  }, [getValues, id, isDirty, navigation, toast]);
 
   const headerLeft = useCallback(
     () => (
-      <TouchableOpacity onPress={handleGoBack} style={{ marginRight: 10 }}>
+      <TouchableOpacity onPress={onSubmit} style={{ marginRight: 10 }}>
         <MaterialCommunityIcons
           name="arrow-left"
           size={24}
@@ -57,7 +26,7 @@ export default function useHeader({
         />
       </TouchableOpacity>
     ),
-    [handleGoBack],
+    [onSubmit],
   );
 
   const headerTitle = useCallback(
