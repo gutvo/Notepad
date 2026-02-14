@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx expo run:android",
+    "dev": "expo start",
     "prebuild": "expo prebuild",
     "android": "expo run:android",
     "ios": "expo run:ios",
