@@ -1,7 +1,6 @@
-import colors from "@Colors";
+import useTheme from "@Hooks/useTheme";
 import React from "react";
 import {
-  Dimensions,
   Modal,
   StyleProp,
   TouchableWithoutFeedback,
@@ -9,8 +8,6 @@ import {
   ViewStyle,
 } from "react-native";
 import BasemodalHeader from "../Header";
-
-const windowHeight = Dimensions.get("window").height;
 
 export interface BaseModalProps {
   visible: boolean;
@@ -27,6 +24,8 @@ export default function BaseModalModal({
   children,
   style,
 }: BaseModalProps) {
+  const theme = useTheme();
+
   return (
     <Modal
       visible={visible}
@@ -40,22 +39,24 @@ export default function BaseModalModal({
           style={{
             flex: 1,
             backgroundColor: "rgba(0,0,0,0.5)",
+            padding: theme.spacing(4),
+            alignItems: "center",
             justifyContent: "center",
-            padding: 16,
           }}
         >
           <TouchableWithoutFeedback>
             <View
               style={[
                 {
-                  backgroundColor: colors.common.white,
+                  backgroundColor: theme.palette.background.body,
                   borderRadius: 4,
                   elevation: 5, // Android shadow
-                  shadowColor: colors.common.black, // iOS shadow
+                  shadowColor: theme.palette.common.black, // iOS shadow
                   shadowOpacity: 0.2,
                   shadowRadius: 10,
                   shadowOffset: { width: 0, height: 4 },
-                  minHeight: windowHeight / 3,
+                  minHeight: "34%",
+                  minWidth: "90%",
                 },
                 style,
               ]}

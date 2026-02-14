@@ -1,4 +1,3 @@
-import actions from "@Actions";
 import BaseModal from "@Components/BaseModal";
 import BaseTypography from "@Components/BaseTypography";
 import SelectInput from "@Components/SelectInput";
@@ -6,41 +5,38 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import { themes } from "@Theme/themes";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
-import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
-import useGetConfigs from "./useGetConfigs";
+import getDefaultValues, { ThemeDefaultValueProps } from "./getDefaultValues";
 
 export default function ConfigModal() {
   const theme = useTheme();
   const toast = useToast();
   const { isOpen, closeModal } = useCurrentModal("CONFIG");
 
-  const [configs] = useGetConfigs();
-
   const {
     handleSubmit,
     control,
     formState: { errors, isDirty },
     reset,
-  } = useForm<ConfigDefaultValueProps>({
+  } = useForm<ThemeDefaultValueProps>({
     defaultValues: getDefaultValues(),
   });
 
   useEffect(() => {
-    if (configs.length) {
-      reset(getDefaultValues(configs));
-    }
-  }, [configs, reset]);
+    // if (configs.length) {
+    //   reset(getDefaultValues(configs));
+    // }
+  }, [reset]);
 
-  async function handleConfirm(data: ConfigDefaultValueProps) {
+  async function handleConfirm(data: ThemeDefaultValueProps) {
     if (!isDirty) {
       closeModal();
       return;
     }
 
-    await actions.config.update("TEXT_FONT_SIZE", { value: data.textFontSize });
     closeModal();
 
     toast.success("Configuração atualizadas com sucesso!");
@@ -60,7 +56,7 @@ export default function ConfigModal() {
       <BaseModal.Container style={{ padding: theme.spacing(4) }}>
         <Controller
           control={control}
-          name="textFontSize"
+          name="themeIndex"
           rules={{ required: "Campo obrigatório" }}
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
@@ -68,11 +64,8 @@ export default function ConfigModal() {
               onChange={(itemValue) => onChange(itemValue)}
               label="Tamanho da fonte"
               disabled={disabled}
-              options={Array.from(
-                { length: (80 - 12) / 4 + 1 },
-                (_, index) => 12 + index * 4,
-              )}
-              renderItem={({ item, selectedItem }) => {
+              options={themes}
+              renderItem={({ item, selectedItem, index }) => {
                 return (
                   <View
                     style={{
@@ -82,7 +75,10 @@ export default function ConfigModal() {
                       gap: theme.spacing(3),
                     }}
                   >
-                    <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
+                    <View style={{ backgroundColor: "red" }} />
+                    <BaseTypography style={{ flex: 1 }}>
+                      Tema {index}
+                    </BaseTypography>
 
                     {item === selectedItem && (
                       <MaterialCommunityIcons
@@ -94,8 +90,8 @@ export default function ConfigModal() {
                   </View>
                 );
               }}
-              error={Boolean(errors.textFontSize?.message)}
-              helpText={errors.textFontSize?.message}
+              error={Boolean(errors.themeIndex?.message)}
+              helpText={errors.themeIndex?.message}
             />
           )}
         />

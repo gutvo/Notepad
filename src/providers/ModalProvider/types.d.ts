@@ -1,6 +1,7 @@
 type ModalMapProps = {
   CONFIG: undefined;
   SIDEBAR: undefined;
+  THEME: undefined;
 };
 
 type ModalNameProps = keyof ModalMapProps;

@@ -1,6 +1,7 @@
 import BottomModal from "@Components/BottomModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
+import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { Dispatch, SetStateAction } from "react";
 import actions from "src/database/actions";
@@ -19,6 +20,7 @@ export default function ActionModal({
   selectedNote,
   setSelectedNote,
 }: ActionModalProps) {
+  const theme = useTheme();
   const toast = useToast();
   const navigation = useNavigation();
 
@@ -56,17 +58,35 @@ export default function ActionModal({
     {
       name: "Visualizar",
       onClick: handleVisualizeNote,
-      Icon: <MaterialCommunityIcons name="eye-outline" size={24} />,
+      Icon: (
+        <MaterialCommunityIcons
+          name="eye-outline"
+          size={24}
+          color={theme.palette.background.textPrimary}
+        />
+      ),
     },
     {
       name: "Duplicar",
       onClick: handleDuplicateNote,
-      Icon: <MaterialCommunityIcons name="content-duplicate" size={24} />,
+      Icon: (
+        <MaterialCommunityIcons
+          name="content-duplicate"
+          size={24}
+          color={theme.palette.background.textPrimary}
+        />
+      ),
     },
     {
       name: "Deletar",
       onClick: handleDeleteNote,
-      Icon: <MaterialCommunityIcons name="delete-outline" size={24} />,
+      Icon: (
+        <MaterialCommunityIcons
+          name="delete-outline"
+          size={24}
+          color={theme.palette.background.textPrimary}
+        />
+      ),
     },
   ];
 
@@ -80,7 +100,7 @@ export default function ActionModal({
         data={options}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => <CustomListItem item={item} />}
-        contentContainerStyle={{ paddingVertical: 12 }}
+        contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
     </BottomModal.Modal>
   );

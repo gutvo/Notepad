@@ -1,6 +1,7 @@
-import colors from "@Colors";
+import BaseTypography from "@Components/BaseTypography";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View } from "react-native";
+import useTheme from "@Hooks/useTheme";
+import { TouchableOpacity, View } from "react-native";
 
 interface BasemodalHeaderProps {
   title?: string;
@@ -11,28 +12,26 @@ export default function BasemodalHeader({
   title,
   onClose,
 }: BasemodalHeaderProps) {
+  const theme = useTheme();
+
   return (
     <View
       style={{
-        backgroundColor: colors.primary.main,
+        backgroundColor: theme.palette.primary.main,
         alignItems: "center",
         display: "flex",
         justifyContent: "center",
-        height: 36,
+        height: 40,
         borderTopEndRadius: 4,
         borderTopStartRadius: 4,
       }}
     >
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "600",
-          textAlign: "center",
-          color: colors.primary.contrast,
-        }}
+      <BaseTypography
+        variant="H4"
+        style={{ color: theme.palette.primary.contrast }}
       >
         {title}
-      </Text>
+      </BaseTypography>
 
       <TouchableOpacity
         onPress={onClose}
@@ -40,7 +39,7 @@ export default function BasemodalHeader({
       >
         <MaterialCommunityIcons
           name="close"
-          color={colors.primary.contrast}
+          color={theme.palette.primary.contrast}
           size={32}
         />
       </TouchableOpacity>

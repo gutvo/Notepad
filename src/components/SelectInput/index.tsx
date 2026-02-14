@@ -1,22 +1,12 @@
-import colors from "@Colors";
-import { Picker } from "@react-native-picker/picker";
-import { Key, ReactNode, Ref, useState } from "react";
-import {
-  NativeSyntheticEvent,
-  StyleProp,
-  TargetedEvent,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
+import BaseSelectInput, {
+  BaseSelectInputProps,
+} from "@Components/BaseSelectInput";
+import BaseTypography from "@Components/BaseTypography";
+import useTheme from "@Hooks/useTheme";
+import { ReactNode } from "react";
+import { StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
 
-interface OptionProps<DataProps> {
-  label: string;
-  value: DataProps;
-}
-
-interface SelectInputProps<DataProps> {
+interface SelectInputProps<DataProps> extends BaseSelectInputProps<DataProps> {
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   label?: string;
@@ -25,106 +15,79 @@ interface SelectInputProps<DataProps> {
   error?: boolean;
   helpText?: string;
   helpTextStyle?: StyleProp<TextStyle>;
-  onFocus?: (event: NativeSyntheticEvent<TargetedEvent>) => void;
-  onBlur?: (event: NativeSyntheticEvent<TargetedEvent>) => void;
-  style?: StyleProp<TextStyle>;
-  selectedValue?: DataProps;
-  onValueChange?: (itemValue: DataProps, itemIndex: number) => void;
-  options: OptionProps<DataProps>[];
-  ref?: Ref<Picker<DataProps>>;
-  disabled?: boolean;
-  placeholder?: string;
 }
 
 export default function SelectInput<DataProps>({
   endIcon,
   startIcon,
   label,
-  onFocus,
-  onBlur,
-  style,
   containerStyle,
   textStyle,
   helpText,
   error,
   helpTextStyle,
-  selectedValue,
-  onValueChange,
-  options,
-  ref,
-  disabled,
-  placeholder,
+  ...rest
 }: SelectInputProps<DataProps>) {
-  const [focused, setFocused] = useState(false);
+  const theme = useTheme();
 
   return (
-    <View style={{ marginTop: 12 }}>
+    <View style={{ marginTop: theme.spacing(3) }}>
       {label && (
-        <Text
+        <BaseTypography
+          variant="BODY2"
           style={[
             {
               position: "absolute",
-              top: -8,
+              top: -10,
               left: 12,
-              paddingHorizontal: 4,
-              backgroundColor: colors.common.white,
-              fontSize: 12,
-              color: focused ? colors.primary.main : colors.grey[600],
+              paddingHorizontal: theme.spacing(1),
+              backgroundColor: theme.palette.background.body,
+              color: theme.palette.background.border,
               zIndex: 1,
             },
             textStyle,
           ]}
         >
           {label}
-        </Text>
+        </BaseTypography>
       )}
 
       <View
         style={[
           {
             borderWidth: 1,
-            borderColor: focused ? colors.primary.main : colors.grey[600],
             borderRadius: 4,
             flexDirection: "row",
             alignItems: "center",
-            // paddingHorizontal: 8,
+            paddingHorizontal: theme.spacing(2),
             height: 48,
+            backgroundColor: theme.palette.background.body,
+            borderColor: theme.palette.background.border,
           },
           containerStyle,
         ]}
       >
         {startIcon}
 
-        <Picker<DataProps>
-          selectedValue={selectedValue}
-          onValueChange={onValueChange}
-          enabled={!disabled}
-          ref={ref}
-          onFocus={(event) => {
-            onFocus?.(event);
-            setFocused(true);
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            setFocused(false);
-          }}
-          placeholder={placeholder}
-          style={[{ flex: 1 }, style]}
-        >
-          {options.map((item) => (
-            <Picker.Item
-              key={item.value as Key}
-              label={item.label}
-              value={item.value}
-            />
-          ))}
-        </Picker>
+        <BaseSelectInput {...rest} />
 
         {endIcon}
       </View>
-      <Text style={[error && { color: colors.error.main }, helpTextStyle]}>
-        {helpText}
-      </Text>
+
+      {helpText && (
+        <Text
+          style={[
+            {
+              color: error
+                ? theme.palette.error.main
+                : theme.palette.background.textPrimary,
+            },
+            helpTextStyle,
+          ]}
+        >
+          {helpText}
+        </Text>
+      )}
     </View>
   );
 }

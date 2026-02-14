@@ -1,3 +1,4 @@
+import useTheme from "@Hooks/useTheme";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,12 +12,16 @@ interface BottomModalScrollViewProps {
 export default function BottomModalScrollView({
   children,
 }: BottomModalScrollViewProps) {
+  const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { title } = useBottomModal();
 
   return (
     <BottomSheetScrollView
-      contentContainerStyle={{ padding: 16 + insets.bottom }}
+      contentContainerStyle={{
+        padding: theme.spacing(4) + insets.bottom,
+        backgroundColor: theme.palette.background.body,
+      }}
     >
       {title && <BottomModalTitle title={title} />}
 

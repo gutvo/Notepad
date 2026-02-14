@@ -1,4 +1,5 @@
-import { Text, TextProps } from "react-native";
+import useTheme from "@Hooks/useTheme";
+import { StyleProp, Text, TextProps, TextStyle } from "react-native";
 import getVariantStyles from "./getVariantStyles";
 
 type BaseTypographyVariantProps =
@@ -24,9 +25,15 @@ export default function BaseTypography({
   variant = "BODY1",
   ...rest
 }: BaseTypographyProps) {
-  const variantStyle = getVariantStyles(variant);
+  const theme = useTheme();
 
-  const customStyle = [variantStyle, style];
+  const variantStyle = getVariantStyles(variant, theme);
+
+  const customStyle: StyleProp<TextStyle> = [
+    variantStyle,
+    { color: theme.palette.background.textPrimary },
+    style,
+  ];
 
   return (
     <Text style={customStyle} {...rest}>

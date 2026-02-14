@@ -1,9 +1,9 @@
-import colors from "@Colors";
 import FloatingButton from "@Components/FloatButton";
 import List from "@Components/List";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useActionList } from "@Hooks/useActionList";
 import useNavigation from "@Hooks/useNavigation";
+import useTheme from "@Hooks/useTheme";
 import { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
 import actions from "src/database/actions";
@@ -14,6 +14,7 @@ import useHeader from "./useHeader";
 const windowHeight = Dimensions.get("window").height;
 
 export default function HomeList() {
+  const theme = useTheme();
   const navigation = useNavigation();
   const { search } = useHeader();
 
@@ -40,7 +41,12 @@ export default function HomeList() {
     <>
       <Drawer />
 
-      <ScrollView style={{ height: windowHeight }}>
+      <ScrollView
+        style={{
+          height: windowHeight,
+          backgroundColor: theme.palette.background.body,
+        }}
+      >
         <List
           data={notes}
           onClick={(item) => navigation.navigate("HomeDetail", { id: item.id })}
@@ -56,7 +62,7 @@ export default function HomeList() {
           <MaterialCommunityIcons
             name="plus"
             size={24}
-            color={colors.grey[200]}
+            color={theme.palette.primary.contrast}
           />
         }
       />

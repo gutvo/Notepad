@@ -1,4 +1,4 @@
-import colors from "@Colors";
+import useTheme from "@Hooks/useTheme";
 
 import HomeDetail from "@Pages/Home/Detail";
 import HomeList from "@Pages/Home/List";
@@ -14,10 +14,12 @@ export type PageNames = keyof RootStackParamList;
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Routes() {
+  const theme = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: colors.primary.main },
+        headerStyle: { backgroundColor: theme.palette.primary.main },
       }}
     >
       <Stack.Screen name="HomeList" component={HomeList} />

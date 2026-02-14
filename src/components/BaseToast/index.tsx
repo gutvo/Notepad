@@ -1,5 +1,6 @@
 import BaseTypography from "@Components/BaseTypography";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import useTheme from "@Hooks/useTheme";
 import {
   Animated,
   Dimensions,
@@ -8,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import toastConfig from "./toastConfig";
+import useToastConfig from "./toastConfig";
 import useAnimation from "./useAnimation";
 
 interface BaseToastProps {
@@ -26,7 +27,10 @@ export default function BaseToast({
   onHide,
   index,
 }: BaseToastProps) {
+  const theme = useTheme();
   const insets = useSafeAreaInsets();
+
+  const toastConfig = useToastConfig();
 
   const { opacity, translateY, close } = useAnimation({ duration, onHide });
 
@@ -53,11 +57,11 @@ export default function BaseToast({
           <View
             style={{
               width: Dimensions.get("window").width * 0.92,
-              backgroundColor: "white",
+              backgroundColor: theme.palette.background.body,
               borderRadius: 16,
-              padding: 16,
+              padding: theme.spacing(4),
               flexDirection: "row",
-              gap: 12,
+              gap: theme.spacing(3),
               alignItems: "center",
 
               borderLeftWidth: 6,
@@ -81,7 +85,10 @@ export default function BaseToast({
                 {title.toUpperCase()}
               </BaseTypography>
 
-              <BaseTypography variant="BODY2" style={{ marginTop: 4 }}>
+              <BaseTypography
+                variant="BODY2"
+                style={{ marginTop: theme.spacing(1) }}
+              >
                 {message}
               </BaseTypography>
             </View>

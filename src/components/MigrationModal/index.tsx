@@ -1,7 +1,9 @@
 import BaseModal from "@Components/BaseModal/Modal";
+import BaseTypography from "@Components/BaseTypography";
+import useTheme from "@Hooks/useTheme";
 import { DrizzleError } from "drizzle-orm";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 interface MigrationModalProps {
   success: boolean;
@@ -12,6 +14,8 @@ export default function MigrationModal({
   error,
   success,
 }: MigrationModalProps) {
+  const theme = useTheme();
+
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   function handleOpenModal() {
@@ -37,23 +41,30 @@ export default function MigrationModal({
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          gap: 20,
-          padding: 20,
+          gap: theme.spacing(5),
+          padding: theme.spacing(5),
         }}
       >
         <ActivityIndicator size={50} />
 
         {error && (
           <>
-            <Text style={{ color: "red", fontWeight: "bold", fontSize: 20 }}>
+            <BaseTypography
+              style={{ color: theme.palette.error.main }}
+              variant="H4"
+            >
               Erro ao migrar os dados:
-            </Text>
-            <Text style={{ color: "red" }}>{error?.message}</Text>
+            </BaseTypography>
+            <BaseTypography style={{ color: theme.palette.error.main }}>
+              {error?.message}
+            </BaseTypography>
           </>
         )}
 
         {!error && !success && (
-          <Text style={{ fontSize: 20 }}>Fazendo a migração dos dados...</Text>
+          <BaseTypography variant="H4">
+            Fazendo a migração dos dados...
+          </BaseTypography>
         )}
       </View>
     </BaseModal>

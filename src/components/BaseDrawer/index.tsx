@@ -1,4 +1,4 @@
-import colors from "@Colors";
+import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -23,6 +23,8 @@ export default function BaseDrawer({
   onClose,
   children,
 }: BaseDrawerProps) {
+  const theme = useTheme();
+
   const [isMounted, setIsMounted] = useState(visible);
   const translateX = useRef(new Animated.Value(-Drawer_WIDTH)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
@@ -70,7 +72,10 @@ export default function BaseDrawer({
           <Animated.View
             style={[
               StyleSheet.absoluteFill,
-              { backgroundColor: colors.common.black, opacity: overlayOpacity },
+              {
+                backgroundColor: theme.palette.common.black,
+                opacity: overlayOpacity,
+              },
             ]}
           />
         </Pressable>
@@ -82,7 +87,7 @@ export default function BaseDrawer({
             top: 0,
             bottom: 0,
             width: Drawer_WIDTH,
-            backgroundColor: colors.common.white,
+            backgroundColor: theme.palette.background.body,
 
             transform: [{ translateX }],
           }}

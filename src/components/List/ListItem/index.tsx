@@ -1,6 +1,7 @@
-import colors from "@Colors";
+import BaseTypography from "@Components/BaseTypography";
+import useTheme from "@Hooks/useTheme";
 import { format } from "date-fns";
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 
 interface ListItemProps {
   item: ListItemDataProps;
@@ -13,6 +14,8 @@ export default function ListItem({
   onClick,
   onLongPress,
 }: ListItemProps) {
+  const theme = useTheme();
+
   const formattedDate = format(item.created_at, "dd/MM/yyyy HH:mm");
 
   const firstLine = item.description
@@ -29,24 +32,26 @@ export default function ListItem({
       style={({ pressed }) => [
         {
           flexDirection: "row",
-          paddingHorizontal: 8,
-          paddingVertical: 16,
+          paddingHorizontal: theme.spacing(2),
+          paddingVertical: theme.spacing(4),
           alignItems: "center",
-          gap: 4,
+          gap: theme.spacing(1),
         },
-        pressed && { backgroundColor: colors.grey[300] },
+        pressed && { backgroundColor: theme.palette.background.button.pressed },
       ]}
       onPress={() => onClick?.(item)}
       onLongPress={() => onLongPress?.(item)}
     >
-      <Text
+      <BaseTypography
         numberOfLines={1}
         ellipsizeMode="tail"
-        style={{ fontSize: 16, flexShrink: 1, marginRight: 8, flex: 1 }}
+        style={{ flexShrink: 1, marginRight: theme.spacing(2), flex: 1 }}
       >
         {shortName}
-      </Text>
-      <Text style={{ flexShrink: 0, fontSize: 12 }}>{formattedDate}</Text>
+      </BaseTypography>
+      <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
+        {formattedDate}
+      </BaseTypography>
     </Pressable>
   );
 }

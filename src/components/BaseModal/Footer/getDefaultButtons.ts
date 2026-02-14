@@ -1,19 +1,26 @@
-import colors from "@Colors";
+import { ThemeProps } from "@Theme/mergeTheme";
 
 interface GetDefaultButtonsProps {
   buttons: BaseModalFooterButtonProps[];
+  theme: ThemeProps;
 }
 
-export default function getDefaultButtons({ buttons }: GetDefaultButtonsProps) {
+export default function getDefaultButtons({
+  buttons,
+  theme,
+}: GetDefaultButtonsProps) {
   const defaultButtons: Record<
     BaseModalFooterButtonNames,
     Omit<CustomBaseModalFooterButtonProps, "name">
   > = {
-    CONFIRM: { label: "Confirmar", backgroundColor: colors.primary.main },
+    CONFIRM: {
+      label: "Confirmar",
+      backgroundColor: theme.palette.primary.main,
+    },
     CANCEL: {
       label: "Cancelar",
-      backgroundColor: colors.grey[700],
-      color: colors.grey[50],
+      backgroundColor: theme.palette.grey[700],
+      color: theme.palette.grey[50],
     },
   };
 

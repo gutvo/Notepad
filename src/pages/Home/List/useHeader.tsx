@@ -1,12 +1,13 @@
-import colors from "@Colors";
 import BaseTextField from "@Components/BaseTextField";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import useOpenModal from "@Hooks/useOpenModal";
+import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function useHeader() {
+  const theme = useTheme();
   const navigation = useNavigation();
   const openModal = useOpenModal();
 
@@ -37,8 +38,8 @@ export default function useHeader() {
             <MaterialCommunityIcons
               name="arrow-left"
               size={28}
-              color={colors.primary.contrast}
-              style={{ marginRight: 10 }}
+              color={theme.palette.primary.contrast}
+              style={{ marginRight: theme.spacing(3) }}
             />
           </TouchableOpacity>
         ) : (
@@ -50,14 +51,14 @@ export default function useHeader() {
             <MaterialCommunityIcons
               name="menu"
               size={28}
-              color={colors.primary.contrast}
-              style={{ marginRight: 10 }}
+              color={theme.palette.primary.contrast}
+              style={{ marginRight: theme.spacing(3) }}
             />
           </TouchableOpacity>
         )}
       </>
     ),
-    [isSearching, openModal],
+    [isSearching, openModal, theme],
   );
 
   const headerCenter = useCallback(
@@ -68,18 +69,20 @@ export default function useHeader() {
             onChangeText={(value) => setInputSearch(value)}
             value={inputSearch}
             style={{
-              borderColor: colors.primary.contrast,
-              color: colors.primary.contrast,
+              borderColor: theme.palette.primary.contrast,
+              color: theme.palette.primary.contrast,
             }}
-            placeholderTextColor={colors.primary.contrast}
+            placeholderTextColor={theme.palette.primary.contrast}
             placeholder="Pesquisar"
           />
         ) : (
-          <Text style={{ color: colors.primary.contrast }}>Página incial</Text>
+          <Text style={{ color: theme.palette.primary.contrast }}>
+            Página incial
+          </Text>
         )}
       </View>
     ),
-    [isSearching, inputSearch],
+    [isSearching, inputSearch, theme.palette.primary.contrast],
   );
 
   const headerRight = useCallback(
@@ -88,12 +91,12 @@ export default function useHeader() {
         <MaterialCommunityIcons
           name="magnify"
           size={28}
-          color={colors.primary.contrast}
-          style={{ marginLeft: 10 }}
+          color={theme.palette.primary.contrast}
+          style={{ marginLeft: theme.spacing(3) }}
         />
       </TouchableOpacity>
     ),
-    [handleOnClick],
+    [handleOnClick, theme],
   );
 
   useLayoutEffect(() => {

@@ -1,3 +1,4 @@
+import useTheme from "@Hooks/useTheme";
 import { StyleProp, View, ViewStyle } from "react-native";
 
 interface DividerProps {
@@ -5,9 +6,18 @@ interface DividerProps {
 }
 
 export default function Divider({ style }: DividerProps) {
+  const theme = useTheme();
+
   return (
     <View
-      style={[{ height: 1, backgroundColor: "black", opacity: 0.2 }, style]}
+      style={[
+        {
+          height: 1,
+          backgroundColor: theme.palette.background.divider,
+          opacity: 0.2,
+        },
+        style,
+      ]}
     />
   );
 }

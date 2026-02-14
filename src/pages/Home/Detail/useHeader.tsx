@@ -1,8 +1,8 @@
-import colors from "@Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useOpenModal from "@Hooks/useOpenModal";
+import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect } from "react";
 import { Text, TouchableOpacity } from "react-native";
 
@@ -12,6 +12,7 @@ interface UseHeaderProps {
 }
 
 export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
+  const theme = useTheme();
   const openModal = useOpenModal();
   const navigation = useNavigation();
 
@@ -36,21 +37,26 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
 
   const headerLeft = useCallback(
     () => (
-      <TouchableOpacity onPress={handleGoBack} style={{ marginRight: 10 }}>
+      <TouchableOpacity
+        onPress={handleGoBack}
+        style={{ marginRight: theme.spacing(3) }}
+      >
         <MaterialCommunityIcons
           name="arrow-left"
           size={24}
-          color={colors.primary.contrast}
-          style={{ marginRight: 10 }}
+          color={theme.palette.primary.contrast}
+          style={{ marginRight: theme.spacing(3) }}
         />
       </TouchableOpacity>
     ),
-    [handleGoBack],
+    [handleGoBack, theme],
   );
 
   const headerTitle = useCallback(
-    () => <Text style={{ color: colors.primary.contrast }}>Detalhes</Text>,
-    [],
+    () => (
+      <Text style={{ color: theme.palette.primary.contrast }}>Detalhes</Text>
+    ),
+    [theme.palette.primary.contrast],
   );
 
   const headerRight = useCallback(
@@ -59,11 +65,11 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
         <MaterialCommunityIcons
           name="cog"
           size={24}
-          color={colors.primary.contrast}
+          color={theme.palette.primary.contrast}
         />
       </TouchableOpacity>
     ),
-    [openModal],
+    [openModal, theme.palette.primary.contrast],
   );
 
   useLayoutEffect(() => {

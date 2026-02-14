@@ -1,4 +1,5 @@
-import colors from "@Colors";
+import BaseTypography from "@Components/BaseTypography";
+import useTheme from "@Hooks/useTheme";
 import { ReactNode, useState } from "react";
 import {
   StyleProp,
@@ -35,39 +36,42 @@ export default function TextField({
   helpTextStyle,
   ...rest
 }: TextFieldProps) {
+  const theme = useTheme();
   const [focused, setFocused] = useState(false);
 
   return (
-    <View style={{ marginTop: 12 }}>
+    <View style={{ marginTop: theme.spacing(3) }}>
       {label && (
-        <Text
+        <BaseTypography
+          variant="BODY2"
           style={[
             {
               position: "absolute",
-              top: -8,
+              top: -10,
               left: 12,
-              paddingHorizontal: 4,
-              backgroundColor: colors.common.white,
-              fontSize: 12,
-              color: focused ? colors.primary.main : colors.grey[600],
+              paddingHorizontal: theme.spacing(1),
+              backgroundColor: theme.palette.background.body,
+              color: theme.palette.background.border,
               zIndex: 1,
             },
             textStyle,
           ]}
         >
           {label}
-        </Text>
+        </BaseTypography>
       )}
 
       <View
         style={[
           {
             borderWidth: 1,
-            borderColor: focused ? colors.primary.main : colors.grey[600],
+            borderColor: focused
+              ? theme.palette.primary.main
+              : theme.palette.background.border,
             borderRadius: 4,
             flexDirection: "row",
             alignItems: "center",
-            paddingHorizontal: 8,
+            paddingHorizontal: theme.spacing(2),
             height: 48,
           },
           containerStyle,
@@ -76,7 +80,7 @@ export default function TextField({
         {startIcon}
 
         <TextInput
-          style={[{ flex: 1, paddingHorizontal: 8 }, style]}
+          style={[{ flex: 1, paddingHorizontal: theme.spacing(2) }, style]}
           onFocus={(event) => {
             onFocus?.(event);
             setFocused(true);
@@ -90,7 +94,9 @@ export default function TextField({
 
         {endIcon}
       </View>
-      <Text style={[error && { color: colors.error.main }, helpTextStyle]}>
+      <Text
+        style={[error && { color: theme.palette.error.main }, helpTextStyle]}
+      >
         {helpText}
       </Text>
     </View>

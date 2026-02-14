@@ -1,5 +1,5 @@
-import colors from "@Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import useTheme from "@Hooks/useTheme";
 
 type ToastConfigProps = Record<
   BaseToastType,
@@ -10,27 +10,31 @@ type ToastConfigProps = Record<
   }
 >;
 
-const toastConfig: ToastConfigProps = {
-  success: {
-    color: colors.success.main,
-    icon: "check-circle-outline",
-    title: "Sucesso",
-  },
-  error: {
-    color: colors.error.main,
-    icon: "close-circle-outline",
-    title: "Erro",
-  },
-  warning: {
-    color: colors.warning.main,
-    icon: "alert-circle-outline",
-    title: "Alerta",
-  },
-  info: {
-    color: colors.info.main,
-    icon: "information-outline",
-    title: "Informação",
-  },
-};
+export default function useToastConfig() {
+  const theme = useTheme();
 
-export default toastConfig;
+  const toastConfig: ToastConfigProps = {
+    success: {
+      color: theme.palette.success.main,
+      icon: "check-circle-outline",
+      title: "Sucesso",
+    },
+    error: {
+      color: theme.palette.error.main,
+      icon: "close-circle-outline",
+      title: "Erro",
+    },
+    warning: {
+      color: theme.palette.warning.main,
+      icon: "alert-circle-outline",
+      title: "Alerta",
+    },
+    info: {
+      color: theme.palette.info.main,
+      icon: "information-outline",
+      title: "Informação",
+    },
+  };
+
+  return toastConfig;
+}

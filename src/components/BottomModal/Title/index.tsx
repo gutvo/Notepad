@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import BaseTypography from "@Components/BaseTypography";
 
 interface BottomModalTitleProps {
   title: string;
@@ -6,15 +6,8 @@ interface BottomModalTitleProps {
 
 export default function BottomModalTitle({ title }: BottomModalTitleProps) {
   return (
-    <Text
-      style={{
-        fontSize: 20,
-        fontWeight: "600",
-        marginBottom: 24,
-        textAlign: "center",
-      }}
-    >
+    <BaseTypography variant="H4" style={{ textAlign: "center" }}>
       {title}
-    </Text>
+    </BaseTypography>
   );
 }

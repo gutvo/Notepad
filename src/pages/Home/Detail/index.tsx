@@ -1,4 +1,5 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
+import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -12,6 +13,7 @@ import deleteNote from "./utils/deleteNote";
 import updateNote from "./utils/updateNote";
 
 export default function HomeDetail() {
+  const theme = useTheme();
   const toast = useToast();
 
   const params = useGlobalSearchParams("HomeDetail");
@@ -75,8 +77,12 @@ export default function HomeDetail() {
               textAlignVertical="top"
               style={{
                 flex: 1,
-                padding: 16,
-                fontSize: (defaultSettings.TEXT_FONT_SIZE as number) ?? 16,
+                padding: theme.spacing(4),
+                fontSize:
+                  (defaultSettings.TEXT_FONT_SIZE as number) ??
+                  theme.fontSize(4),
+                backgroundColor: theme.palette.background.body,
+                color: theme.palette.background.textPrimary,
               }}
             />
           )}

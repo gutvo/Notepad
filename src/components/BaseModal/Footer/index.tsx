@@ -1,5 +1,6 @@
 import BaseButton from "@Components/BaseButton";
 import Divider from "@Components/List/Divider";
+import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
 import getDefaultButtons from "./getDefaultButtons";
 
@@ -12,7 +13,9 @@ export default function BaseModalFooter({
   buttons = [],
   customButtons = [],
 }: BaseModalFooterProps) {
-  const defaultButtons = getDefaultButtons({ buttons });
+  const theme = useTheme();
+
+  const defaultButtons = getDefaultButtons({ buttons, theme });
   const mergedButtons = defaultButtons.concat(customButtons);
 
   const sortedButtons = mergedButtons.sort((a, b) => {
@@ -21,17 +24,17 @@ export default function BaseModalFooter({
   });
 
   return (
-    <View style={{ paddingVertical: 12 }}>
-      <Divider style={{ marginBottom: 12 }} />
+    <View style={{ paddingVertical: theme.spacing(3) }}>
+      <Divider style={{ marginBottom: theme.spacing(3) }} />
 
       <View
         style={{
-          marginHorizontal: 12,
+          marginHorizontal: theme.spacing(3),
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          gap: 12,
+          gap: theme.spacing(3),
         }}
       >
         {sortedButtons.map((item) => {

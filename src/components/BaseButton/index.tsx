@@ -1,4 +1,4 @@
-import colors from "@Colors";
+import useTheme from "@Hooks/useTheme";
 import {
   StyleProp,
   Text,
@@ -17,18 +17,24 @@ export default function BaseButton({
   children,
   ...rest
 }: BaseButtonProps) {
+  const theme = useTheme();
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={[
-        { backgroundColor: colors.primary.main, borderRadius: 4, padding: 8 },
+        {
+          backgroundColor: theme.palette.primary.main,
+          borderRadius: 4,
+          padding: theme.spacing(2),
+        },
         style,
       ]}
       {...rest}
     >
       <Text
         style={[
-          { textAlign: "center", color: colors.primary.contrast },
+          { textAlign: "center", color: theme.palette.primary.contrast },
           textStyle,
         ]}
       >

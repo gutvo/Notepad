@@ -1,4 +1,5 @@
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef } from "react";
 import BottomModalContext from "../context";
 
@@ -15,6 +16,7 @@ export default function BottomModalModal({
   onClose,
   children,
 }: BottomModalModalProps) {
+  const theme = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   useEffect(() => {
@@ -42,6 +44,10 @@ export default function BottomModalModal({
           disappearsOnIndex={-1}
         />
       )}
+      backgroundStyle={{ backgroundColor: theme.palette.background.body }}
+      handleIndicatorStyle={{
+        backgroundColor: theme.palette.background.textSecondary,
+      }}
     >
       <BottomModalContext.Provider value={{ title }}>
         {children}

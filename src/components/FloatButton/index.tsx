@@ -1,4 +1,4 @@
-import colors from "@Colors";
+import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
 import {
   Pressable,
@@ -19,6 +19,8 @@ export default function FloatingButton({
   icon,
   style,
 }: FloatingButtonProps) {
+  const theme = useTheme();
+
   const insets = useSafeAreaInsets();
 
   const customStyle:
@@ -33,14 +35,12 @@ export default function FloatingButton({
       width: 56,
       height: 56,
       borderRadius: 28,
-      backgroundColor: colors.primary.main,
+      backgroundColor: theme.palette.primary.main,
       alignItems: "center",
       justifyContent: "center",
       elevation: 6,
     },
-    pressed && {
-      opacity: 0.8,
-    },
+    pressed && { opacity: 0.8 },
     style,
   ];
 

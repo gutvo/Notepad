@@ -1,70 +1,74 @@
+import { ThemeProps } from "@Providers/ThemeProvider/types";
 import { TextStyle } from "react-native";
 
-export default function getVariantStyles(variant: BaseTypographyVariantProps) {
+export default function getVariantStyles(
+  variant: BaseTypographyVariantProps,
+  theme: ThemeProps,
+) {
   const typographyVariants: Record<BaseTypographyVariantProps, TextStyle> = {
     H1: {
-      fontSize: 32,
+      fontSize: theme.fontSize(8),
       lineHeight: 40,
       fontWeight: "700",
     },
 
     H2: {
-      fontSize: 28,
+      fontSize: theme.fontSize(7),
       lineHeight: 36,
       fontWeight: "700",
     },
 
     H3: {
-      fontSize: 24,
+      fontSize: theme.fontSize(6),
       lineHeight: 32,
       fontWeight: "600",
     },
 
     H4: {
-      fontSize: 20,
+      fontSize: theme.fontSize(5),
       lineHeight: 28,
       fontWeight: "600",
     },
 
     H5: {
-      fontSize: 18,
+      fontSize: theme.fontSize(5),
       lineHeight: 24,
       fontWeight: "600",
     },
 
     H6: {
-      fontSize: 16,
+      fontSize: theme.fontSize(4),
       lineHeight: 22,
       fontWeight: "600",
     },
 
     SUBTITLE1: {
-      fontSize: 16,
+      fontSize: theme.fontSize(4),
       lineHeight: 22,
       fontWeight: "500",
     },
 
     SUBTITLE2: {
-      fontSize: 14,
+      fontSize: theme.fontSize(3),
       lineHeight: 20,
       fontWeight: "500",
     },
 
     BODY1: {
-      fontSize: 16,
+      fontSize: theme.fontSize(4),
       lineHeight: 24,
       fontWeight: "400",
     },
 
     BODY2: {
-      fontSize: 14,
+      fontSize: theme.fontSize(3),
       lineHeight: 20,
       fontWeight: "400",
     },
 
     BUTTON: {
-      fontSize: 14,
-      lineHeight: 16,
+      fontSize: theme.fontSize(3),
+      lineHeight: theme.fontSize(4),
       fontWeight: "600",
       textTransform: "uppercase",
     },
