@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type FloatingButtonProps = {
   onPress: () => void;
@@ -18,6 +19,8 @@ export default function FloatingButton({
   icon,
   style,
 }: FloatingButtonProps) {
+  const insets = useSafeAreaInsets();
+
   const customStyle:
     | StyleProp<ViewStyle>
     | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>) = ({
@@ -25,7 +28,7 @@ export default function FloatingButton({
   }) => [
     {
       position: "absolute",
-      bottom: 24,
+      bottom: 20 + insets.bottom,
       right: 24,
       width: 56,
       height: 56,
