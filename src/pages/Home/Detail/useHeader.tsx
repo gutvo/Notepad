@@ -3,20 +3,23 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import useToast from "@Hooks/useToast";
 import { useCallback, useLayoutEffect } from "react";
+import { UseFormGetValues } from "react-hook-form";
 import { Text, TouchableOpacity } from "react-native";
 import createNote from "./utils/createNote";
 import updateNote from "./utils/updateNote";
 
 interface UseHeaderProps {
   id?: number;
-  description: string;
   handleOpenModal: () => void;
+  getValues: UseFormGetValues<{ description: string }>;
+  isDirty: boolean;
 }
 
 export default function useHeader({
-  description,
   id,
   handleOpenModal,
+  getValues,
+  isDirty,
 }: UseHeaderProps) {
   const toast = useToast();
   const navigation = useNavigation();
@@ -25,10 +28,14 @@ export default function useHeader({
     if (!navigation.canGoBack()) return;
 
     try {
-      if (id) {
-        updateNote({ description, toast, id });
-      } else {
-        createNote({ description, toast });
+      const description = getValues("description");
+
+      if (isDirty && description) {
+        if (id) {
+          updateNote({ description, toast, id });
+        } else {
+          createNote({ description, toast });
+        }
       }
 
       navigation.goBack();
@@ -37,7 +44,7 @@ export default function useHeader({
 
       toast.error(isUpdate ? "Erro ao atualizar nota!" : "Erro ao criar nota!");
     }
-  }, [description, id, navigation, toast]);
+  }, [getValues, id, isDirty, navigation, toast]);
 
   const headerLeft = useCallback(
     () => (

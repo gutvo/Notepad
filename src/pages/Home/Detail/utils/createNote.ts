@@ -9,8 +9,6 @@ export default async function createNote({
   description,
   toast,
 }: CreateNoteProps) {
-  if (!description) return;
-
   const data = { description };
 
   const createdNote = await actions.note.create(data);

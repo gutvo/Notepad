@@ -1,5 +1,6 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
 import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { TextInput, View } from "react-native";
 import TextConfigModal from "./TextConfigModal";
 import useGetDefaultSettings from "./useGetDefaultSettings";
@@ -14,7 +15,6 @@ export default function HomeDetail() {
 
   const [defaultSettings] = useGetDefaultSettings();
 
-  const [description, setDescription] = useState("");
   const [isOpenedModal, setIsOpenedModal] = useState(false);
 
   function handleOpenModal() {
@@ -25,27 +25,43 @@ export default function HomeDetail() {
     setIsOpenedModal(false);
   }
 
+  const {
+    control,
+    reset,
+    getValues,
+    formState: { isDirty },
+  } = useForm<{ description: string }>({
+    defaultValues: { description: note?.description || "" },
+  });
+
   useEffect(() => {
     if (note) {
-      setDescription(note.description);
+      reset({ description: note.description });
     }
-  }, [note]);
+  }, [note, reset]);
 
-  useHeader({ id: noteId, description, handleOpenModal });
+  useHeader({ id: noteId, getValues, isDirty, handleOpenModal });
 
   return (
     <>
       <View style={{ flex: 1 }}>
-        <TextInput
-          multiline
-          value={description}
-          onChangeText={setDescription}
-          textAlignVertical="top"
-          style={{
-            flex: 1,
-            padding: 16,
-            fontSize: (defaultSettings.TEXT_FONT_SIZE as number) ?? 16,
-          }}
+        <Controller
+          control={control}
+          name="description"
+          render={({ field: { onChange, value, onBlur } }) => (
+            <TextInput
+              multiline
+              onBlur={onBlur}
+              value={value}
+              onChangeText={onChange}
+              textAlignVertical="top"
+              style={{
+                flex: 1,
+                padding: 16,
+                fontSize: (defaultSettings.TEXT_FONT_SIZE as number) ?? 16,
+              }}
+            />
+          )}
         />
       </View>
 

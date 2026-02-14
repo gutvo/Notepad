@@ -11,8 +11,6 @@ export default async function updateNote({
   toast,
   id,
 }: UpdateNoteProps) {
-  if (!description) return;
-
   const data = { description };
 
   const updatedNote = await actions.note.update(id, data);
