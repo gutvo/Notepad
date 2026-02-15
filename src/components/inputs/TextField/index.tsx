@@ -50,7 +50,7 @@ export default function TextField({
               left: 12,
               paddingHorizontal: theme.spacing(1),
               backgroundColor: theme.palette.background.body,
-              color: theme.palette.background.border,
+              color: theme.palette.background.textPrimary,
               zIndex: 1,
             },
             textStyle,

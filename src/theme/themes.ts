@@ -1,67 +1,105 @@
+import defaultColors from "./defaultColors";
+
 /**
  * Temas de cores primárias disponíveis
  * Cada tema fornece variações: light, main, dark e contrast
  *
  * Uso: O usuário pode selecionar um destes temas como cor primária da aplicação
- * Atualmente, todos os 8 temas estão igualmente disponíveis no seletor de temas
+ * Cores otimizadas para acessibilidade WCAG AA (contraste 4.5:1)
+ * Cada tema utiliza sua escala de cinza tintada para coerência visual
  *
  * Futuro: Considere criar "temas recomendados" se necessário reduzir opções
  */
 
 const themeBlue = {
-  light: "#7da3ff",
-  main: "#2b67ff",
-  dark: "#193d99",
-  contrast: "#e5e7eb",
+  light: defaultColors.blueGrey[200],
+  main: defaultColors.blueGrey[600],
+  dark: defaultColors.blueGrey[900],
+  contrast: "#ffffff",
 };
 
 const themePurple = {
-  light: "#b197fc",
-  main: "#7c3aed",
-  dark: "#4c1d95",
-  contrast: "#f3e8ff",
+  light: defaultColors.purpleGrey[200],
+  main: defaultColors.purpleGrey[600],
+  dark: defaultColors.purpleGrey[900],
+  contrast: "#ffffff",
 };
 
 const themeGreen = {
-  light: "#86efac",
-  main: "#16a34a",
-  dark: "#14532d",
-  contrast: "#dcfce7",
+  light: defaultColors.greenGrey[200],
+  main: defaultColors.greenGrey[600],
+  dark: defaultColors.greenGrey[900],
+  contrast: "#ffffff",
 };
 
 const themeRed = {
-  light: "#fca5a5",
-  main: "#dc2626",
-  dark: "#7f1d1d",
-  contrast: "#fee2e2",
+  light: defaultColors.redGrey[200],
+  main: defaultColors.redGrey[600],
+  dark: defaultColors.redGrey[900],
+  contrast: "#ffffff",
 };
 
 const themeOrange = {
-  light: "#fdba74",
-  main: "#ea580c",
-  dark: "#7c2d12",
-  contrast: "#ffedd5",
+  light: defaultColors.orangeGrey[200],
+  main: defaultColors.orangeGrey[600],
+  dark: defaultColors.orangeGrey[900],
+  contrast: "#ffffff",
 };
 
 const themeTeal = {
-  light: "#5eead4",
-  main: "#0d9488",
-  dark: "#134e4a",
-  contrast: "#ccfbf1",
+  light: defaultColors.tealGrey[200],
+  main: defaultColors.tealGrey[600],
+  dark: defaultColors.tealGrey[900],
+  contrast: "#ffffff",
 };
 
 const themePink = {
-  light: "#f9a8d4",
-  main: "#db2777",
-  dark: "#831843",
-  contrast: "#fce7f3",
+  light: defaultColors.pinkGrey[200],
+  main: defaultColors.pinkGrey[600],
+  dark: defaultColors.pinkGrey[900],
+  contrast: "#ffffff",
 };
 
 const themeIndigo = {
-  light: "#a5b4fc",
-  main: "#4f46e5",
-  dark: "#1e1b4b",
-  contrast: "#e0e7ff",
+  light: defaultColors.indigoGrey[200],
+  main: defaultColors.indigoGrey[600],
+  dark: defaultColors.indigoGrey[900],
+  contrast: "#ffffff",
+};
+
+const themeAmber = {
+  light: defaultColors.amberGrey[200],
+  main: defaultColors.amberGrey[600],
+  dark: defaultColors.amberGrey[900],
+  contrast: "#ffffff",
+};
+
+const themeViolet = {
+  light: defaultColors.violetGrey[200],
+  main: defaultColors.violetGrey[600],
+  dark: defaultColors.violetGrey[900],
+  contrast: "#ffffff",
+};
+
+const themeCyan = {
+  light: defaultColors.cyanGrey[200],
+  main: defaultColors.cyanGrey[600],
+  dark: defaultColors.cyanGrey[900],
+  contrast: "#ffffff",
+};
+
+const themeSlate = {
+  light: defaultColors.slateGrey[200],
+  main: defaultColors.slateGrey[600],
+  dark: defaultColors.slateGrey[900],
+  contrast: "#ffffff",
+};
+
+const themeZinc = {
+  light: defaultColors.zincGrey[200],
+  main: defaultColors.zincGrey[600],
+  dark: defaultColors.zincGrey[900],
+  contrast: "#ffffff",
 };
 
 /** Array de todos os temas disponíveis */
@@ -74,6 +112,11 @@ const themes = [
   themePurple,
   themeRed,
   themeTeal,
+  themeAmber,
+  themeViolet,
+  themeCyan,
+  themeSlate,
+  themeZinc,
 ];
 
 export { themes };

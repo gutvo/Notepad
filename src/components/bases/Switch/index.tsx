@@ -56,7 +56,7 @@ export default function BaseSwitch({
         <BaseTypography
           variant="BODY2"
           style={{
-            color: theme.palette.background.border,
+            color: theme.palette.background.textPrimary,
             marginBottom: theme.spacing(dimentions.labelMarginBottom),
           }}
         >
