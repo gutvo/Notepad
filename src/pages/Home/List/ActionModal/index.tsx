@@ -1,5 +1,5 @@
+import BaseBottomModal from "@Components/BaseBottomModal";
 import BaseIcon from "@Components/BaseIcon";
-import BottomModal from "@Components/BottomModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
@@ -73,17 +73,17 @@ export default function ActionModal({
   ];
 
   return (
-    <BottomModal.Modal
+    <BaseBottomModal.Modal
       isOpen={isOpenModal}
       title="Opções"
       onClose={handleCloseModal}
     >
-      <BottomModal.FlatList
+      <BaseBottomModal.FlatList
         data={options}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => <CustomListItem item={item} />}
         contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
-    </BottomModal.Modal>
+    </BaseBottomModal.Modal>
   );
 }
