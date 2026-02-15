@@ -1,6 +1,6 @@
 import actions from "@Actions";
-import BaseModal from "@Components/BaseModal";
 import BaseIcon from "@Components/bases/Icon";
+import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/BaseTypography";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";

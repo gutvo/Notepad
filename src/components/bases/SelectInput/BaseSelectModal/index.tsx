@@ -1,6 +1,6 @@
-import BaseModal from "@Components/BaseModal";
 import BaseButton from "@Components/bases/Button";
 import BaseDivider from "@Components/bases/Divider";
+import BaseModal from "@Components/bases/Modal";
 import useTheme from "@Hooks/useTheme";
 import { FlashList } from "@shopify/flash-list";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";

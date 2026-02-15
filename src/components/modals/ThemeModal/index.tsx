@@ -1,5 +1,5 @@
 import actions from "@Actions";
-import BaseModal from "@Components/BaseModal";
+import BaseModal from "@Components/bases/Modal";
 import BaseSwitch from "@Components/bases/Switch";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";

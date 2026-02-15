@@ -1,4 +1,4 @@
-import BaseModal from "@Components/BaseModal/Modal";
+import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import { DrizzleError } from "drizzle-orm";
@@ -35,7 +35,7 @@ export default function MigrationModal({
   }, [error, success]);
 
   return (
-    <BaseModal visible={isOpenModal}>
+    <BaseModal.Modal visible={isOpenModal}>
       <View
         style={{
           flex: 1,
@@ -67,6 +67,6 @@ export default function MigrationModal({
           </BaseTypography>
         )}
       </View>
-    </BaseModal>
+    </BaseModal.Modal>
   );
 }
