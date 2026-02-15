@@ -1,4 +1,4 @@
-import ConfigModal from "@Components/ConfigModal";
+import ConfigModal from "@Components/modals/ConfigModal";
 import MigrationModal from "@Components/modals/MigrationModal";
 import database from "@Database";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
