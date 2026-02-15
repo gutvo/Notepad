@@ -18,13 +18,13 @@ export default function Drawer() {
     {
       name: "config",
       label: locales.home.list.drawer.config,
-      icon: <BaseIcon name="cog-outline" />,
+      icon: <BaseIcon name="settings" />,
       onclick: () => openModal("CONFIG"),
     },
     {
       name: "theme",
       label: locales.home.list.drawer.theme,
-      icon: <BaseIcon name="theme-light-dark" />,
+      icon: <BaseIcon name="sun" />,
       onclick: () => openModal("THEME"),
     },
   ];

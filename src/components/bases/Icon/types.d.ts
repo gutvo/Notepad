@@ -1,20 +1,19 @@
 type BaseIconSizeProps = "small" | "medium" | "large";
 
 type BaseIconNameProps =
-  | "close"
+  | "x"
   | "check"
   | "arrow-left"
   | "plus"
   | "menu"
-  | "magnify"
-  | "eye-outline"
-  | "content-duplicate"
-  | "delete-outline"
-  | "cog-outline"
-  | "theme-light-dark"
-  | "check-circle-outline"
-  | "close-circle-outline"
-  | "alert-circle-outline"
-  | "information-outline"
-  | "weather-sunny"
-  | "moon-waning-crescent";
+  | "search"
+  | "eye"
+  | "copy"
+  | "trash-2"
+  | "settings"
+  | "sun"
+  | "moon"
+  | "check-circle"
+  | "x-circle"
+  | "alert-circle"
+  | "info";

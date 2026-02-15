@@ -89,7 +89,7 @@ export default function useHeader() {
     () => (
       <BaseButton onPress={handleOnClick}>
         <BaseIcon
-          name="magnify"
+          name="search"
           color={theme.palette.primary.contrast}
           style={{ marginLeft: theme.spacing(3) }}
         />

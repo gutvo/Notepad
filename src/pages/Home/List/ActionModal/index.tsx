@@ -59,17 +59,17 @@ export default function ActionModal({
     {
       name: locales.home.list.actionModal.actions.view,
       onClick: handleVisualizeNote,
-      Icon: <BaseIcon name="eye-outline" />,
+      Icon: <BaseIcon name="eye" />,
     },
     {
       name: locales.home.list.actionModal.actions.duplicate,
       onClick: handleDuplicateNote,
-      Icon: <BaseIcon name="content-duplicate" />,
+      Icon: <BaseIcon name="copy" />,
     },
     {
       name: locales.home.list.actionModal.actions.delete,
       onClick: handleDeleteNote,
-      Icon: <BaseIcon name="delete-outline" />,
+      Icon: <BaseIcon name="trash-2" />,
     },
   ];
 

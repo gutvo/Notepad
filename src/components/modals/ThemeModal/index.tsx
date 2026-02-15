@@ -124,8 +124,8 @@ export default function ThemeModal() {
           render={({ field: { onChange, value, disabled } }) => (
             <BaseSwitch
               label={locales.theme.modal.section.darkMode.label}
-              disableIconName="weather-sunny"
-              enableIconName="moon-waning-crescent"
+              disableIconName="sun"
+              enableIconName="moon"
               value={value}
               onChange={onChange}
               disabled={disabled}
