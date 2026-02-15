@@ -21,6 +21,7 @@ export default function HomeList() {
   const { search } = useHeader();
 
   const { isOpen } = useCurrentModal("THEME");
+  const { isOpen: sideBarIsOpen } = useCurrentModal("SIDEBAR");
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState<NoteDataProps | null>(null);
@@ -43,7 +44,7 @@ export default function HomeList() {
 
   return (
     <>
-      <Drawer />
+      {sideBarIsOpen && <Drawer />}
 
       {isOpen && <ThemeModal />}
 

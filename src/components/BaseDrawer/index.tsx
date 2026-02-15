@@ -1,4 +1,5 @@
 import CustomModal from "@Components/CustomModal";
+import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import {
@@ -24,6 +25,13 @@ export default function BaseDrawer({
   children,
 }: BaseDrawerProps) {
   const theme = useTheme();
+
+  function onBackPress() {
+    onClose?.();
+    return true;
+  }
+
+  useOnGoBack({ onBackPress });
 
   const [isMounted, setIsMounted] = useState(visible);
   const translateX = useRef(new Animated.Value(-Drawer_WIDTH)).current;

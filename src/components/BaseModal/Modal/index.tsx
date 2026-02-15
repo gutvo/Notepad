@@ -1,4 +1,5 @@
 import CustomModal from "@Components/CustomModal";
+import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
 import {
@@ -25,6 +26,13 @@ export default function BaseModalModal({
   style,
 }: BaseModalProps) {
   const theme = useTheme();
+
+  function onBackPress() {
+    onClose?.();
+    return true;
+  }
+
+  useOnGoBack({ onBackPress });
 
   if (!visible) return null;
 
