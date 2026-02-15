@@ -1,5 +1,5 @@
-import BaseIcon from "@Components/BaseIcon";
 import BaseButton from "@Components/bases/Button";
+import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/BaseTypography";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";

@@ -1,4 +1,4 @@
-import BaseIcon from "@Components/BaseIcon";
+import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
