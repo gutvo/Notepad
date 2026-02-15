@@ -1,6 +1,6 @@
 import BaseSelectInput, {
   BaseSelectInputProps,
-} from "@Components/BaseSelectInput";
+} from "@Components/bases/SelectInput";
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
