@@ -1,6 +1,6 @@
+import BaseIcon from "@Components/BaseIcon";
 import BaseTypography from "@Components/BaseTypography";
 import CustomModal from "@Components/CustomModal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useTheme from "@Hooks/useTheme";
 import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -72,7 +72,7 @@ export default function BaseToast({
               borderLeftColor: color,
             }}
           >
-            <MaterialCommunityIcons name={icon} size={24} color={color} />
+            <BaseIcon name={icon} color={color} />
 
             <View style={{ flex: 1 }}>
               <BaseTypography variant="H6">

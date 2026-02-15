@@ -1,11 +1,10 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useTheme from "@Hooks/useTheme";
 
 type ToastConfigProps = Record<
   BaseToastType,
   {
     color: string;
-    icon: keyof typeof MaterialCommunityIcons.glyphMap;
+    icon: BaseIconNameProps;
     title: string;
   }
 >;

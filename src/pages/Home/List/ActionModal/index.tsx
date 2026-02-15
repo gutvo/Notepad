@@ -1,5 +1,5 @@
+import BaseIcon from "@Components/BaseIcon";
 import BottomModal from "@Components/BottomModal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
@@ -58,35 +58,17 @@ export default function ActionModal({
     {
       name: "Visualizar",
       onClick: handleVisualizeNote,
-      Icon: (
-        <MaterialCommunityIcons
-          name="eye-outline"
-          size={24}
-          color={theme.palette.background.textPrimary}
-        />
-      ),
+      Icon: <BaseIcon name="eye-outline" />,
     },
     {
       name: "Duplicar",
       onClick: handleDuplicateNote,
-      Icon: (
-        <MaterialCommunityIcons
-          name="content-duplicate"
-          size={24}
-          color={theme.palette.background.textPrimary}
-        />
-      ),
+      Icon: <BaseIcon name="content-duplicate" />,
     },
     {
       name: "Deletar",
       onClick: handleDeleteNote,
-      Icon: (
-        <MaterialCommunityIcons
-          name="delete-outline"
-          size={24}
-          color={theme.palette.background.textPrimary}
-        />
-      ),
+      Icon: <BaseIcon name="delete-outline" />,
     },
   ];
 

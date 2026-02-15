@@ -1,5 +1,5 @@
+import BaseIcon from "@Components/BaseIcon";
 import BaseTextField from "@Components/BaseTextField";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useNavigation from "@Hooks/useNavigation";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
@@ -35,9 +35,8 @@ export default function useHeader() {
       <>
         {isSearching ? (
           <TouchableOpacity onPress={handleGoBack}>
-            <MaterialCommunityIcons
+            <BaseIcon
               name="arrow-left"
-              size={28}
               color={theme.palette.primary.contrast}
               style={{ marginRight: theme.spacing(3) }}
             />
@@ -48,9 +47,8 @@ export default function useHeader() {
               openModal("SIDEBAR");
             }}
           >
-            <MaterialCommunityIcons
+            <BaseIcon
               name="menu"
-              size={28}
               color={theme.palette.primary.contrast}
               style={{ marginRight: theme.spacing(3) }}
             />
@@ -88,9 +86,8 @@ export default function useHeader() {
   const headerRight = useCallback(
     () => (
       <TouchableOpacity onPress={handleOnClick}>
-        <MaterialCommunityIcons
+        <BaseIcon
           name="magnify"
-          size={28}
           color={theme.palette.primary.contrast}
           style={{ marginLeft: theme.spacing(3) }}
         />

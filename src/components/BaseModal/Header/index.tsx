@@ -1,5 +1,5 @@
+import BaseIcon from "@Components/BaseIcon";
 import BaseTypography from "@Components/BaseTypography";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useTheme from "@Hooks/useTheme";
 import { TouchableOpacity, View } from "react-native";
 
@@ -37,10 +37,10 @@ export default function BasemodalHeader({
         onPress={onClose}
         style={{ position: "absolute", right: 0 }}
       >
-        <MaterialCommunityIcons
+        <BaseIcon
           name="close"
           color={theme.palette.primary.contrast}
-          size={32}
+          size="large"
         />
       </TouchableOpacity>
     </View>

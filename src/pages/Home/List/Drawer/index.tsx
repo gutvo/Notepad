@@ -1,7 +1,7 @@
 import BaseDrawer from "@Components/BaseDrawer";
+import BaseIcon from "@Components/BaseIcon";
 import BaseTypography from "@Components/BaseTypography";
 import Divider from "@Components/List/Divider";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
@@ -17,25 +17,13 @@ export default function Drawer() {
     {
       name: "config",
       label: "Configuração",
-      icon: (
-        <MaterialCommunityIcons
-          name="cog-outline"
-          color={theme.palette.background.textPrimary}
-          size={24}
-        />
-      ),
+      icon: <BaseIcon name="cog-outline" />,
       onclick: () => openModal("CONFIG"),
     },
     {
       name: "theme",
       label: "Temas",
-      icon: (
-        <MaterialCommunityIcons
-          name="theme-light-dark"
-          color={theme.palette.background.textPrimary}
-          size={24}
-        />
-      ),
+      icon: <BaseIcon name="theme-light-dark" />,
       onclick: () => openModal("THEME"),
     },
   ];

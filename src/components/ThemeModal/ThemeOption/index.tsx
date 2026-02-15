@@ -1,5 +1,5 @@
+import BaseIcon from "@Components/BaseIcon";
 import BaseTypography from "@Components/BaseTypography";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
 
@@ -35,13 +35,7 @@ export default function ThemeOption({
       />
       <BaseTypography style={{ flex: 1 }}>{label}</BaseTypography>
 
-      {selected && (
-        <MaterialCommunityIcons
-          name="check"
-          size={24}
-          color={theme.palette.background.textPrimary}
-        />
-      )}
+      {selected && <BaseIcon name="check" />}
     </View>
   );
 }

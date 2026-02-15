@@ -1,8 +1,8 @@
 import actions from "@Actions";
+import BaseIcon from "@Components/BaseIcon";
 import BaseModal from "@Components/BaseModal";
 import BaseTypography from "@Components/BaseTypography";
 import SelectInput from "@Components/SelectInput";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
@@ -84,13 +84,7 @@ export default function ConfigModal() {
                   >
                     <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
 
-                    {item === selectedItem && (
-                      <MaterialCommunityIcons
-                        name="check"
-                        color={theme.palette.background.textPrimary}
-                        size={24}
-                      />
-                    )}
+                    {item === selectedItem && <BaseIcon name="check" />}
                   </View>
                 );
               }}

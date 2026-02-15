@@ -1,7 +1,7 @@
+import BaseIcon from "@Components/BaseIcon";
 import FloatingButton from "@Components/FloatButton";
 import List from "@Components/List";
 import ThemeModal from "@Components/ThemeModal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useActionList } from "@Hooks/useActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
@@ -64,13 +64,7 @@ export default function HomeList() {
       </ScrollView>
       <FloatingButton
         onPress={() => navigation.navigate("HomeDetail")}
-        icon={
-          <MaterialCommunityIcons
-            name="plus"
-            size={24}
-            color={theme.palette.primary.contrast}
-          />
-        }
+        icon={<BaseIcon name="plus" color={theme.palette.primary.contrast} />}
       />
       <ActionModal
         isOpenModal={isOpenModal}

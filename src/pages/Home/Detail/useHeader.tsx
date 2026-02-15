@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import BaseIcon from "@Components/BaseIcon";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useOpenModal from "@Hooks/useOpenModal";
@@ -41,9 +41,8 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
         onPress={handleGoBack}
         style={{ marginRight: theme.spacing(3) }}
       >
-        <MaterialCommunityIcons
+        <BaseIcon
           name="arrow-left"
-          size={24}
           color={theme.palette.primary.contrast}
           style={{ marginRight: theme.spacing(3) }}
         />
@@ -62,11 +61,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
   const headerRight = useCallback(
     () => (
       <TouchableOpacity onPress={() => openModal("CONFIG")}>
-        <MaterialCommunityIcons
-          name="cog"
-          size={24}
-          color={theme.palette.primary.contrast}
-        />
+        <BaseIcon color={theme.palette.primary.contrast} name="cog-outline" />
       </TouchableOpacity>
     ),
     [openModal, theme.palette.primary.contrast],

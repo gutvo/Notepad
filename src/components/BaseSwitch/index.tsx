@@ -1,17 +1,15 @@
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
-import React, { ComponentProps } from "react";
+import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import useCalculateDimetions from "./useCalculateDimetions";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-type IconNameProps = ComponentProps<typeof MaterialCommunityIcons>["name"];
+import BaseIcon from "@Components/BaseIcon";
 
 interface BaseSwitchProps {
   label?: string;
-  enableIconName?: IconNameProps;
-  disableIconName?: IconNameProps;
+  enableIconName?: BaseIconNameProps;
+  disableIconName?: BaseIconNameProps;
   width?: number;
   height?: number;
   value?: boolean;
@@ -102,13 +100,13 @@ export default function BaseSwitch({
             }}
           >
             {value && enableIconName ? (
-              <MaterialCommunityIcons
+              <BaseIcon
                 name={enableIconName}
                 size={dimentions.iconSize}
                 color={theme.palette.primary.contrast}
               />
             ) : !value && disableIconName ? (
-              <MaterialCommunityIcons
+              <BaseIcon
                 name={disableIconName}
                 size={dimentions.iconSize}
                 color={theme.palette.primary.contrast}
