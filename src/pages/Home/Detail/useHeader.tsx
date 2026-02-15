@@ -22,7 +22,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
     if (!navigation.canGoBack()) return true;
 
     if (!isDirty) {
-      navigation.goBack();
+      navigation.back();
       return true;
     }
 

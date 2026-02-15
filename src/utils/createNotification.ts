@@ -1,7 +1,7 @@
 import actions from "@Actions";
 import database from "@Database";
 import * as Notifications from "expo-notifications";
-// import { PageNames } from "../routes";
+import { Href } from "expo-router";
 
 interface CreateNotificationProps {
   title: string;
@@ -11,7 +11,7 @@ interface CreateNotificationProps {
   noteId: number;
 }
 
-// const DETAIL_PAGE_URL: PageNames = "HomeDetail";
+const DETAIL_PAGE_URL: Href = "/home/detail";
 
 export default async function createNotification({
   title,
@@ -35,7 +35,7 @@ export default async function createNotification({
               title,
               body,
               sound: true,
-              data: { url: "home", params: { id: noteId } },
+              data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
             },
             trigger: {
               type: Notifications.SchedulableTriggerInputTypes.CALENDAR,

@@ -1,5 +1,5 @@
 import HomeList from "@Pages/Home/List";
 
-export default function Routes() {
+export default function HomeListPage() {
   return <HomeList />;
 }

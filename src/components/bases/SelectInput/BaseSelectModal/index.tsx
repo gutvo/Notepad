@@ -1,9 +1,8 @@
 import BaseButton from "@Components/bases/Button";
-import BaseDivider from "@Components/bases/Divider";
+import BaseFlashList from "@Components/bases/FlashList";
 import BaseModal from "@Components/bases/Modal";
 import useTheme from "@Hooks/useTheme";
 import locales from "@Locales";
-import { FlashList } from "@shopify/flash-list";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
 
@@ -65,7 +64,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
     >
       <BaseModal.Container style={{ flex: undefined }}>
         <View style={{ height: listHeight }}>
-          <FlashList
+          <BaseFlashList
             data={options}
             renderItem={({ item, index }) => (
               <BaseButton
@@ -75,9 +74,6 @@ export default function BaseSelectModal<DataProps, ValueProps>({
                 {renderItem({ item, selectedItem, index })}
               </BaseButton>
             )}
-            ItemSeparatorComponent={() => <BaseDivider />}
-            showsVerticalScrollIndicator
-            indicatorStyle={theme.palette.isDarkMode ? "white" : "black"}
           />
         </View>
       </BaseModal.Container>

@@ -1,10 +1,10 @@
 import * as Notifications from "expo-notifications";
+import { Href } from "expo-router";
 import { useCallback, useEffect } from "react";
-import { PageNames } from "../routes";
 import useNavigation from "./useNavigation";
 
 interface NotificationDataProps {
-  url?: PageNames;
+  url?: Href;
   params?: any;
 }
 
@@ -26,8 +26,7 @@ export default function useNotificationObserver({
 
       if (!url) return;
 
-      const params = data?.params;
-      navigation.push(url, params);
+      navigation.navigate(url);
     },
     [navigation, isThemeLoading],
   );

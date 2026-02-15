@@ -1,4 +1,3 @@
-import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
@@ -14,13 +13,14 @@ import createNote from "./utils/createNote";
 import deleteNote from "./utils/deleteNote";
 import updateNote from "./utils/updateNote";
 
-export default function HomeDetail() {
+interface HomeDetailProps {
+  noteId?: number;
+}
+
+export default function HomeDetail({ noteId }: HomeDetailProps) {
   const theme = useTheme();
   const toast = useToast();
   const navigation = useNavigation();
-
-  const params = useGlobalSearchParams("HomeDetail");
-  const noteId = params?.id ? Number(params?.id) : undefined;
 
   const [note] = useGetNote({ noteId });
 
@@ -42,13 +42,13 @@ export default function HomeDetail() {
     try {
       if (isDelete) {
         await deleteNote({ id: noteId, toast });
-        navigation.goBack();
+        navigation.back();
       } else if (isUpdate) {
         await updateNote({ id: noteId, description: data.description, toast });
-        navigation.goBack();
+        navigation.back();
       } else {
         await createNote({ description: data.description, toast });
-        navigation.goBack();
+        navigation.back();
       }
     } catch {
       if (isDelete) {

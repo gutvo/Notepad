@@ -1,17 +1,16 @@
 import BaseButton from "@Components/bases/Button";
-import BaseDivider from "@Components/bases/Divider";
 import BaseDrawer from "@Components/bases/Drawer";
+import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useNavigation from "@Hooks/useNavigation";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import locales from "@Locales";
-import { FlashList } from "@shopify/flash-list";
-import { useRouter } from "expo-router";
 
 export default function Drawer() {
-  const router = useRouter();
+  const navigation = useNavigation();
   const theme = useTheme();
   const openModal = useOpenModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
@@ -21,7 +20,10 @@ export default function Drawer() {
       name: "reminder",
       label: locales.home.list.drawer.reminder,
       icon: <BaseIcon name="bell" />,
-      onclick: () => router.push("/reminders"),
+      onclick: () => {
+        navigation.navigate("/reminders/list");
+        closeModal();
+      },
     },
     {
       name: "config",
@@ -43,7 +45,7 @@ export default function Drawer() {
         {locales.home.list.drawer.title}
       </BaseTypography>
 
-      <FlashList
+      <BaseFlashList
         data={options}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
@@ -60,7 +62,6 @@ export default function Drawer() {
             <BaseTypography>{item.label}</BaseTypography>
           </BaseButton>
         )}
-        ItemSeparatorComponent={() => <BaseDivider />}
       />
     </BaseDrawer>
   );
