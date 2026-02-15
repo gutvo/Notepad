@@ -20,6 +20,7 @@ const locales = {
   home: {
     list: {
       drawer: {
+        title: "Menu",
         config: "Configuração",
         theme: "Temas",
       },

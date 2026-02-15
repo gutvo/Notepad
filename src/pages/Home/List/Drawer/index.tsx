@@ -32,7 +32,7 @@ export default function Drawer() {
   return (
     <BaseDrawer visible={isOpen} onClose={closeModal}>
       <BaseTypography variant="H4" style={{ padding: theme.spacing(5) }}>
-        Menu
+        {locales.home.list.drawer.title}
       </BaseTypography>
 
       <FlashList
