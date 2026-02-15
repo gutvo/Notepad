@@ -1,7 +1,7 @@
-import { Portal } from "@Components/Portal";
 import { ReactNode } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Portal } from "./Portal";
 
 interface CustomModalProps {
   children: ReactNode;
