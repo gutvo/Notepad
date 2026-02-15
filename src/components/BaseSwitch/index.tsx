@@ -5,7 +5,7 @@ import { View } from "react-native";
 import useCalculateDimetions from "./useCalculateDimetions";
 
 import BaseIcon from "@Components/BaseIcon";
-import BaseButton from "@Components/bases/BaseButton";
+import BaseButton from "@Components/bases/Button";
 
 interface BaseSwitchProps {
   label?: string;

@@ -1,7 +1,7 @@
 import BaseDivider from "@Components/BaseDivider";
 import BaseDrawer from "@Components/BaseDrawer";
 import BaseIcon from "@Components/BaseIcon";
-import BaseButton from "@Components/bases/BaseButton";
+import BaseButton from "@Components/bases/Button";
 import BaseTypography from "@Components/BaseTypography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";

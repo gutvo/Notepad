@@ -1,5 +1,5 @@
 import BaseIcon from "@Components/BaseIcon";
-import BaseButton from "@Components/bases/BaseButton";
+import BaseButton from "@Components/bases/Button";
 import BaseTypography from "@Components/BaseTypography";
 import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
