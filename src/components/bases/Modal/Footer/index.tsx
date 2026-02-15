@@ -46,7 +46,7 @@ export default function BaseModalFooter({
               disabled={item.disabled}
               onPress={item.onClick}
               style={[
-                { width: 100 },
+                { minWidth: 120 },
                 item.backgroundColor && {
                   backgroundColor: item.backgroundColor,
                 },
