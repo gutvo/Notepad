@@ -1,5 +1,5 @@
+import actions from "@Actions";
 import { useCallback, useEffect, useState } from "react";
-import actions from "src/database/actions";
 
 interface useGetNoteProps {
   noteId?: number;

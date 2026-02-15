@@ -1,4 +1,5 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
+import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { useEffect } from "react";
@@ -15,6 +16,7 @@ import updateNote from "./utils/updateNote";
 export default function HomeDetail() {
   const theme = useTheme();
   const toast = useToast();
+  const navigation = useNavigation();
 
   const params = useGlobalSearchParams("HomeDetail");
   const noteId = params?.id ? Number(params?.id) : undefined;
@@ -39,10 +41,13 @@ export default function HomeDetail() {
     try {
       if (isDelete) {
         await deleteNote({ id: noteId, toast });
+        navigation.goBack();
       } else if (isUpdate) {
         await updateNote({ id: noteId, description: data.description, toast });
+        navigation.goBack();
       } else {
         await createNote({ description: data.description, toast });
+        navigation.goBack();
       }
     } catch {
       if (isDelete) {

@@ -8,14 +8,11 @@ export default async function updateNote(
   id: number,
   data: UpdateNoteDataProps,
 ) {
-  const updated = await database
-    .update(noteSchema)
-    .set(data)
-    .where(eq(noteSchema.id, id));
+  await database.update(noteSchema).set(data).where(eq(noteSchema.id, id));
 
   dataEvents.emit();
 
-  const updatedNote = await findNote(updated.lastInsertRowId);
+  const updatedNote = await findNote(id);
 
   return updatedNote;
 }

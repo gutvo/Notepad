@@ -1,7 +1,7 @@
 import actions from "@Actions";
 import seeds from "@Seeds";
+import saveSeed from "@Utils/saveSeed";
 import { useEffect } from "react";
-import saveSeed from "src/utils/saveSeed";
 
 export default function useSaveSeeds(migrationsSuccess: boolean) {
   useEffect(() => {

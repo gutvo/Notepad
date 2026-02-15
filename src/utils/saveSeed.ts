@@ -34,9 +34,5 @@ export default async function saveSeed<DataProps>({
     return accumulator;
   }, []);
 
-  await Promise.all(
-    createData.map(async (createData) => {
-      action.create(createData);
-    }),
-  );
+  await Promise.all(createData.map((item) => action.create(item)));
 }

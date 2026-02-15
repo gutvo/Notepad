@@ -1,10 +1,10 @@
+import actions from "@Actions";
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { Dispatch, SetStateAction } from "react";
-import actions from "src/database/actions";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {

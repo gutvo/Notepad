@@ -29,7 +29,9 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
       .then(() => {
         navigation.goBack();
       })
-      .catch(() => {});
+      .catch((_error) => {
+        // Error is handled by the toast in onSubmit
+      });
 
     return true;
   }, [isDirty, navigation, onSubmit]);
