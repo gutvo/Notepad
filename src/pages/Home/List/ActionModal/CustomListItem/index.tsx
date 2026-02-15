@@ -1,4 +1,4 @@
-import BaseDivider from "@Components/BaseDivider";
+import BaseDivider from "@Components/bases/Divider";
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";

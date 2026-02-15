@@ -1,4 +1,4 @@
-import BaseDivider from "@Components/BaseDivider";
+import BaseDivider from "@Components/bases/Divider";
 import Button from "@Components/buttons/Button";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
