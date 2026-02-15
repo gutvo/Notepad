@@ -2,7 +2,6 @@ import BaseButton from "@Components/bases/Button";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
 import { ViewStyle } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type FloatingButtonProps = {
   onPress: () => void;
@@ -17,15 +16,13 @@ export default function FloatingButton({
 }: FloatingButtonProps) {
   const theme = useTheme();
 
-  const insets = useSafeAreaInsets();
-
   return (
     <BaseButton
       onPress={onPress}
       style={[
         {
           position: "absolute",
-          bottom: insets.bottom,
+          bottom: 24,
           right: 24,
           width: 56,
           height: 56,

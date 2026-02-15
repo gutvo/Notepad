@@ -4,7 +4,6 @@ import BaseTypography from "@Components/bases/Typography";
 import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
 import { Animated, Dimensions, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useToastConfig from "./toastConfig";
 import useAnimation from "./useAnimation";
 
@@ -24,7 +23,6 @@ export default function BaseToast({
   index,
 }: BaseToastProps) {
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
 
   const toastConfig = useToastConfig();
 
@@ -40,7 +38,7 @@ export default function BaseToast({
     <BaseModalWrapper priority={1}>
       <Animated.View
         style={{
-          top: insets.top + 10 + index * 90,
+          top: index * 90,
           transform: [{ translateY }],
           opacity,
           position: "absolute",
