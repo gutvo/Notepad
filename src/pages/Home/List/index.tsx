@@ -1,7 +1,7 @@
 import BaseIcon from "@Components/BaseIcon";
 import FloatingButton from "@Components/FloatButton";
 import List from "@Components/List";
-import ThemeModal from "@Components/ThemeModal";
+import ThemeModal from "@Components/modals/ThemeModal";
 import { useActionList } from "@Hooks/useActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
