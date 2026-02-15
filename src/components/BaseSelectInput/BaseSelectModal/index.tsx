@@ -59,7 +59,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
       visible={isOpenModal}
       title="Selecione"
       onClose={onClose}
-      style={{ minHeight: 0, maxHeight: "70%" }}
+      style={{ minHeight: 0 }}
     >
       <BaseModal.Container style={{ flex: undefined }}>
         <View style={{ height: listHeight }}>
