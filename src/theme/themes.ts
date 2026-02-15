@@ -1,3 +1,13 @@
+/**
+ * Temas de cores primárias disponíveis
+ * Cada tema fornece variações: light, main, dark e contrast
+ *
+ * Uso: O usuário pode selecionar um destes temas como cor primária da aplicação
+ * Atualmente, todos os 8 temas estão igualmente disponíveis no seletor de temas
+ *
+ * Futuro: Considere criar "temas recomendados" se necessário reduzir opções
+ */
+
 const themeBlue = {
   light: "#7da3ff",
   main: "#2b67ff",
@@ -54,6 +64,7 @@ const themeIndigo = {
   contrast: "#e0e7ff",
 };
 
+/** Array de todos os temas disponíveis */
 const themes = [
   themeBlue,
   themeGreen,

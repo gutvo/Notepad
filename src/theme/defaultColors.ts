@@ -1,28 +1,40 @@
+/**
+ * Cores padrão do projeto
+ * Definições base para status e escala de cinza
+ */
 const defaultColors = {
+  /**
+   * Cor informativa
+   * @usage Toast de informação, indicadores de status
+   */
   info: {
-    light: "#6fd3ff",
     main: "#0ea5e9",
-    dark: "#0369a1",
-    contrast: "#f9fafb",
   },
+  /**
+   * Cor de sucesso
+   * @usage Toast de sucesso, validações
+   */
   success: {
-    light: "#5bd395",
     main: "#0ea85c",
-    dark: "#086234",
-    contrast: "#e5e7eb",
   },
+  /**
+   * Cor de aviso
+   * @usage Toast de aviso, alertas não-críticos
+   */
   warning: {
-    light: "#ffbd3f",
     main: "#ffa800",
-    dark: "#805300",
-    contrast: "#1f2937",
   },
+  /**
+   * Cor de erro
+   * @usage Validações, erros, toasts de erro
+   */
   error: {
-    light: "#ea6c6c",
     main: "#cc2424",
-    dark: "#7a1515",
-    contrast: "#e5e7eb",
   },
+  /**
+   * Escala de cinza do projeto
+   * Usada para backgrounds, borders e tipografia secundária
+   */
   grey: {
     50: "#f9fafb",
     100: "#f3f4f6",
@@ -35,9 +47,11 @@ const defaultColors = {
     800: "#1f2937",
     900: "#111827",
   },
+  /**
+   * Cores comuns
+   */
   common: {
     black: "#000000",
-    white: "#ffffff",
   },
 };
 

@@ -23,7 +23,7 @@ export default function BaseDivider({
     <View
       style={[
         dividerStyle,
-        { backgroundColor: theme.palette.background.divider, opacity: 0.2 },
+        { backgroundColor: theme.palette.background.border, opacity: 0.2 },
         style,
       ]}
     />

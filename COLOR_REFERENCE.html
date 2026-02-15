@@ -1,0 +1,521 @@
+<!-- 
+  Color Reference HTML - Abra este arquivo em um navegador para ver a paleta de cores
+  Ref: src/theme/
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paleta de Cores - Notepad App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2b67ff;
+            border-bottom: 2px solid #2b67ff;
+            padding-bottom: 10px;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .color-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .color-box {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .color-info {
+            padding: 12px;
+            font-size: 12px;
+        }
+
+        .color-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .color-hex {
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .color-usage {
+            color: #999;
+            font-style: italic;
+            font-size: 11px;
+        }
+
+        .grey-scale {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .grey-card {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .grey-box {
+            height: 80px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .grey-info {
+            padding: 8px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .responsive-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .color-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Paleta de Cores - Notepad App</h1>
+
+    <div class="note success">
+        ✅ <strong>Status:</strong> Sistema de temas validado e otimizado
+    </div>
+
+    <!-- STATUS COLORS -->
+    <div class="section">
+        <h2>🔔 Cores de Status</h2>
+        <p>Cores para indicar o estado de operações e informações.</p>
+
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-box" style="background-color: #0ea5e9">
+                    Info
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Info</div>
+                    <div class="color-hex">#0ea5e9</div>
+                    <div class="color-usage">Toast informativo</div>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <div class="color-box" style="background-color: #0ea85c">
+                    Success
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Success</div>
+                    <div class="color-hex">#0ea85c</div>
+                    <div class="color-usage">Toast de sucesso</div>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <div class="color-box" style="background-color: #ffa800">
+                    Warning
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Warning</div>
+                    <div class="color-hex">#ffa800</div>
+                    <div class="color-usage">Toast de aviso</div>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <div class="color-box" style="background-color: #cc2424; color: white">
+                    Error
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Error</div>
+                    <div class="color-hex">#cc2424</div>
+                    <div class="color-usage">Validações, erros</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRIMARY COLORS -->
+    <div class="section">
+        <h2>🎯 Cores Primárias (Selecionáveis)</h2>
+        <p>Cores disponíveis para o usuário escolher como tema primário da aplicação.</p>
+
+        <div class="color-grid">
+            <!-- Blue -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #2b67ff">
+                    Blue
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Azul</div>
+                    <div class="color-hex">Light: #7da3ff</div>
+                    <div class="color-hex">Main: #2b67ff</div>
+                    <div class="color-hex">Dark: #193d99</div>
+                </div>
+            </div>
+
+            <!-- Green -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #16a34a">
+                    Green
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Verde</div>
+                    <div class="color-hex">Light: #86efac</div>
+                    <div class="color-hex">Main: #16a34a</div>
+                    <div class="color-hex">Dark: #14532d</div>
+                </div>
+            </div>
+
+            <!-- Purple -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #7c3aed">
+                    Purple
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Roxo</div>
+                    <div class="color-hex">Light: #b197fc</div>
+                    <div class="color-hex">Main: #7c3aed</div>
+                    <div class="color-hex">Dark: #4c1d95</div>
+                </div>
+            </div>
+
+            <!-- Red -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #dc2626">
+                    Red
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Vermelho</div>
+                    <div class="color-hex">Light: #fca5a5</div>
+                    <div class="color-hex">Main: #dc2626</div>
+                    <div class="color-hex">Dark: #7f1d1d</div>
+                </div>
+            </div>
+
+            <!-- Orange -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #ea580c">
+                    Orange
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Laranja</div>
+                    <div class="color-hex">Light: #fdba74</div>
+                    <div class="color-hex">Main: #ea580c</div>
+                    <div class="color-hex">Dark: #7c2d12</div>
+                </div>
+            </div>
+
+            <!-- Teal -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #0d9488">
+                    Teal
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Verde-Azulado</div>
+                    <div class="color-hex">Light: #5eead4</div>
+                    <div class="color-hex">Main: #0d9488</div>
+                    <div class="color-hex">Dark: #134e4a</div>
+                </div>
+            </div>
+
+            <!-- Pink -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #db2777">
+                    Pink
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Rosa</div>
+                    <div class="color-hex">Light: #f9a8d4</div>
+                    <div class="color-hex">Main: #db2777</div>
+                    <div class="color-hex">Dark: #831843</div>
+                </div>
+            </div>
+
+            <!-- Indigo -->
+            <div class="color-card">
+                <div class="color-box" style="background-color: #4f46e5">
+                    Indigo
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Índigo</div>
+                    <div class="color-hex">Light: #a5b4fc</div>
+                    <div class="color-hex">Main: #4f46e5</div>
+                    <div class="color-hex">Dark: #1e1b4b</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GREY SCALE -->
+    <div class="section">
+        <h2>⚫ Escala de Cinza</h2>
+        <p>Tons de cinza usados para backgrounds, bordas e textos secundários.</p>
+
+        <div class="grey-scale">
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #f9fafb; color: #333">50</div>
+                <div class="grey-info">#f9fafb<br>Fundo claro</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #f3f4f6; color: #333">100</div>
+                <div class="grey-info">#f3f4f6</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #e5e7eb; color: #333">200</div>
+                <div class="grey-info">#e5e7eb</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #d1d5db; color: #333">300<br>Pressed</div>
+                <div class="grey-info">#d1d5db</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #9ca3af">400</div>
+                <div class="grey-info">#9ca3af</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #6b7280">500<br>Borda</div>
+                <div class="grey-info">#6b7280<br>Light</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #4b5563">600</div>
+                <div class="grey-info">#4b5563</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #374151">700<br>Texto</div>
+                <div class="grey-info">#374151<br>Light</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #1f2937">800<br>Texto</div>
+                <div class="grey-info">#1f2937<br>Light</div>
+            </div>
+            <div class="grey-card">
+                <div class="grey-box" style="background-color: #111827">900<br>Escuro</div>
+                <div class="grey-info">#111827<br>Fundo dark</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACKGROUND THEME -->
+    <div class="section">
+        <h2>🌙 Temas de Background</h2>
+
+        <h3 style="margin-top: 20px; color: #2b67ff">Light Theme</h3>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-box" style="background-color: #f9fafb; color: #333">
+                    Body
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Fundo Principal</div>
+                    <div class="color-hex">#f9fafb</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-box" style="background-color: #1f2937">
+                    Text Primary
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Texto Principal</div>
+                    <div class="color-hex">#1f2937</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-box" style="background-color: #374151">
+                    Text Secondary
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Texto Secundário</div>
+                    <div class="color-hex">#374151</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-box" style="background-color: #6b7280">
+                    Border
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Bordas</div>
+                    <div class="color-hex">#6b7280</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 20px; color: #2b67ff">Dark Theme</h3>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-box" style="background-color: #111827">
+                    Body
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Fundo Principal</div>
+                    <div class="color-hex">#111827</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-box" style="background-color: #e5e7eb; color: #333">
+                    Text Primary
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Texto Principal</div>
+                    <div class="color-hex">#e5e7eb</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-box" style="background-color: #d1d5db; color: #333">
+                    Text Secondary
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Texto Secundário</div>
+                    <div class="color-hex">#d1d5db</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-box" style="background-color: #9ca3af">
+                    Border
+                </div>
+                <div class="color-info">
+                    <div class="color-name">Bordas</div>
+                    <div class="color-hex">#9ca3af</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- USAGE EXAMPLES -->
+    <div class="section">
+        <h2>💡 Exemplos de Uso</h2>
+
+        <div style="margin-bottom: 20px;">
+            <strong>Botão Primário:</strong>
+            <code>backgroundColor: theme.palette.primary.main</code><br>
+            <code>color: theme.palette.primary.contrast</code>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <strong>Input com Erro:</strong>
+            <code>borderColor: theme.palette.error.main</code><br>
+            <code>color: theme.palette.error.main</code>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <strong>Texto Primário:</strong>
+            <code>color: theme.palette.background.textPrimary</code>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <strong>Fundo:</strong>
+            <code>backgroundColor: theme.palette.background.body</code>
+        </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="note success">
+        <strong>✅ Validado:</strong> Todas as cores estão em uso no projeto
+    </div>
+
+    <div class="note">
+        <strong>📝 Documentação:</strong> Ver arquivos <code>THEME_GUIDE.md</code> e <code>THEME_AUDIT_REPORT.md</code>
+    </div>
+
+    <div class="note">
+        <strong>🔄 Alterações Recentes:</strong> Sistema foi otimizado em 15/02/2026. Variáveis não utilizadas foram removidas.
+    </div>
+
+</body>
+</html>
