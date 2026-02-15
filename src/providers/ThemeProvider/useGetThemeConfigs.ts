@@ -4,6 +4,9 @@ import {
   setThemeIndex,
 } from "@Utils/themeStorage";
 import { useCallback, useEffect, useState } from "react";
+import { Appearance } from "react-native";
+
+const colorScheme = Appearance.getColorScheme();
 
 interface ThemeConfigProps {
   THEME_INDEX: number;
@@ -12,12 +15,13 @@ interface ThemeConfigProps {
 
 const DEFAULT_THEME_CONFIG = {
   THEME_INDEX: 0,
-  THEME_IS_DARK_MODE: true,
+  THEME_IS_DARK_MODE: colorScheme === "dark",
 } as const;
 
 export default function useGetThemeConfigs() {
   const [themeConfigs, setThemeConfigs] =
     useState<ThemeConfigProps>(DEFAULT_THEME_CONFIG);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadThemeConfigs = useCallback(async () => {
     try {
@@ -28,6 +32,8 @@ export default function useGetThemeConfigs() {
       });
     } catch {
       setThemeConfigs(DEFAULT_THEME_CONFIG);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -49,5 +55,6 @@ export default function useGetThemeConfigs() {
     themeConfigs,
     updateThemeIndex,
     updateDarkMode,
+    isLoading,
   } as const;
 }

@@ -34,13 +34,18 @@ export default function BasemodalHeader({
         {title}
       </BaseTypography>
 
-      <BaseButton onPress={onClose} style={{ position: "absolute", right: 0 }}>
-        <BaseIcon
-          name="close"
-          color={theme.palette.primary.contrast}
-          size="large"
-        />
-      </BaseButton>
+      {onClose && (
+        <BaseButton
+          onPress={onClose}
+          style={{ position: "absolute", right: 0 }}
+        >
+          <BaseIcon
+            name="close"
+            color={theme.palette.primary.contrast}
+            size="large"
+          />
+        </BaseButton>
+      )}
     </View>
   );
 }

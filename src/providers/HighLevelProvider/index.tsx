@@ -2,6 +2,7 @@ import ConfigModal from "@Components/modals/ConfigModal";
 import MigrationModal from "@Components/modals/MigrationModal";
 import database from "@Database";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useIsThemeLoading from "@Hooks/useIsThemeLoading";
 import useSaveSeeds from "@Hooks/useSaveSeeds";
 import useTheme from "@Hooks/useTheme";
 import migrations from "@Migrations";
@@ -19,22 +20,26 @@ export default function HighLevelProvider({
 }: HighLevelProviderProps) {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const isThemeLoading = useIsThemeLoading();
 
   const { isOpen } = useCurrentModal("CONFIG");
 
-  const { success, error } = useMigrations(database, migrations);
+  const { error, success } = useMigrations(database, migrations);
 
   useSaveSeeds(success);
 
-  if (error || !success) {
+  // While theme is loading, show empty view with theme background
+  if (isThemeLoading) {
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: theme.palette.background.body,
-          width: "100%",
-        }}
-      >
+        style={{ flex: 1, backgroundColor: theme.palette.background.body }}
+      />
+    );
+  }
+
+  if (error || !success) {
+    return (
+      <View style={{ flex: 1, backgroundColor: theme.palette.background.body }}>
         <MigrationModal error={error} success={success} />
       </View>
     );

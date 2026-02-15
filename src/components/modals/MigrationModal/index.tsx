@@ -42,11 +42,11 @@ export default function MigrationModal({
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          gap: theme.spacing(5),
+          gap: theme.spacing(10),
           padding: theme.spacing(5),
         }}
       >
-        <ActivityIndicator size={50} color={theme.palette.primary.main} />
+        <ActivityIndicator size={80} color={theme.palette.primary.main} />
 
         {error && (
           <>

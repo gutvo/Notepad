@@ -11,7 +11,7 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-  const { themeConfigs, updateThemeIndex, updateDarkMode } =
+  const { themeConfigs, updateThemeIndex, updateDarkMode, isLoading } =
     useGetThemeConfigs();
 
   const theme: ThemeProps = useMemo(
@@ -40,8 +40,8 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
   );
 
   const contextValue = useMemo(
-    () => ({ changeTheme, theme }),
-    [changeTheme, theme],
+    () => ({ changeTheme, theme, isThemeLoading: isLoading }),
+    [changeTheme, theme, isLoading],
   );
 
   return (

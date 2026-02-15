@@ -65,7 +65,9 @@ export default function BaseModalModal({
                 style,
               ]}
             >
-              <BasemodalHeader title={title} onClose={onClose} />
+              {(title || onClose) && (
+                <BasemodalHeader title={title} onClose={onClose} />
+              )}
               {children}
             </View>
           </TouchableWithoutFeedback>

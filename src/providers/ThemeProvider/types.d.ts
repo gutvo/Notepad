@@ -16,4 +16,5 @@ interface ThemeContextChangeThemeProps {
 interface ThemeContextProps {
   changeTheme: (data: ThemeContextChangeThemeProps) => void;
   theme: ThemeProps;
+  isThemeLoading: boolean;
 }
