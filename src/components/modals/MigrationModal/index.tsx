@@ -1,5 +1,5 @@
 import BaseModal from "@Components/bases/Modal";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { DrizzleError } from "drizzle-orm";
 import { useEffect, useState } from "react";

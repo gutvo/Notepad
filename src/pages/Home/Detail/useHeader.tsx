@@ -1,6 +1,6 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useOpenModal from "@Hooks/useOpenModal";

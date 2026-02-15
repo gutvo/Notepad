@@ -1,5 +1,5 @@
 import BaseButton from "@Components/bases/Button";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useState } from "react";
 import BaseSelectModal from "./BaseSelectModal";

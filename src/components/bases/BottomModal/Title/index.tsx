@@ -1,4 +1,4 @@
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 
 interface BottomModalTitleProps {
   title: string;

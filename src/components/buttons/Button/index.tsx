@@ -1,5 +1,5 @@
 import BaseButton, { BaseButtonProps } from "@Components/bases/Button";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { StyleProp, TextStyle } from "react-native";
 

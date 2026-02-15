@@ -1,7 +1,7 @@
 import BaseSelectInput, {
   BaseSelectInputProps,
 } from "@Components/bases/SelectInput";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native";

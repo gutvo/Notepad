@@ -1,6 +1,6 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
 import { Animated, Dimensions, View } from "react-native";

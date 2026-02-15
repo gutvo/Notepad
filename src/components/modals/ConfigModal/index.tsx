@@ -1,7 +1,7 @@
 import actions from "@Actions";
 import BaseIcon from "@Components/bases/Icon";
 import BaseModal from "@Components/bases/Modal";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";

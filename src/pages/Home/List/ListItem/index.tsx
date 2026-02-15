@@ -1,4 +1,4 @@
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { format } from "date-fns";
 import { Pressable } from "react-native";

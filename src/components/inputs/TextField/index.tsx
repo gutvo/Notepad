@@ -1,4 +1,4 @@
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useState } from "react";
 import {

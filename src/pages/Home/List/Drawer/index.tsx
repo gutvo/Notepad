@@ -2,7 +2,7 @@ import BaseButton from "@Components/bases/Button";
 import BaseDivider from "@Components/bases/Divider";
 import BaseDrawer from "@Components/bases/Drawer";
 import BaseIcon from "@Components/bases/Icon";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";

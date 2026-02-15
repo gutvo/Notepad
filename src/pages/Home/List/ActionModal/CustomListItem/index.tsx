@@ -1,5 +1,5 @@
 import BaseDivider from "@Components/bases/Divider";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
 import { Pressable } from "react-native";

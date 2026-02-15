@@ -1,5 +1,5 @@
 import BaseIcon from "@Components/bases/Icon";
-import BaseTypography from "@Components/BaseTypography";
+import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
 
