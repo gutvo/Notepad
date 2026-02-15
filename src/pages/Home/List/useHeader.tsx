@@ -1,6 +1,6 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
-import BaseTextField from "@Components/BaseTextField";
+import BaseTextField from "@Components/bases/TextField";
 import BaseTypography from "@Components/BaseTypography";
 import useNavigation from "@Hooks/useNavigation";
 import useOpenModal from "@Hooks/useOpenModal";
