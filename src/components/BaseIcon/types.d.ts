@@ -15,4 +15,6 @@ type BaseIconNameProps =
   | "check-circle-outline"
   | "close-circle-outline"
   | "alert-circle-outline"
-  | "information-outline";
+  | "information-outline"
+  | "weather-sunny"
+  | "moon-waning-crescent";
