@@ -40,7 +40,7 @@ export default function BasemodalHeader({
           style={{ position: "absolute", right: 0 }}
         >
           <BaseIcon
-            name="x"
+            name="close"
             color={theme.palette.primary.contrast}
             size="large"
           />

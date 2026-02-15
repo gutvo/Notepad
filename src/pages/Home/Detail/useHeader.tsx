@@ -61,7 +61,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
   const headerRight = useCallback(
     () => (
       <BaseButton onPress={() => openModal("CONFIG")}>
-        <BaseIcon color={theme.palette.primary.contrast} name="settings" />
+        <BaseIcon color={theme.palette.primary.contrast} name="cog-outline" />
       </BaseButton>
     ),
     [openModal, theme.palette.primary.contrast],

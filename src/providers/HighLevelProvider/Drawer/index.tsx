@@ -19,7 +19,7 @@ export default function Drawer() {
     {
       name: "reminder",
       label: locales.home.list.drawer.reminder,
-      icon: <BaseIcon name="bell" />,
+      icon: <BaseIcon name="bell-outline" />,
       onclick: () => {
         navigation.navigate("/reminders/list");
         closeModal();
@@ -28,13 +28,13 @@ export default function Drawer() {
     {
       name: "config",
       label: locales.home.list.drawer.config,
-      icon: <BaseIcon name="settings" />,
+      icon: <BaseIcon name="cog-outline" />,
       onclick: () => openModal("CONFIG"),
     },
     {
       name: "theme",
       label: locales.home.list.drawer.theme,
-      icon: <BaseIcon name="sun" />,
+      icon: <BaseIcon name="theme-light-dark" />,
       onclick: () => openModal("THEME"),
     },
   ];
