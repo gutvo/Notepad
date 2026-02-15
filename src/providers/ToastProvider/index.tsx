@@ -1,4 +1,4 @@
-import BaseToast from "@Components/BaseToast";
+import BaseToast from "@Components/bases/Toast";
 import { ReactNode, useCallback, useState } from "react";
 import ToastContext from "./context";
 
