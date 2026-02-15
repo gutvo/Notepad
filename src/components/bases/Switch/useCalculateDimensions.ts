@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-interface UseCalculateDimetionsProps {
+interface UseCalculateDimensionsProps {
   width: number;
   height: number;
 }
@@ -9,11 +9,11 @@ function roundToNearest4(value: number) {
   return Math.round(value / 4) * 4;
 }
 
-export default function useCalculateDimetions({
+export default function useCalculateDimensions({
   width,
   height,
-}: UseCalculateDimetionsProps) {
-  const dimentions = useMemo(() => {
+}: UseCalculateDimensionsProps) {
+  const dimensions = useMemo(() => {
     const trackWidth = width;
     const trackHeight = height;
     const trackRadius = height / 2;
@@ -40,5 +40,5 @@ export default function useCalculateDimetions({
     };
   }, [height, width]);
 
-  return dimentions;
+  return dimensions;
 }

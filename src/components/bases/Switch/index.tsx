@@ -2,7 +2,7 @@ import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
 import { View } from "react-native";
-import useCalculateDimetions from "./useCalculateDimetions";
+import useCalculateDimensions from "./useCalculateDimensions";
 
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
@@ -30,23 +30,14 @@ export default function BaseSwitch({
 }: BaseSwitchProps) {
   const theme = useTheme();
 
-  const dimentions = useCalculateDimetions({
+  const dimensions = useCalculateDimensions({
     height,
     width,
   });
 
-  // const [internalIsEnabled, setInternalIsEnabled] = useState(false);
-
-  // const { backgroundColor, translateX } = useAnimation({
-  //   internalIsEnabled,
-  //   thumbWidth: dimentions.thumbWidth,
-  //   trackWidth: dimentions.trackWidth,
-  // });
-
   function handleChangeIsEnabled() {
     if (disabled) return;
 
-    // setInternalIsEnabled(!internalIsEnabled);
     onChange?.(!value);
   }
 
@@ -57,7 +48,7 @@ export default function BaseSwitch({
           variant="BODY2"
           style={{
             color: theme.palette.background.textPrimary,
-            marginBottom: theme.spacing(dimentions.labelMarginBottom),
+            marginBottom: theme.spacing(dimensions.labelMarginBottom),
           }}
         >
           {label}
@@ -67,10 +58,9 @@ export default function BaseSwitch({
       <BaseButton onPress={handleChangeIsEnabled} disabled={disabled}>
         <View
           style={{
-            // backgroundColor,
-            width: dimentions.trackWidth,
-            height: dimentions.trackHeight,
-            borderRadius: dimentions.trackRadius,
+            width: dimensions.trackWidth,
+            height: dimensions.trackHeight,
+            borderRadius: dimensions.trackRadius,
             backgroundColor: value
               ? theme.palette.primary.light
               : theme.palette.isDarkMode
@@ -82,16 +72,15 @@ export default function BaseSwitch({
         >
           <View
             style={{
-              // transform: [{ translateX }],
               backgroundColor: value
                 ? theme.palette.primary.dark
                 : theme.palette.grey[700],
-              height: dimentions.thumbHeight,
-              width: dimentions.thumbWidth,
-              borderRadius: dimentions.thumbRadius,
+              height: dimensions.thumbHeight,
+              width: dimensions.thumbWidth,
+              borderRadius: dimensions.thumbRadius,
               position: "absolute",
-              top: dimentions.thumbTop,
-              left: value ? dimentions.trackWidth - dimentions.thumbWidth : 0, // <-- aqui
+              top: dimensions.thumbTop,
+              left: value ? dimensions.trackWidth - dimensions.thumbWidth : 0,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -99,13 +88,13 @@ export default function BaseSwitch({
             {value && enableIconName ? (
               <BaseIcon
                 name={enableIconName}
-                size={dimentions.iconSize}
+                size={dimensions.iconSize}
                 color={theme.palette.primary.contrast}
               />
             ) : !value && disableIconName ? (
               <BaseIcon
                 name={disableIconName}
-                size={dimentions.iconSize}
+                size={dimensions.iconSize}
                 color={theme.palette.primary.contrast}
               />
             ) : null}
