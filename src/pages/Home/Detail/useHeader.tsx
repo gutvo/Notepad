@@ -5,6 +5,7 @@ import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
+import locales from "@Locales";
 import { useCallback, useLayoutEffect } from "react";
 
 interface UseHeaderProps {
@@ -51,7 +52,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
   const headerTitle = useCallback(
     () => (
       <BaseTypography style={{ color: theme.palette.primary.contrast }}>
-        Detalhes
+        {locales.home.detail.title}
       </BaseTypography>
     ),
     [theme.palette.primary.contrast],

@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import locales from "@Locales";
 
 interface CreateNoteProps {
   description: string;
@@ -13,7 +14,7 @@ export default async function createNote({
 
   const createdNote = await actions.note.create(data);
 
-  toast.success("Nota criada com sucesso!");
+  toast.success(locales.home.detail.note.success.create);
 
   return createdNote;
 }

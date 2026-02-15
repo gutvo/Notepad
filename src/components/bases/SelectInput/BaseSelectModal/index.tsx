@@ -2,6 +2,7 @@ import BaseButton from "@Components/bases/Button";
 import BaseDivider from "@Components/bases/Divider";
 import BaseModal from "@Components/bases/Modal";
 import useTheme from "@Hooks/useTheme";
+import locales from "@Locales";
 import { FlashList } from "@shopify/flash-list";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
@@ -58,7 +59,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   return (
     <BaseModal.Modal
       visible={isOpenModal}
-      title="Selecione"
+      title={locales.selectModal.title}
       onClose={onClose}
       style={{ minHeight: 0 }}
     >

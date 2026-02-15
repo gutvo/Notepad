@@ -1,6 +1,7 @@
 import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
+import locales from "@Locales";
 import { DrizzleError } from "drizzle-orm";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
@@ -53,7 +54,7 @@ export default function MigrationModal({
               style={{ color: theme.palette.error.main }}
               variant="H4"
             >
-              Erro ao migrar os dados:
+              {locales.migration.modal.error.title}
             </BaseTypography>
             <BaseTypography style={{ color: theme.palette.error.main }}>
               {error?.message}
@@ -63,7 +64,7 @@ export default function MigrationModal({
 
         {!error && !success && (
           <BaseTypography variant="H4">
-            Fazendo a migração dos dados...
+            {locales.migration.modal.progress}
           </BaseTypography>
         )}
       </View>

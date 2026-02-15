@@ -16,7 +16,8 @@
       "@Utils/*": ["src/utils/*"],
       "@Seeds": ["src/database/seeds/index.ts"],
       "@Providers/*": ["src/providers/*"],
-      "@Theme/*": ["src/theme/*"]
+      "@Theme/*": ["src/theme/*"],
+      "@Locales": ["src/locales/index.ts"]
     }
   },
   "include": ["src", ".expo/types/**/*.ts", "expo-env.d.ts","tsconfig.json" ,"app.config.ts"]

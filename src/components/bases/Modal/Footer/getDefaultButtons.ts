@@ -1,3 +1,4 @@
+import locales from "@Locales";
 import { ThemeProps } from "@Providers/ThemeProvider/types";
 
 interface GetDefaultButtonsProps {
@@ -14,11 +15,11 @@ export default function getDefaultButtons({
     Omit<CustomBaseModalFooterButtonProps, "name">
   > = {
     CONFIRM: {
-      label: "Confirmar",
+      label: locales.buttons.confirm,
       backgroundColor: theme.palette.primary.main,
     },
     CANCEL: {
-      label: "Cancelar",
+      label: locales.buttons.cancel,
       backgroundColor: theme.palette.grey[700],
       color: theme.palette.grey[50],
     },

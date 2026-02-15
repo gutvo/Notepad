@@ -6,6 +6,7 @@ import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
+import locales from "@Locales";
 import { FlashList } from "@shopify/flash-list";
 
 export default function Drawer() {
@@ -16,13 +17,13 @@ export default function Drawer() {
   const options = [
     {
       name: "config",
-      label: "Configuração",
+      label: locales.home.list.drawer.config,
       icon: <BaseIcon name="cog-outline" />,
       onclick: () => openModal("CONFIG"),
     },
     {
       name: "theme",
-      label: "Temas",
+      label: locales.home.list.drawer.theme,
       icon: <BaseIcon name="theme-light-dark" />,
       onclick: () => openModal("THEME"),
     },

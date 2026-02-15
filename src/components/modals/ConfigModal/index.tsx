@@ -6,6 +6,7 @@ import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import locales from "@Locales";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
@@ -43,7 +44,7 @@ export default function ConfigModal() {
     await actions.config.update("TEXT_FONT_SIZE", { value: data.textFontSize });
     closeModal();
 
-    toast.success("Configuração atualizadas com sucesso!");
+    toast.success(locales.config.modal.success);
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
@@ -59,7 +60,7 @@ export default function ConfigModal() {
 
   return (
     <BaseModal.Modal
-      title="Configurações"
+      title={locales.config.modal.title}
       visible={isOpen}
       onClose={closeModal}
     >
@@ -67,12 +68,12 @@ export default function ConfigModal() {
         <Controller
           control={control}
           name="textFontSize"
-          rules={{ required: "Campo obrigatório" }}
+          rules={{ required: locales.validations.required }}
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue)}
-              label="Tamanho da fonte"
+              label={locales.config.modal.section.fontSize.label}
               disabled={disabled}
               options={textFontOptions}
               renderItem={({ item, selectedItem }) => {

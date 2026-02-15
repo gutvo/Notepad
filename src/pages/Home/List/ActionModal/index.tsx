@@ -4,6 +4,7 @@ import BaseIcon from "@Components/bases/Icon";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import locales from "@Locales";
 import { Dispatch, SetStateAction } from "react";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
@@ -40,7 +41,7 @@ export default function ActionModal({
     setSelectedNote(null);
     handleCloseModal();
 
-    toast.success("Nota deletada com sucesso!");
+    toast.success(locales.home.list.actionModal.success.delete);
   }
 
   async function handleDuplicateNote() {
@@ -51,22 +52,22 @@ export default function ActionModal({
     setSelectedNote(null);
     handleCloseModal();
 
-    toast.success("Nota duplicada com sucesso!");
+    toast.success(locales.home.list.actionModal.success.duplicate);
   }
 
   const options: CustomItemProps[] = [
     {
-      name: "Visualizar",
+      name: locales.home.list.actionModal.actions.view,
       onClick: handleVisualizeNote,
       Icon: <BaseIcon name="eye-outline" />,
     },
     {
-      name: "Duplicar",
+      name: locales.home.list.actionModal.actions.duplicate,
       onClick: handleDuplicateNote,
       Icon: <BaseIcon name="content-duplicate" />,
     },
     {
-      name: "Deletar",
+      name: locales.home.list.actionModal.actions.delete,
       onClick: handleDeleteNote,
       Icon: <BaseIcon name="delete-outline" />,
     },
@@ -75,7 +76,7 @@ export default function ActionModal({
   return (
     <BaseBottomModal.Modal
       isOpen={isOpenModal}
-      title="Opções"
+      title={locales.home.list.actionModal.title}
       onClose={handleCloseModal}
     >
       <BaseBottomModal.FlatList

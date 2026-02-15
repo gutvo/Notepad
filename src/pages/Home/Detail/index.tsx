@@ -2,6 +2,7 @@ import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import locales from "@Locales";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextInput, View } from "react-native";
@@ -51,11 +52,15 @@ export default function HomeDetail() {
       }
     } catch {
       if (isDelete) {
-        toast.error("Erro ao deletar nota!");
+        toast.error(locales.home.detail.note.error.delete);
         return;
       }
 
-      toast.error(noteId ? "Erro ao atualizar nota!" : "Erro ao criar nota!");
+      toast.error(
+        noteId
+          ? locales.home.detail.note.error.update
+          : locales.home.detail.note.error.create,
+      );
     }
   });
 

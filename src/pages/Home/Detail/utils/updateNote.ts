@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import locales from "@Locales";
 
 interface UpdateNoteProps {
   description: string;
@@ -15,7 +16,7 @@ export default async function updateNote({
 
   const updatedNote = await actions.note.update(id, data);
 
-  toast.success("Nota atualizada com sucesso!");
+  toast.success(locales.home.detail.note.success.update);
 
   return updatedNote;
 }

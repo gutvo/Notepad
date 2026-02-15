@@ -5,6 +5,7 @@ import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import locales from "@Locales";
 import { themes } from "@Theme/themes";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -47,7 +48,7 @@ export default function ThemeModal() {
 
     closeModal();
 
-    toast.success("Configuração atualizadas com sucesso!");
+    toast.success(locales.theme.modal.success);
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
@@ -72,7 +73,11 @@ export default function ThemeModal() {
   );
 
   return (
-    <BaseModal.Modal title="Temas" visible={isOpen} onClose={closeModal}>
+    <BaseModal.Modal
+      title={locales.theme.modal.title}
+      visible={isOpen}
+      onClose={closeModal}
+    >
       <BaseModal.Container
         style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
       >
@@ -83,20 +88,26 @@ export default function ThemeModal() {
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue.index)}
-              label="Tema"
+              label={locales.theme.modal.section.theme.label}
               disabled={disabled}
               getOptionValue={(item) => item.index}
               options={Object.values(formattedThemes)}
               renderInputValue={(renderValue) => (
                 <ThemeOption
                   color={formattedThemes[renderValue].main}
-                  label={`Tema ${renderValue + 1}`}
+                  label={locales.theme.modal.section.theme.optionLabel.replace(
+                    "{index}",
+                    String(renderValue + 1),
+                  )}
                 />
               )}
               renderItem={({ item, selectedItem, index }) => (
                 <ThemeOption
                   color={item.main}
-                  label={`Tema ${index + 1}`}
+                  label={locales.theme.modal.section.theme.optionLabel.replace(
+                    "{index}",
+                    String(index + 1),
+                  )}
                   selected={item === selectedItem}
                 />
               )}
@@ -111,7 +122,7 @@ export default function ThemeModal() {
           name="isDarkMode"
           render={({ field: { onChange, value, disabled } }) => (
             <BaseSwitch
-              label="Modo noturno"
+              label={locales.theme.modal.section.darkMode.label}
               disableIconName="weather-sunny"
               enableIconName="moon-waning-crescent"
               value={value}
