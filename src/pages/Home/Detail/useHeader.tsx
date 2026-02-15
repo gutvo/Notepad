@@ -1,10 +1,11 @@
 import BaseIcon from "@Components/BaseIcon";
+import BaseTypography from "@Components/BaseTypography";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect } from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 interface UseHeaderProps {
   onSubmit: () => Promise<void>;
@@ -53,7 +54,9 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
 
   const headerTitle = useCallback(
     () => (
-      <Text style={{ color: theme.palette.primary.contrast }}>Detalhes</Text>
+      <BaseTypography style={{ color: theme.palette.primary.contrast }}>
+        Detalhes
+      </BaseTypography>
     ),
     [theme.palette.primary.contrast],
   );

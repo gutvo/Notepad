@@ -3,7 +3,6 @@ import useTheme from "@Hooks/useTheme";
 import { ReactNode, useState } from "react";
 import {
   StyleProp,
-  Text,
   TextInput,
   TextInputProps,
   TextStyle,
@@ -94,11 +93,21 @@ export default function TextField({
 
         {endIcon}
       </View>
-      <Text
-        style={[error && { color: theme.palette.error.main }, helpTextStyle]}
-      >
-        {helpText}
-      </Text>
+
+      {helpText && (
+        <BaseTypography
+          style={[
+            {
+              color: error
+                ? theme.palette.error.main
+                : theme.palette.background.textPrimary,
+            },
+            helpTextStyle,
+          ]}
+        >
+          {helpText}
+        </BaseTypography>
+      )}
     </View>
   );
 }

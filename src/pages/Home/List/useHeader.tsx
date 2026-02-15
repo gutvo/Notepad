@@ -1,10 +1,11 @@
 import BaseIcon from "@Components/BaseIcon";
 import BaseTextField from "@Components/BaseTextField";
+import BaseTypography from "@Components/BaseTypography";
 import useNavigation from "@Hooks/useNavigation";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 export default function useHeader() {
   const theme = useTheme();
@@ -74,9 +75,9 @@ export default function useHeader() {
             placeholder="Pesquisar"
           />
         ) : (
-          <Text style={{ color: theme.palette.primary.contrast }}>
+          <BaseTypography style={{ color: theme.palette.primary.contrast }}>
             Página incial
-          </Text>
+          </BaseTypography>
         )}
       </View>
     ),

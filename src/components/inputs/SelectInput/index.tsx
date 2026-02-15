@@ -4,7 +4,7 @@ import BaseSelectInput, {
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
-import { StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, View, ViewStyle } from "react-native";
 
 interface SelectInputProps<DataProps, ValueProps> extends BaseSelectInputProps<
   DataProps,
@@ -81,7 +81,7 @@ export default function SelectInput<
       </View>
 
       {helpText && (
-        <Text
+        <BaseTypography
           style={[
             {
               color: error
@@ -92,7 +92,7 @@ export default function SelectInput<
           ]}
         >
           {helpText}
-        </Text>
+        </BaseTypography>
       )}
     </View>
   );
