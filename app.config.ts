@@ -38,6 +38,7 @@ const config: ExpoConfig = {
         },
       },
     ],
+    ["expo-notifications", { icon: "./assets/images/notification-icon" }],
   ],
   experiments: {
     typedRoutes: true,
