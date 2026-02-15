@@ -1,7 +1,7 @@
 import actions from "@Actions";
 import BaseModal from "@Components/BaseModal";
 import BaseSwitch from "@Components/BaseSwitch";
-import SelectInput from "@Components/SelectInput";
+import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
