@@ -1,6 +1,6 @@
 import BaseDivider from "@Components/BaseDivider";
 import BaseIcon from "@Components/BaseIcon";
-import FloatingButton from "@Components/FloatButton";
+import FloatingButton from "@Components/buttons/FloatButton";
 import ThemeModal from "@Components/modals/ThemeModal";
 import { useActionList } from "@Hooks/useActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
