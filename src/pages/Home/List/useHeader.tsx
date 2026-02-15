@@ -1,11 +1,12 @@
 import BaseIcon from "@Components/BaseIcon";
+import BaseButton from "@Components/bases/BaseButton";
 import BaseTextField from "@Components/BaseTextField";
 import BaseTypography from "@Components/BaseTypography";
 import useNavigation from "@Hooks/useNavigation";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 
 export default function useHeader() {
   const theme = useTheme();
@@ -35,15 +36,15 @@ export default function useHeader() {
     () => (
       <>
         {isSearching ? (
-          <TouchableOpacity onPress={handleGoBack}>
+          <BaseButton onPress={handleGoBack}>
             <BaseIcon
               name="arrow-left"
               color={theme.palette.primary.contrast}
               style={{ marginRight: theme.spacing(3) }}
             />
-          </TouchableOpacity>
+          </BaseButton>
         ) : (
-          <TouchableOpacity
+          <BaseButton
             onPress={() => {
               openModal("SIDEBAR");
             }}
@@ -53,7 +54,7 @@ export default function useHeader() {
               color={theme.palette.primary.contrast}
               style={{ marginRight: theme.spacing(3) }}
             />
-          </TouchableOpacity>
+          </BaseButton>
         )}
       </>
     ),
@@ -86,13 +87,13 @@ export default function useHeader() {
 
   const headerRight = useCallback(
     () => (
-      <TouchableOpacity onPress={handleOnClick}>
+      <BaseButton onPress={handleOnClick}>
         <BaseIcon
           name="magnify"
           color={theme.palette.primary.contrast}
           style={{ marginLeft: theme.spacing(3) }}
         />
-      </TouchableOpacity>
+      </BaseButton>
     ),
     [handleOnClick, theme],
   );

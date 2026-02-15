@@ -1,5 +1,5 @@
-import BaseButton from "@Components/BaseButton";
 import BaseDivider from "@Components/BaseDivider";
+import Button from "@Components/buttons/Button";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
 import getDefaultButtons from "./getDefaultButtons";
@@ -41,7 +41,7 @@ export default function BaseModalFooter({
           if (item.hidden) return;
 
           return (
-            <BaseButton
+            <Button
               key={item.name}
               disabled={item.disabled}
               onPress={item.onClick}
@@ -53,7 +53,7 @@ export default function BaseModalFooter({
               ]}
             >
               {item.label}
-            </BaseButton>
+            </Button>
           );
         })}
       </View>

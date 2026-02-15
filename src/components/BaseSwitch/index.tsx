@@ -1,10 +1,11 @@
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import useCalculateDimetions from "./useCalculateDimetions";
 
 import BaseIcon from "@Components/BaseIcon";
+import BaseButton from "@Components/bases/BaseButton";
 
 interface BaseSwitchProps {
   label?: string;
@@ -63,11 +64,7 @@ export default function BaseSwitch({
         </BaseTypography>
       )}
 
-      <TouchableOpacity
-        onPress={handleChangeIsEnabled}
-        activeOpacity={1}
-        disabled={disabled}
-      >
+      <BaseButton onPress={handleChangeIsEnabled} disabled={disabled}>
         <View
           style={{
             // backgroundColor,
@@ -114,7 +111,7 @@ export default function BaseSwitch({
             ) : null}
           </View>
         </View>
-      </TouchableOpacity>
+      </BaseButton>
     </View>
   );
 }

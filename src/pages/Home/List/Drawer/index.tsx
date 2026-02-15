@@ -1,12 +1,12 @@
 import BaseDivider from "@Components/BaseDivider";
 import BaseDrawer from "@Components/BaseDrawer";
 import BaseIcon from "@Components/BaseIcon";
+import BaseButton from "@Components/bases/BaseButton";
 import BaseTypography from "@Components/BaseTypography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { FlashList } from "@shopify/flash-list";
-import { TouchableOpacity } from "react-native";
 
 export default function Drawer() {
   const theme = useTheme();
@@ -38,7 +38,7 @@ export default function Drawer() {
         data={options}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <TouchableOpacity
+          <BaseButton
             style={{
               padding: theme.spacing(4),
               display: "flex",
@@ -49,7 +49,7 @@ export default function Drawer() {
           >
             {item.icon}
             <BaseTypography>{item.label}</BaseTypography>
-          </TouchableOpacity>
+          </BaseButton>
         )}
         ItemSeparatorComponent={() => <BaseDivider />}
       />

@@ -1,11 +1,11 @@
 import BaseIcon from "@Components/BaseIcon";
+import BaseButton from "@Components/bases/BaseButton";
 import BaseTypography from "@Components/BaseTypography";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect } from "react";
-import { TouchableOpacity } from "react-native";
 
 interface UseHeaderProps {
   onSubmit: () => Promise<void>;
@@ -38,7 +38,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
 
   const headerLeft = useCallback(
     () => (
-      <TouchableOpacity
+      <BaseButton
         onPress={handleGoBack}
         style={{ marginRight: theme.spacing(3) }}
       >
@@ -47,7 +47,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
           color={theme.palette.primary.contrast}
           style={{ marginRight: theme.spacing(3) }}
         />
-      </TouchableOpacity>
+      </BaseButton>
     ),
     [handleGoBack, theme],
   );
@@ -63,9 +63,9 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
 
   const headerRight = useCallback(
     () => (
-      <TouchableOpacity onPress={() => openModal("CONFIG")}>
+      <BaseButton onPress={() => openModal("CONFIG")}>
         <BaseIcon color={theme.palette.primary.contrast} name="cog-outline" />
-      </TouchableOpacity>
+      </BaseButton>
     ),
     [openModal, theme.palette.primary.contrast],
   );

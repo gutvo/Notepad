@@ -1,9 +1,10 @@
 import BaseDivider from "@Components/BaseDivider";
 import BaseModal from "@Components/BaseModal";
+import BaseButton from "@Components/bases/BaseButton";
 import useTheme from "@Hooks/useTheme";
 import { FlashList } from "@shopify/flash-list";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
-import { TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 
 interface BaseSelectModalProps<DataProps, ValueProps> {
   isOpenModal: boolean;
@@ -66,12 +67,12 @@ export default function BaseSelectModal<DataProps, ValueProps>({
           <FlashList
             data={options}
             renderItem={({ item, index }) => (
-              <TouchableOpacity
+              <BaseButton
                 onPress={() => handleSelectOption(item)}
                 style={{ padding: theme.spacing(4) }}
               >
                 {renderItem({ item, selectedItem, index })}
-              </TouchableOpacity>
+              </BaseButton>
             )}
             ItemSeparatorComponent={() => <BaseDivider />}
             showsVerticalScrollIndicator

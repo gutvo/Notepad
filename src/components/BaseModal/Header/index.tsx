@@ -1,7 +1,8 @@
 import BaseIcon from "@Components/BaseIcon";
+import BaseButton from "@Components/bases/BaseButton";
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 
 interface BasemodalHeaderProps {
   title?: string;
@@ -33,16 +34,13 @@ export default function BasemodalHeader({
         {title}
       </BaseTypography>
 
-      <TouchableOpacity
-        onPress={onClose}
-        style={{ position: "absolute", right: 0 }}
-      >
+      <BaseButton onPress={onClose} style={{ position: "absolute", right: 0 }}>
         <BaseIcon
           name="close"
           color={theme.palette.primary.contrast}
           size="large"
         />
-      </TouchableOpacity>
+      </BaseButton>
     </View>
   );
 }

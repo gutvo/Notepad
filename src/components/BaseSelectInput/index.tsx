@@ -1,7 +1,7 @@
+import BaseButton from "@Components/bases/BaseButton";
 import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
 import BaseSelectModal from "./BaseSelectModal";
 
 export interface BaseSelectInputProps<DataProps, ValueProps> {
@@ -59,7 +59,7 @@ export default function BaseSelectInput<
 
   return (
     <>
-      <TouchableOpacity
+      <BaseButton
         onPress={handleOpenModal}
         disabled={disabled}
         style={{ flex: 1 }}
@@ -85,7 +85,7 @@ export default function BaseSelectInput<
             <BaseTypography>{value ?? internalValue}</BaseTypography>
           </>
         )}
-      </TouchableOpacity>
+      </BaseButton>
 
       {isOpenModal && (
         <BaseSelectModal

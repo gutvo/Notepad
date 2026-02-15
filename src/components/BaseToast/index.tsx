@@ -1,8 +1,9 @@
 import BaseIcon from "@Components/BaseIcon";
+import BaseButton from "@Components/bases/BaseButton";
 import BaseTypography from "@Components/BaseTypography";
 import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
-import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
+import { Animated, Dimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useToastConfig from "./toastConfig";
 import useAnimation from "./useAnimation";
@@ -47,7 +48,7 @@ export default function BaseToast({
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={resetDuration}>
+        <BaseButton onPress={resetDuration}>
           <View
             style={{
               width: Dimensions.get("window").width * 0.92,
@@ -87,7 +88,7 @@ export default function BaseToast({
               </BaseTypography>
             </View>
           </View>
-        </TouchableOpacity>
+        </BaseButton>
       </Animated.View>
     </BaseModalWrapper>
   );

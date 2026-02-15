@@ -1,26 +1,22 @@
+import BaseButton, { BaseButtonProps } from "@Components/bases/BaseButton";
+import BaseTypography from "@Components/BaseTypography";
 import useTheme from "@Hooks/useTheme";
-import {
-  StyleProp,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from "react-native";
+import { StyleProp, TextStyle } from "react-native";
 
-interface BaseButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends BaseButtonProps {
   textStyle?: StyleProp<TextStyle>;
 }
 
-export default function BaseButton({
+export default function Button({
   textStyle,
   style,
   children,
   ...rest
-}: BaseButtonProps) {
+}: ButtonProps) {
   const theme = useTheme();
 
   return (
-    <TouchableOpacity
+    <BaseButton
       activeOpacity={0.8}
       style={[
         {
@@ -32,14 +28,14 @@ export default function BaseButton({
       ]}
       {...rest}
     >
-      <Text
+      <BaseTypography
         style={[
           { textAlign: "center", color: theme.palette.primary.contrast },
           textStyle,
         ]}
       >
         {children}
-      </Text>
-    </TouchableOpacity>
+      </BaseTypography>
+    </BaseButton>
   );
 }
