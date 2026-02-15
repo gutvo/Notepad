@@ -3,11 +3,13 @@ import MigrationModal from "@Components/modals/MigrationModal";
 import database from "@Database";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useIsThemeLoading from "@Hooks/useIsThemeLoading";
+import useNotificationObserver from "@Hooks/useNotificationObserver";
 import useSaveSeeds from "@Hooks/useSaveSeeds";
 import migrations from "@Migrations";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { ReactNode } from "react";
 import BlankView from "./BlankView";
+import Drawer from "./Drawer";
 import Footer from "./Footer";
 
 interface HighLevelProviderProps {
@@ -18,8 +20,10 @@ export default function HighLevelProvider({
   children,
 }: HighLevelProviderProps) {
   const isThemeLoading = useIsThemeLoading();
+  useNotificationObserver({ isThemeLoading });
 
   const { isOpen } = useCurrentModal("CONFIG");
+  const { isOpen: sideBarIsOpen } = useCurrentModal("SIDEBAR");
 
   const { error, success } = useMigrations(database, migrations);
 
@@ -40,6 +44,7 @@ export default function HighLevelProvider({
       {children}
 
       {isOpen && <ConfigModal />}
+      {sideBarIsOpen && <Drawer />}
 
       <Footer />
     </BlankView>

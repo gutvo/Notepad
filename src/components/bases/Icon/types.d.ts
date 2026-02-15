@@ -16,4 +16,5 @@ type BaseIconNameProps =
   | "check-circle"
   | "x-circle"
   | "alert-circle"
-  | "info";
+  | "info"
+  | "bell";

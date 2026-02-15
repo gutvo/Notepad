@@ -23,6 +23,7 @@ const locales = {
         title: "Menu",
         config: "Configuração",
         theme: "Temas",
+        reminder: "Lembretes",
       },
       actionModal: {
         title: "Opções",

@@ -11,7 +11,6 @@ import { FlashList } from "@shopify/flash-list";
 import { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
 import ActionModal from "./ActionModal";
-import Drawer from "./Drawer";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
 
@@ -23,7 +22,6 @@ export default function HomeList() {
   const { search } = useHeader();
 
   const { isOpen } = useCurrentModal("THEME");
-  const { isOpen: sideBarIsOpen } = useCurrentModal("SIDEBAR");
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState<NoteDataProps | null>(null);
@@ -46,8 +44,6 @@ export default function HomeList() {
 
   return (
     <>
-      {sideBarIsOpen && <Drawer />}
-
       {isOpen && <ThemeModal />}
 
       <ScrollView

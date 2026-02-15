@@ -8,13 +8,21 @@ import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import locales from "@Locales";
 import { FlashList } from "@shopify/flash-list";
+import { useRouter } from "expo-router";
 
 export default function Drawer() {
+  const router = useRouter();
   const theme = useTheme();
   const openModal = useOpenModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
 
   const options = [
+    {
+      name: "reminder",
+      label: locales.home.list.drawer.reminder,
+      icon: <BaseIcon name="bell" />,
+      onclick: () => router.push("/reminders"),
+    },
     {
       name: "config",
       label: locales.home.list.drawer.config,
