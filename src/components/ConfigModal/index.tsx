@@ -6,7 +6,7 @@ import SelectInput from "@Components/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
@@ -51,6 +51,12 @@ export default function ConfigModal() {
     { name: "CONFIRM", onClick: handleSubmit(handleConfirm) },
   ];
 
+  const textFontOptions = useMemo(
+    () =>
+      Array.from({ length: (80 - 12) / 4 + 1 }, (_, index) => 12 + index * 4),
+    [],
+  );
+
   return (
     <BaseModal.Modal
       title="Configurações"
@@ -68,10 +74,7 @@ export default function ConfigModal() {
               onChange={(itemValue) => onChange(itemValue)}
               label="Tamanho da fonte"
               disabled={disabled}
-              options={Array.from(
-                { length: (80 - 12) / 4 + 1 },
-                (_, index) => 12 + index * 4,
-              )}
+              options={textFontOptions}
               renderItem={({ item, selectedItem }) => {
                 return (
                   <View
