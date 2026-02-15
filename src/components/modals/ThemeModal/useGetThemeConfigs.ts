@@ -1,13 +1,11 @@
-import actions from "@Actions";
+import { getThemeConfig, ThemeStorageConfigProps } from "@Utils/themeStorage";
 import { useCallback, useEffect, useState } from "react";
 
 export default function useGetThemeConfigs() {
-  const [themeConfigs, setThemeConfigs] = useState<ConfigDataProps[]>([]);
+  const [themeConfigs, setThemeConfigs] = useState<ThemeStorageConfigProps>();
 
   const getThemeConfigs = useCallback(async () => {
-    const settings = await actions.config.list({
-      findBy: { keys: ["THEME_INDEX", "THEME_IS_DARK_MODE"] },
-    });
+    const settings = await getThemeConfig();
 
     setThemeConfigs(settings);
   }, []);

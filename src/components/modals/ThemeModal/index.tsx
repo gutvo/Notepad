@@ -1,13 +1,13 @@
-import actions from "@Actions";
 import BaseModal from "@Components/bases/Modal";
 import BaseSwitch from "@Components/bases/Switch";
 import SelectInput from "@Components/inputs/SelectInput";
+import useChangeTheme from "@Hooks/useChangeTheme";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
 import { themes } from "@Theme/themes";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import getDefaultValues, { ThemeDefaultValueProps } from "./getDefaultValues";
 import ThemeOption from "./ThemeOption";
@@ -16,6 +16,7 @@ import useGetThemeConfigs from "./useGetThemeConfigs";
 export default function ThemeModal() {
   const theme = useTheme();
   const toast = useToast();
+  const changeTheme = useChangeTheme();
   const { isOpen, closeModal } = useCurrentModal("THEME");
 
   const [themeConfigs] = useGetThemeConfigs();
@@ -23,33 +24,33 @@ export default function ThemeModal() {
   const {
     handleSubmit,
     control,
-    formState: { errors, isDirty },
+    formState: { errors },
     reset,
   } = useForm<ThemeDefaultValueProps>({
     defaultValues: getDefaultValues(),
   });
 
   useEffect(() => {
-    if (themeConfigs.length) {
+    if (themeConfigs) {
       reset(getDefaultValues(themeConfigs));
     }
   }, [reset, themeConfigs]);
 
-  async function handleConfirm(data: ThemeDefaultValueProps) {
-    if (!isDirty) {
-      closeModal();
-      return;
-    }
-
-    await actions.config.update("THEME_INDEX", { value: data.themeIndex });
-    await actions.config.update("THEME_IS_DARK_MODE", {
-      value: data.isDarkMode,
-    });
-
-    closeModal();
-
-    toast.success(locales.theme.modal.success);
-  }
+  const handleConfirm = useCallback(
+    (data: ThemeDefaultValueProps) => {
+      try {
+        changeTheme({
+          themeCode: data.themeIndex,
+          darkMode: data.isDarkMode,
+        });
+        closeModal();
+        toast.success(locales.theme.modal.success);
+      } catch {
+        toast.error("Erro ao atualizar tema!");
+      }
+    },
+    [changeTheme, closeModal, toast],
+  );
 
   const buttons: BaseModalFooterButtonProps[] = [
     { name: "CANCEL", onClick: closeModal },

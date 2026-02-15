@@ -46,7 +46,7 @@ export default function MigrationModal({
           padding: theme.spacing(5),
         }}
       >
-        <ActivityIndicator size={50} />
+        <ActivityIndicator size={50} color={theme.palette.primary.main} />
 
         {error && (
           <>

@@ -1,22 +1,11 @@
-export default function getDefaultValues(themeConfigs?: ConfigDataProps[]) {
-  const defaultProps = themeConfigs?.reduce(
-    (accumulator, themeConfig) => {
-      if (themeConfig.key === "THEME_INDEX") {
-        accumulator.themeIndex = themeConfig.value;
-      }
+import { ThemeStorageConfigProps } from "@Utils/themeStorage";
 
-      if (themeConfig.key === "THEME_IS_DARK_MODE") {
-        accumulator.isDarkMode = themeConfig.value;
-      }
-
-      return accumulator;
-    },
-    { themeIndex: 0, isDarkMode: false },
-  );
-
+export default function getDefaultValues(
+  themeConfigs?: ThemeStorageConfigProps,
+) {
   const defaultValues = {
-    themeIndex: defaultProps?.themeIndex ?? 0,
-    isDarkMode: defaultProps?.isDarkMode ?? false,
+    themeIndex: themeConfigs?.themeIndex ?? 0,
+    isDarkMode: themeConfigs?.isDarkMode ?? false,
   };
 
   return defaultValues;

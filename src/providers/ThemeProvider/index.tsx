@@ -1,4 +1,3 @@
-import actions from "@Actions";
 import mergeTheme from "@Theme/mergeTheme";
 import { ReactNode, useCallback, useMemo } from "react";
 import ConfigContext from "./context";
@@ -12,7 +11,8 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-  const [themeConfigs] = useGetThemeConfigs();
+  const { themeConfigs, updateThemeIndex, updateDarkMode } =
+    useGetThemeConfigs();
 
   const theme: ThemeProps = useMemo(
     () => ({
@@ -29,14 +29,14 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
   const changeTheme = useCallback(
     async ({ darkMode, themeCode }: ThemeContextChangeThemeProps) => {
       if (darkMode !== undefined) {
-        await actions.config.update("THEME_IS_DARK_MODE", { value: darkMode });
+        await updateDarkMode(darkMode);
       }
 
       if (themeCode !== undefined) {
-        await actions.config.update("THEME_INDEX", { value: themeCode });
+        await updateThemeIndex(themeCode);
       }
     },
-    [],
+    [updateDarkMode, updateThemeIndex],
   );
 
   const contextValue = useMemo(
