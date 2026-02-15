@@ -1,5 +1,5 @@
-import BaseBottomModal from "@Components/BaseBottomModal";
 import BaseIcon from "@Components/BaseIcon";
+import BaseBottomModal from "@Components/bases/BottomModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
