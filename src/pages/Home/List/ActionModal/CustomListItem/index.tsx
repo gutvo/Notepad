@@ -22,7 +22,7 @@ export default function CustomListItem({ item }: CustomListItemProps) {
       <Pressable
         style={({ pressed }) => [
           {
-            paddingVertical: theme.spacing(20),
+            paddingVertical: theme.spacing(5),
             paddingHorizontal: theme.spacing(4),
             display: "flex",
             flexDirection: "row",
