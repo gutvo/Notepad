@@ -5,13 +5,18 @@ export default function getDefaultValues(configs?: ConfigDataProps[]) {
         accumulator.textFontSize = config.value;
       }
 
+      if (config.key === "DAYS_BEFORE_REMINDER") {
+        accumulator.daysBeforeReminder = config.value;
+      }
+
       return accumulator;
     },
-    { textFontSize: 12 },
+    { textFontSize: 12, daysBeforeReminder: 0 },
   );
 
   const defaultValues = {
-    textFontSize: defaultProps?.textFontSize,
+    textFontSize: defaultProps?.textFontSize ?? 12,
+    daysBeforeReminder: defaultProps?.daysBeforeReminder ?? 0,
   };
 
   return defaultValues;
