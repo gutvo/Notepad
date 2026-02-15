@@ -1,5 +1,5 @@
+import BaseDivider from "@Components/BaseDivider";
 import BaseTypography from "@Components/BaseTypography";
-import Divider from "@Components/List/Divider";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
 import { Pressable } from "react-native";
@@ -39,7 +39,7 @@ export default function CustomListItem({ item }: CustomListItemProps) {
         <BaseTypography>{item.name}</BaseTypography>
       </Pressable>
 
-      <Divider />
+      <BaseDivider />
     </>
   );
 }

@@ -1,5 +1,5 @@
+import BaseDivider from "@Components/BaseDivider";
 import BaseModal from "@Components/BaseModal";
-import Divider from "@Components/List/Divider";
 import useTheme from "@Hooks/useTheme";
 import { FlashList } from "@shopify/flash-list";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
@@ -73,7 +73,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
                 {renderItem({ item, selectedItem, index })}
               </TouchableOpacity>
             )}
-            ItemSeparatorComponent={() => <Divider />}
+            ItemSeparatorComponent={() => <BaseDivider />}
             showsVerticalScrollIndicator
             indicatorStyle={theme.palette.isDarkMode ? "white" : "black"}
           />

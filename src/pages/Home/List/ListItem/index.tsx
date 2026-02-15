@@ -3,6 +3,12 @@ import useTheme from "@Hooks/useTheme";
 import { format } from "date-fns";
 import { Pressable } from "react-native";
 
+interface ListItemDataProps {
+  id: number;
+  description: string;
+  created_at: Date;
+}
+
 interface ListItemProps {
   item: ListItemDataProps;
   onClick?: (item: ListItemDataProps) => void;

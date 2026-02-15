@@ -1,16 +1,18 @@
+import BaseDivider from "@Components/BaseDivider";
 import BaseIcon from "@Components/BaseIcon";
 import FloatingButton from "@Components/FloatButton";
-import List from "@Components/List";
 import ThemeModal from "@Components/modals/ThemeModal";
 import { useActionList } from "@Hooks/useActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
+import { FlashList } from "@shopify/flash-list";
 import { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
 import actions from "src/database/actions";
 import ActionModal from "./ActionModal";
 import Drawer from "./Drawer";
+import ListItem from "./ListItem";
 import useHeader from "./useHeader";
 
 const windowHeight = Dimensions.get("window").height;
@@ -54,13 +56,22 @@ export default function HomeList() {
           backgroundColor: theme.palette.background.body,
         }}
       >
-        <List
+        <FlashList
+          style={{ backgroundColor: theme.palette.background.body }}
           data={notes}
-          onClick={(item) => navigation.navigate("HomeDetail", { id: item.id })}
-          onLongPress={(item) => {
-            setSelectedNote(item);
-            handleOpenModal();
-          }}
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              onClick={(item) =>
+                navigation.navigate("HomeDetail", { id: item.id })
+              }
+              onLongPress={(item) => {
+                setSelectedNote(item);
+                handleOpenModal();
+              }}
+            />
+          )}
+          ItemSeparatorComponent={() => <BaseDivider />}
         />
       </ScrollView>
       <FloatingButton

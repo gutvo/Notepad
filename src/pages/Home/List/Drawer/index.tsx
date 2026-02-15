@@ -1,7 +1,7 @@
+import BaseDivider from "@Components/BaseDivider";
 import BaseDrawer from "@Components/BaseDrawer";
 import BaseIcon from "@Components/BaseIcon";
 import BaseTypography from "@Components/BaseTypography";
-import Divider from "@Components/List/Divider";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
@@ -51,7 +51,7 @@ export default function Drawer() {
             <BaseTypography>{item.label}</BaseTypography>
           </TouchableOpacity>
         )}
-        ItemSeparatorComponent={() => <Divider />}
+        ItemSeparatorComponent={() => <BaseDivider />}
       />
     </BaseDrawer>
   );

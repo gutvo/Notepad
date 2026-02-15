@@ -1,5 +1,5 @@
 import BaseButton from "@Components/BaseButton";
-import Divider from "@Components/List/Divider";
+import BaseDivider from "@Components/BaseDivider";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
 import getDefaultButtons from "./getDefaultButtons";
@@ -25,7 +25,7 @@ export default function BaseModalFooter({
 
   return (
     <View style={{ paddingVertical: theme.spacing(3) }}>
-      <Divider style={{ marginBottom: theme.spacing(3) }} />
+      <BaseDivider style={{ marginBottom: theme.spacing(3) }} />
 
       <View
         style={{
