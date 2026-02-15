@@ -9,24 +9,16 @@ const config: ExpoConfig = {
   icon: "./assets/images/icon.png",
   scheme: "notepad",
   userInterfaceStyle: "automatic",
-  newArchEnabled: true,
   ios: {
     supportsTablet: true,
   },
   android: {
     package: "com.anonymous.notepad",
     adaptiveIcon: {
-      backgroundColor: "#E6F4FE",
       foregroundImage: "./assets/images/android-icon-foreground.png",
-      backgroundImage: "./assets/images/android-icon-background.png",
-      monochromeImage: "./assets/images/android-icon-monochrome.png",
     },
     edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
-  },
-  web: {
-    output: "static",
-    favicon: "./assets/images/favicon.png",
   },
   plugins: [
     ["expo-router", { root: "./src/routes" }],

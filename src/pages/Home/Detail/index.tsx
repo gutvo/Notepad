@@ -1,12 +1,24 @@
 import useGlobalSearchParams from "@Hooks/useGlobalSearchParams";
-import { useEffect, useState } from "react";
+import useNavigation from "@Hooks/useNavigation";
+import useTheme from "@Hooks/useTheme";
+import useToast from "@Hooks/useToast";
+import locales from "@Locales";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { TextInput, View } from "react-native";
-import TextConfigModal from "./TextConfigModal";
+import defaultValues from "./defaultValues";
 import useGetDefaultSettings from "./useGetDefaultSettings";
 import useGetNote from "./useGetNote";
 import useHeader from "./useHeader";
+import createNote from "./utils/createNote";
+import deleteNote from "./utils/deleteNote";
+import updateNote from "./utils/updateNote";
 
 export default function HomeDetail() {
+  const theme = useTheme();
+  const toast = useToast();
+  const navigation = useNavigation();
+
   const params = useGlobalSearchParams("HomeDetail");
   const noteId = params?.id ? Number(params?.id) : undefined;
 
@@ -14,45 +26,78 @@ export default function HomeDetail() {
 
   const [defaultSettings] = useGetDefaultSettings();
 
-  const [description, setDescription] = useState("");
-  const [isOpenedModal, setIsOpenedModal] = useState(false);
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<{ description: string }>({
+    defaultValues,
+  });
 
-  function handleOpenModal() {
-    setIsOpenedModal(true);
-  }
+  const onSubmit = handleSubmit(async (data) => {
+    const isDelete = !data.description.trim() && noteId;
+    const isUpdate = !!noteId;
 
-  function handleCloseModal() {
-    setIsOpenedModal(false);
-  }
+    try {
+      if (isDelete) {
+        await deleteNote({ id: noteId, toast });
+        navigation.goBack();
+      } else if (isUpdate) {
+        await updateNote({ id: noteId, description: data.description, toast });
+        navigation.goBack();
+      } else {
+        await createNote({ description: data.description, toast });
+        navigation.goBack();
+      }
+    } catch {
+      if (isDelete) {
+        toast.error(locales.home.detail.note.error.delete);
+        return;
+      }
+
+      toast.error(
+        noteId
+          ? locales.home.detail.note.error.update
+          : locales.home.detail.note.error.create,
+      );
+    }
+  });
 
   useEffect(() => {
     if (note) {
-      setDescription(note.description);
+      reset({ description: note.description });
     }
-  }, [note]);
+  }, [note, reset]);
 
-  useHeader({ id: noteId, description, handleOpenModal });
+  useHeader({ onSubmit, isDirty });
 
   return (
     <>
       <View style={{ flex: 1 }}>
-        <TextInput
-          multiline
-          value={description}
-          onChangeText={setDescription}
-          textAlignVertical="top"
-          style={{
-            flex: 1,
-            padding: 16,
-            fontSize: (defaultSettings.TEXT_FONT_SIZE as number) ?? 16,
-          }}
+        <Controller
+          control={control}
+          name="description"
+          render={({ field: { onChange, value, onBlur } }) => (
+            <TextInput
+              multiline
+              onBlur={onBlur}
+              value={value}
+              onChangeText={onChange}
+              textAlignVertical="top"
+              style={{
+                flex: 1,
+                padding: theme.spacing(4),
+                fontSize:
+                  (defaultSettings.TEXT_FONT_SIZE as number) ??
+                  theme.fontSize(4),
+                backgroundColor: theme.palette.background.body,
+                color: theme.palette.background.textPrimary,
+              }}
+            />
+          )}
         />
       </View>
-
-      <TextConfigModal
-        isOpenedModal={isOpenedModal}
-        onClose={handleCloseModal}
-      />
     </>
   );
 }

@@ -1,30 +1,45 @@
-import colors from "@Colors";
-import Divider from "@Components/List/Divider";
-import { Pressable, Text } from "react-native";
+import BaseDivider from "@Components/bases/Divider";
+import BaseTypography from "@Components/bases/Typography";
+import useTheme from "@Hooks/useTheme";
+import { ReactNode } from "react";
+import { Pressable } from "react-native";
 
-interface ItemProps {
+export interface CustomItemProps {
   name: string;
   onClick?: () => void;
+  Icon?: ReactNode;
 }
 
 interface CustomListItemProps {
-  item: ItemProps;
+  item: CustomItemProps;
 }
 
 export default function CustomListItem({ item }: CustomListItemProps) {
+  const theme = useTheme();
+
   return (
     <>
       <Pressable
         style={({ pressed }) => [
-          { paddingVertical: 10, paddingHorizontal: 16 },
-          pressed && { backgroundColor: colors.grey[200] },
+          {
+            paddingVertical: theme.spacing(5),
+            paddingHorizontal: theme.spacing(4),
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: theme.spacing(4),
+          },
+          pressed && {
+            backgroundColor: theme.palette.background.button.pressed,
+          },
         ]}
         onPress={item.onClick}
       >
-        <Text style={{ fontSize: 16 }}>{item.name}</Text>
+        {item.Icon && item.Icon}
+        <BaseTypography>{item.name}</BaseTypography>
       </Pressable>
 
-      <Divider />
+      <BaseDivider />
     </>
   );
 }

@@ -1,16 +1,18 @@
-function formatValues(data: ConfigDataProps) {
-  if (data.type === "STRING") return data.value;
-
-  if (data.type === "NUMBER") return Number(data.value);
-
-  if (data.type === "BOOLEAN") return data.value === "true";
-
-  return data.value;
+interface FormatDataProps {
+  key: keyof ConfigValueMapProps;
+  type: ConfigTypeProps;
+  value: string;
 }
 
-export default function _formatConfigData(data: ConfigDataProps) {
+export default function _formatData(data: FormatDataProps): ConfigDataProps {
+  let formattedValue: any;
+
+  if (data.type === "STRING") formattedValue = data.value;
+  if (data.type === "NUMBER") formattedValue = Number(data.value);
+  if (data.type === "BOOLEAN") formattedValue = data.value === "true";
+
   return {
     ...data,
-    value: formatValues(data),
+    value: formattedValue,
   };
 }

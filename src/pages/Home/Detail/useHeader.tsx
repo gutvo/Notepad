@@ -1,61 +1,70 @@
-import colors from "@Colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import BaseButton from "@Components/bases/Button";
+import BaseIcon from "@Components/bases/Icon";
+import BaseTypography from "@Components/bases/Typography";
 import useNavigation from "@Hooks/useNavigation";
+import useOnGoBack from "@Hooks/useOnGoBack";
+import useOpenModal from "@Hooks/useOpenModal";
+import useTheme from "@Hooks/useTheme";
+import locales from "@Locales";
 import { useCallback, useLayoutEffect } from "react";
-import { Text, TouchableOpacity } from "react-native";
-import createUpdateOrder from "./createUpdateOrder";
 
 interface UseHeaderProps {
-  id?: number;
-  description: string;
-  handleOpenModal: () => void;
+  onSubmit: () => Promise<void>;
+  isDirty: boolean;
 }
 
-export default function useHeader({
-  description,
-  id,
-  handleOpenModal,
-}: UseHeaderProps) {
+export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
+  const theme = useTheme();
+  const openModal = useOpenModal();
   const navigation = useNavigation();
 
-  const handleGoBack = useCallback(async () => {
-    if (!navigation.canGoBack()) return;
+  const handleGoBack = useCallback(() => {
+    if (!navigation.canGoBack()) return true;
 
-    await createUpdateOrder({ id, description });
+    if (!isDirty) {
+      navigation.goBack();
+      return true;
+    }
 
-    navigation.goBack();
-  }, [description, id, navigation]);
+    onSubmit();
+
+    return true;
+  }, [isDirty, navigation, onSubmit]);
+
+  useOnGoBack({ onBackPress: handleGoBack });
 
   const headerLeft = useCallback(
     () => (
-      <TouchableOpacity onPress={handleGoBack} style={{ marginRight: 10 }}>
-        <MaterialCommunityIcons
+      <BaseButton
+        onPress={handleGoBack}
+        style={{ marginRight: theme.spacing(3) }}
+      >
+        <BaseIcon
           name="arrow-left"
-          size={24}
-          color={colors.primary.contrast}
-          style={{ marginRight: 10 }}
+          color={theme.palette.primary.contrast}
+          style={{ marginRight: theme.spacing(3) }}
         />
-      </TouchableOpacity>
+      </BaseButton>
     ),
-    [handleGoBack],
+    [handleGoBack, theme],
   );
 
   const headerTitle = useCallback(
-    () => <Text style={{ color: colors.primary.contrast }}>Detalhes</Text>,
-    [],
+    () => (
+      <BaseTypography style={{ color: theme.palette.primary.contrast }}>
+        {locales.home.detail.title}
+      </BaseTypography>
+    ),
+    [theme.palette.primary.contrast],
   );
 
   const headerRight = useCallback(
     () => (
-      <TouchableOpacity onPress={handleOpenModal}>
-        <MaterialCommunityIcons
-          name="cog"
-          size={24}
-          color={colors.primary.contrast}
-        />
-      </TouchableOpacity>
+      <BaseButton onPress={() => openModal("CONFIG")}>
+        <BaseIcon color={theme.palette.primary.contrast} name="settings" />
+      </BaseButton>
     ),
-    [handleOpenModal],
+    [openModal, theme.palette.primary.contrast],
   );
 
   useLayoutEffect(() => {

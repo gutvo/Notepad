@@ -7,7 +7,6 @@
       "@Components/*": ["src/components/*"],
       "@Pages/*": ["src/pages/*"],
       "@Hooks/*": ["src/hooks/*"],
-      "@Colors": ["src/theme/colors.ts"],
       "@Migrations":["src/database/drizzle/migrations.js"],
       "@Schemas":["src/database/schemas/index.ts"],
       "@Schema/*":["src/database/schemas/*"],
@@ -15,7 +14,10 @@
       "@Actions": ["src/database/actions/index.ts"],
       "@Lib/*": ["src/lib/*"],
       "@Utils/*": ["src/utils/*"],
-      "@Seeds": ["src/database/seeds/index.ts"]
+      "@Seeds": ["src/database/seeds/index.ts"],
+      "@Providers/*": ["src/providers/*"],
+      "@Theme/*": ["src/theme/*"],
+      "@Locales": ["src/locales/index.ts"]
     }
   },
   "include": ["src", ".expo/types/**/*.ts", "expo-env.d.ts","tsconfig.json" ,"app.config.ts"]

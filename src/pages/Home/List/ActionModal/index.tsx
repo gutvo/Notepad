@@ -1,8 +1,12 @@
-import BottomModal from "@Components/BottomModal";
+import actions from "@Actions";
+import BaseBottomModal from "@Components/bases/BottomModal";
+import BaseIcon from "@Components/bases/Icon";
 import useNavigation from "@Hooks/useNavigation";
+import useTheme from "@Hooks/useTheme";
+import useToast from "@Hooks/useToast";
+import locales from "@Locales";
 import { Dispatch, SetStateAction } from "react";
-import actions from "src/database/actions";
-import CustomListItem from "./CustomListItem";
+import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {
   isOpenModal: boolean;
@@ -17,6 +21,8 @@ export default function ActionModal({
   selectedNote,
   setSelectedNote,
 }: ActionModalProps) {
+  const theme = useTheme();
+  const toast = useToast();
   const navigation = useNavigation();
 
   function handleVisualizeNote() {
@@ -34,25 +40,51 @@ export default function ActionModal({
 
     setSelectedNote(null);
     handleCloseModal();
+
+    toast.success(locales.home.list.actionModal.success.delete);
   }
 
-  const options = [
-    { name: "Visualizar", onClick: handleVisualizeNote },
-    { name: "Deletar", onClick: handleDeleteNote },
+  async function handleDuplicateNote() {
+    if (!selectedNote) return;
+
+    await actions.note.create({ description: selectedNote.description });
+
+    setSelectedNote(null);
+    handleCloseModal();
+
+    toast.success(locales.home.list.actionModal.success.duplicate);
+  }
+
+  const options: CustomItemProps[] = [
+    {
+      name: locales.home.list.actionModal.actions.view,
+      onClick: handleVisualizeNote,
+      Icon: <BaseIcon name="eye" />,
+    },
+    {
+      name: locales.home.list.actionModal.actions.duplicate,
+      onClick: handleDuplicateNote,
+      Icon: <BaseIcon name="copy" />,
+    },
+    {
+      name: locales.home.list.actionModal.actions.delete,
+      onClick: handleDeleteNote,
+      Icon: <BaseIcon name="trash-2" />,
+    },
   ];
 
   return (
-    <BottomModal.Modal
+    <BaseBottomModal.Modal
       isOpen={isOpenModal}
-      title="Opções"
+      title={locales.home.list.actionModal.title}
       onClose={handleCloseModal}
     >
-      <BottomModal.FlatList
+      <BaseBottomModal.FlatList
         data={options}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => <CustomListItem item={item} />}
-        contentContainerStyle={{ paddingVertical: 12 }}
+        contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
-    </BottomModal.Modal>
+    </BaseBottomModal.Modal>
   );
 }

@@ -15,5 +15,9 @@ export default async function createConfig(data: CreateConfigDataProps) {
 
   const createdConfig = await findConfig(data.key);
 
+  if (!createdConfig) {
+    throw new Error(`Erro ao inserir a configuração "${data.key}"!`);
+  }
+
   return createdConfig;
 }

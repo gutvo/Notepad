@@ -1,12 +1,17 @@
-import colors from "@Colors";
-import BaseTextField from "@Components/BaseTextField";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import BaseButton from "@Components/bases/Button";
+import BaseIcon from "@Components/bases/Icon";
+import BaseTextField from "@Components/bases/TextField";
+import BaseTypography from "@Components/bases/Typography";
 import useNavigation from "@Hooks/useNavigation";
+import useOpenModal from "@Hooks/useOpenModal";
+import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 
 export default function useHeader() {
+  const theme = useTheme();
   const navigation = useNavigation();
+  const openModal = useOpenModal();
 
   const [search, setSearch] = useState("");
   const [inputSearch, setInputSearch] = useState("");
@@ -30,19 +35,30 @@ export default function useHeader() {
   const headerLeft = useCallback(
     () => (
       <>
-        {isSearching && (
-          <TouchableOpacity onPress={handleGoBack}>
-            <MaterialCommunityIcons
+        {isSearching ? (
+          <BaseButton onPress={handleGoBack}>
+            <BaseIcon
               name="arrow-left"
-              size={28}
-              color={colors.primary.contrast}
-              style={{ marginRight: 10 }}
+              color={theme.palette.primary.contrast}
+              style={{ marginRight: theme.spacing(3) }}
             />
-          </TouchableOpacity>
+          </BaseButton>
+        ) : (
+          <BaseButton
+            onPress={() => {
+              openModal("SIDEBAR");
+            }}
+          >
+            <BaseIcon
+              name="menu"
+              color={theme.palette.primary.contrast}
+              style={{ marginRight: theme.spacing(3) }}
+            />
+          </BaseButton>
         )}
       </>
     ),
-    [isSearching],
+    [isSearching, openModal, theme],
   );
 
   const headerCenter = useCallback(
@@ -53,32 +69,33 @@ export default function useHeader() {
             onChangeText={(value) => setInputSearch(value)}
             value={inputSearch}
             style={{
-              borderColor: colors.primary.contrast,
-              color: colors.primary.contrast,
+              borderColor: theme.palette.primary.contrast,
+              color: theme.palette.primary.contrast,
             }}
-            placeholderTextColor={colors.primary.contrast}
+            placeholderTextColor={theme.palette.primary.contrast}
             placeholder="Pesquisar"
           />
         ) : (
-          <Text style={{ color: colors.primary.contrast }}>Página incial</Text>
+          <BaseTypography style={{ color: theme.palette.primary.contrast }}>
+            Página incial
+          </BaseTypography>
         )}
       </View>
     ),
-    [isSearching, inputSearch],
+    [isSearching, inputSearch, theme.palette.primary.contrast],
   );
 
   const headerRight = useCallback(
     () => (
-      <TouchableOpacity onPress={handleOnClick}>
-        <MaterialCommunityIcons
-          name="magnify"
-          size={28}
-          color={colors.primary.contrast}
-          style={{ marginLeft: 10 }}
+      <BaseButton onPress={handleOnClick}>
+        <BaseIcon
+          name="search"
+          color={theme.palette.primary.contrast}
+          style={{ marginLeft: theme.spacing(3) }}
         />
-      </TouchableOpacity>
+      </BaseButton>
     ),
-    [handleOnClick],
+    [handleOnClick, theme],
   );
 
   useLayoutEffect(() => {

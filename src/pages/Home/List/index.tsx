@@ -1,20 +1,29 @@
-import colors from "@Colors";
-import FloatingButton from "@Components/FloatButton";
-import List from "@Components/List";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import actions from "@Actions";
+import BaseDivider from "@Components/bases/Divider";
+import BaseIcon from "@Components/bases/Icon";
+import FloatingButton from "@Components/buttons/FloatButton";
+import ThemeModal from "@Components/modals/ThemeModal";
 import { useActionList } from "@Hooks/useActionList";
+import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
+import useTheme from "@Hooks/useTheme";
+import { FlashList } from "@shopify/flash-list";
 import { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
-import actions from "src/database/actions";
 import ActionModal from "./ActionModal";
+import Drawer from "./Drawer";
+import ListItem from "./ListItem";
 import useHeader from "./useHeader";
 
 const windowHeight = Dimensions.get("window").height;
 
 export default function HomeList() {
+  const theme = useTheme();
   const navigation = useNavigation();
   const { search } = useHeader();
+
+  const { isOpen } = useCurrentModal("THEME");
+  const { isOpen: sideBarIsOpen } = useCurrentModal("SIDEBAR");
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState<NoteDataProps | null>(null);
@@ -37,28 +46,38 @@ export default function HomeList() {
 
   return (
     <>
-      <ScrollView style={{ height: windowHeight }}>
-        <List
+      {sideBarIsOpen && <Drawer />}
+
+      {isOpen && <ThemeModal />}
+
+      <ScrollView
+        style={{
+          height: windowHeight,
+          backgroundColor: theme.palette.background.body,
+        }}
+      >
+        <FlashList
+          style={{ backgroundColor: theme.palette.background.body }}
           data={notes}
-          onClick={(item) => navigation.navigate("HomeDetail", { id: item.id })}
-          onLongPress={(item) => {
-            setSelectedNote(item);
-            handleOpenModal();
-          }}
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              onClick={(item) =>
+                navigation.navigate("HomeDetail", { id: item.id })
+              }
+              onLongPress={(item) => {
+                setSelectedNote(item);
+                handleOpenModal();
+              }}
+            />
+          )}
+          ItemSeparatorComponent={() => <BaseDivider />}
         />
       </ScrollView>
-
       <FloatingButton
         onPress={() => navigation.navigate("HomeDetail")}
-        icon={
-          <MaterialCommunityIcons
-            name="plus"
-            size={24}
-            color={colors.grey[200]}
-          />
-        }
+        icon={<BaseIcon name="plus" color={theme.palette.primary.contrast} />}
       />
-
       <ActionModal
         isOpenModal={isOpenModal}
         handleCloseModal={handleCloseModal}
