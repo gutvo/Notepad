@@ -1,7 +1,9 @@
 import FloatingButton from "@Components/FloatButton";
 import List from "@Components/List";
+import ThemeModal from "@Components/ThemeModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useActionList } from "@Hooks/useActionList";
+import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import { useState } from "react";
@@ -17,6 +19,8 @@ export default function HomeList() {
   const theme = useTheme();
   const navigation = useNavigation();
   const { search } = useHeader();
+
+  const { isOpen } = useCurrentModal("THEME");
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState<NoteDataProps | null>(null);
@@ -40,6 +44,8 @@ export default function HomeList() {
   return (
     <>
       <Drawer />
+
+      {isOpen && <ThemeModal />}
 
       <ScrollView
         style={{

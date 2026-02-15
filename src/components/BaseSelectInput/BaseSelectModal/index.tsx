@@ -2,65 +2,57 @@ import BaseModal from "@Components/BaseModal";
 import Divider from "@Components/List/Divider";
 import useTheme from "@Hooks/useTheme";
 import { FlashList } from "@shopify/flash-list";
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { TouchableOpacity } from "react-native";
+import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
+import { TouchableOpacity, View, useWindowDimensions } from "react-native";
 
-interface BaseSelectModalProps<DataProps> {
+interface BaseSelectModalProps<DataProps, ValueProps> {
   isOpenModal: boolean;
   onClose: () => void;
   renderItem: (data: BaseSelectRenderItemProps<DataProps>) => ReactNode;
   options: DataProps[];
-  value?: BaseSelectValueProps;
   onChange?: (data: DataProps) => void;
-  getOptionSelected?: (
-    option: DataProps,
-    value?: BaseSelectValueProps,
-  ) => BaseSelectValueProps;
-  setInternalValue: Dispatch<SetStateAction<BaseSelectValueProps>>;
+  getOptionValue?: (option: DataProps) => ValueProps;
+  setInternalValue: Dispatch<SetStateAction<ValueProps | undefined>>;
+  selectedItem: DataProps | undefined;
+  setSelectedItem: Dispatch<SetStateAction<DataProps | undefined>>;
+  itemHeight?: number; // altura de cada item (padding + conteúdo)
 }
 
-export default function BaseSelectModal<DataProps>({
+export default function BaseSelectModal<DataProps, ValueProps>({
   isOpenModal,
   onClose,
   renderItem,
   options,
-  value,
   onChange,
-  getOptionSelected,
   setInternalValue,
-}: BaseSelectModalProps<DataProps>) {
+  getOptionValue,
+  selectedItem,
+  setSelectedItem,
+  itemHeight = 60, // ajuste esse valor baseado no seu item
+}: BaseSelectModalProps<DataProps, ValueProps>) {
   const theme = useTheme();
-
-  const [selectedItem, setSelectedItem] = useState<DataProps | undefined>(
-    options.find((option) =>
-      getOptionSelected ? getOptionSelected(option, value) : option === value,
-    ),
-  );
-
-  useEffect(() => {
-    setSelectedItem(
-      options.find((option) =>
-        getOptionSelected ? getOptionSelected(option, value) : option === value,
-      ),
-    );
-  }, [value, options, getOptionSelected]);
+  const { height: screenHeight } = useWindowDimensions();
 
   function handleSelectOption(item: DataProps) {
     setSelectedItem(item);
     onChange?.(item);
 
-    const newValue = getOptionSelected
-      ? getOptionSelected(item)
-      : (item as unknown as BaseSelectValueProps);
+    const newValue = getOptionValue
+      ? getOptionValue(item)
+      : (item as unknown as ValueProps);
+
     setInternalValue?.(newValue);
     onClose();
   }
+
+  // Calcula a altura ideal
+  const listHeight = useMemo(() => {
+    const maxHeight = screenHeight * 0.7;
+    const contentHeight = options.length * itemHeight;
+
+    // Retorna o menor valor entre o conteúdo e o máximo permitido
+    return Math.min(contentHeight, maxHeight);
+  }, [options.length, itemHeight, screenHeight]);
 
   return (
     <BaseModal.Modal
@@ -69,21 +61,23 @@ export default function BaseSelectModal<DataProps>({
       onClose={onClose}
       style={{ minHeight: 0, maxHeight: "70%" }}
     >
-      <BaseModal.Container>
-        <FlashList
-          data={options}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => handleSelectOption(item)}
-              style={{ padding: theme.spacing(4) }}
-            >
-              {renderItem({ item, selectedItem, index })}
-            </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <Divider />}
-          showsVerticalScrollIndicator
-          indicatorStyle={theme.palette.isDarkMode ? "white" : "black"}
-        />
+      <BaseModal.Container style={{ flex: undefined }}>
+        <View style={{ height: listHeight }}>
+          <FlashList
+            data={options}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                onPress={() => handleSelectOption(item)}
+                style={{ padding: theme.spacing(4) }}
+              >
+                {renderItem({ item, selectedItem, index })}
+              </TouchableOpacity>
+            )}
+            ItemSeparatorComponent={() => <Divider />}
+            showsVerticalScrollIndicator
+            indicatorStyle={theme.palette.isDarkMode ? "white" : "black"}
+          />
+        </View>
       </BaseModal.Container>
     </BaseModal.Modal>
   );

@@ -4,31 +4,46 @@ import { ReactNode, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import BaseSelectModal from "./BaseSelectModal";
 
-export interface BaseSelectInputProps<DataProps> {
+export interface BaseSelectInputProps<DataProps, ValueProps> {
   placeholder?: string;
   renderItem: (data: BaseSelectRenderItemProps<DataProps>) => ReactNode;
   options: DataProps[];
-  value?: BaseSelectValueProps;
+  value?: ValueProps;
   onChange?: (data: DataProps) => void;
   disabled?: boolean;
-  getOptionSelected?: (
-    option: DataProps,
-    value?: BaseSelectValueProps,
-  ) => BaseSelectValueProps;
+  getOptionValue?: (option: DataProps) => ValueProps;
+  renderInputValue?: (value: ValueProps) => ReactNode;
 }
 
-export default function BaseSelectInput<DataProps>({
+export default function BaseSelectInput<
+  DataProps,
+  ValueProps extends BaseSelectValueProps,
+>({
   placeholder,
   options,
   renderItem,
   value,
   onChange,
   disabled,
-  getOptionSelected,
-}: BaseSelectInputProps<DataProps>) {
+  renderInputValue,
+  getOptionValue,
+}: BaseSelectInputProps<DataProps, ValueProps>) {
   const theme = useTheme();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
+  const [selectedItem, setSelectedItem] = useState<DataProps | undefined>(
+    options.find((option) =>
+      getOptionValue ? getOptionValue(option) === value : option === value,
+    ),
+  );
+
+  useEffect(() => {
+    setSelectedItem(
+      options.find((option) =>
+        getOptionValue ? getOptionValue(option) === value : option === value,
+      ),
+    );
+  }, [value, options, getOptionValue]);
 
   useEffect(() => {
     setInternalValue(value);
@@ -49,14 +64,27 @@ export default function BaseSelectInput<DataProps>({
         disabled={disabled}
         style={{ flex: 1 }}
       >
-        {placeholder && !value && !internalValue && (
-          <BaseTypography
-            style={{ backgroundColor: theme.palette.background.textSecondary }}
-          >
-            {placeholder}
-          </BaseTypography>
+        {renderInputValue &&
+          internalValue !== undefined &&
+          renderInputValue(internalValue)}
+
+        {!renderInputValue && (
+          <>
+            {placeholder &&
+              value === undefined &&
+              internalValue === undefined && (
+                <BaseTypography
+                  style={{
+                    backgroundColor: theme.palette.background.textSecondary,
+                  }}
+                >
+                  {placeholder}
+                </BaseTypography>
+              )}
+
+            <BaseTypography>{value ?? internalValue}</BaseTypography>
+          </>
         )}
-        <BaseTypography>{value ?? internalValue}</BaseTypography>
       </TouchableOpacity>
 
       {isOpenModal && (
@@ -64,11 +92,12 @@ export default function BaseSelectInput<DataProps>({
           isOpenModal={isOpenModal}
           options={options}
           renderItem={renderItem}
-          value={internalValue}
           onClose={handleCloseModal}
           onChange={onChange}
-          getOptionSelected={getOptionSelected}
           setInternalValue={setInternalValue}
+          getOptionValue={getOptionValue}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
         />
       )}
     </>

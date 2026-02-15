@@ -1,7 +1,7 @@
+import CustomModal from "@Components/CustomModal";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
 import {
-  Modal,
   StyleProp,
   TouchableWithoutFeedback,
   View,
@@ -26,14 +26,10 @@ export default function BaseModalModal({
 }: BaseModalProps) {
   const theme = useTheme();
 
+  if (!visible) return null;
+
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
+    <CustomModal>
       <TouchableWithoutFeedback onPress={onClose}>
         <View
           style={{
@@ -62,12 +58,11 @@ export default function BaseModalModal({
               ]}
             >
               <BasemodalHeader title={title} onClose={onClose} />
-
               {children}
             </View>
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    </CustomModal>
   );
 }

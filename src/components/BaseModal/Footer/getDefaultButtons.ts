@@ -1,4 +1,4 @@
-import { ThemeProps } from "@Theme/mergeTheme";
+import { ThemeProps } from "@Providers/ThemeProvider/types";
 
 interface GetDefaultButtonsProps {
   buttons: BaseModalFooterButtonProps[];

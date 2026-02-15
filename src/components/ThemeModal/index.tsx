@@ -1,20 +1,23 @@
+import actions from "@Actions";
 import BaseModal from "@Components/BaseModal";
-import BaseTypography from "@Components/BaseTypography";
+import BaseSwitch from "@Components/BaseSwitch";
 import SelectInput from "@Components/SelectInput";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { themes } from "@Theme/themes";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { View } from "react-native";
 import getDefaultValues, { ThemeDefaultValueProps } from "./getDefaultValues";
+import ThemeOption from "./ThemeOption";
+import useGetThemeConfigs from "./useGetThemeConfigs";
 
-export default function ConfigModal() {
+export default function ThemeModal() {
   const theme = useTheme();
   const toast = useToast();
-  const { isOpen, closeModal } = useCurrentModal("CONFIG");
+  const { isOpen, closeModal } = useCurrentModal("THEME");
+
+  const [themeConfigs] = useGetThemeConfigs();
 
   const {
     handleSubmit,
@@ -26,16 +29,21 @@ export default function ConfigModal() {
   });
 
   useEffect(() => {
-    // if (configs.length) {
-    //   reset(getDefaultValues(configs));
-    // }
-  }, [reset]);
+    if (themeConfigs.length) {
+      reset(getDefaultValues(themeConfigs));
+    }
+  }, [reset, themeConfigs]);
 
   async function handleConfirm(data: ThemeDefaultValueProps) {
     if (!isDirty) {
       closeModal();
       return;
     }
+
+    await actions.config.update("THEME_INDEX", { value: data.themeIndex });
+    await actions.config.update("THEME_IS_DARK_MODE", {
+      value: data.isDarkMode,
+    });
 
     closeModal();
 
@@ -47,51 +55,68 @@ export default function ConfigModal() {
     { name: "CONFIRM", onClick: handleSubmit(handleConfirm) },
   ];
 
+  const formattedThemes = useMemo(
+    () =>
+      themes.reduce<Record<number, { index: number; main: string }>>(
+        (accumulator, themeObject, index) => {
+          accumulator[index] = {
+            index,
+            main: themeObject.main,
+          };
+
+          return accumulator;
+        },
+        {},
+      ),
+    [],
+  );
+
   return (
-    <BaseModal.Modal
-      title="Configurações"
-      visible={isOpen}
-      onClose={closeModal}
-    >
-      <BaseModal.Container style={{ padding: theme.spacing(4) }}>
+    <BaseModal.Modal title="Temas" visible={isOpen} onClose={closeModal}>
+      <BaseModal.Container
+        style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
+      >
         <Controller
           control={control}
           name="themeIndex"
-          rules={{ required: "Campo obrigatório" }}
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
               value={value}
-              onChange={(itemValue) => onChange(itemValue)}
-              label="Tamanho da fonte"
+              onChange={(itemValue) => onChange(itemValue.index)}
+              label="Tema"
               disabled={disabled}
-              options={themes}
-              renderItem={({ item, selectedItem, index }) => {
-                return (
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: theme.spacing(3),
-                    }}
-                  >
-                    <View style={{ backgroundColor: "red" }} />
-                    <BaseTypography style={{ flex: 1 }}>
-                      Tema {index}
-                    </BaseTypography>
-
-                    {item === selectedItem && (
-                      <MaterialCommunityIcons
-                        name="check"
-                        color={theme.palette.background.textPrimary}
-                        size={24}
-                      />
-                    )}
-                  </View>
-                );
-              }}
+              getOptionValue={(item) => item.index}
+              options={Object.values(formattedThemes)}
+              renderInputValue={(renderValue) => (
+                <ThemeOption
+                  color={formattedThemes[renderValue].main}
+                  label={`Tema ${renderValue + 1}`}
+                />
+              )}
+              renderItem={({ item, selectedItem, index }) => (
+                <ThemeOption
+                  color={item.main}
+                  label={`Tema ${index + 1}`}
+                  selected={item === selectedItem}
+                />
+              )}
               error={Boolean(errors.themeIndex?.message)}
               helpText={errors.themeIndex?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="isDarkMode"
+          render={({ field: { onChange, value, disabled } }) => (
+            <BaseSwitch
+              label="Modo noturno"
+              disableIconName="weather-sunny"
+              enableIconName="moon-waning-crescent"
+              value={value}
+              onChange={onChange}
+              disabled={disabled}
             />
           )}
         />

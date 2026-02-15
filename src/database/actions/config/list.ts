@@ -3,13 +3,19 @@ import { configSchema } from "@Schemas";
 import { and, inArray } from "drizzle-orm";
 import _formatConfigData from "./_formatData";
 
-interface ListConfigsProps {
+export default async function listConfigs<
+  TKeys extends ConfigKeyProps = ConfigKeyProps,
+>({
+  findBy,
+}: {
   findBy?: {
-    keys?: ConfigKeyProps[];
+    keys?: readonly TKeys[];
   };
-}
-
-export default async function listConfigs({ findBy }: ListConfigsProps = {}) {
+} = {}): Promise<
+  {
+    [K in TKeys]: Extract<ConfigDataProps, { key: K }>;
+  }[TKeys][]
+> {
   const conditions = [];
 
   if (findBy?.keys?.length) {
@@ -24,7 +30,7 @@ export default async function listConfigs({ findBy }: ListConfigsProps = {}) {
 
   const data = await query;
 
-  const formattedData = data.map((item) => _formatConfigData(item));
+  const formattedData = data.map((item) => _formatConfigData(item)) as any;
 
   return formattedData;
 }

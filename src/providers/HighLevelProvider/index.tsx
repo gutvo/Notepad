@@ -1,6 +1,7 @@
 import ConfigModal from "@Components/ConfigModal";
 import MigrationModal from "@Components/MigrationModal";
 import database from "@Database";
+import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useSaveSeeds from "@Hooks/useSaveSeeds";
 import useTheme from "@Hooks/useTheme";
 import migrations from "@Migrations";
@@ -9,13 +10,17 @@ import { ReactNode } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface HighLevelProps {
+interface HighLevelProviderProps {
   children: ReactNode;
 }
 
-export default function HighLevel({ children }: HighLevelProps) {
+export default function HighLevelProvider({
+  children,
+}: HighLevelProviderProps) {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+
+  const { isOpen } = useCurrentModal("CONFIG");
 
   const { success, error } = useMigrations(database, migrations);
 
@@ -54,7 +59,7 @@ export default function HighLevel({ children }: HighLevelProps) {
         }}
       />
 
-      <ConfigModal />
+      {isOpen && <ConfigModal />}
     </>
   );
 }

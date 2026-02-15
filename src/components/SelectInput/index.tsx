@@ -6,7 +6,10 @@ import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
 import { StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
 
-interface SelectInputProps<DataProps> extends BaseSelectInputProps<DataProps> {
+interface SelectInputProps<DataProps, ValueProps> extends BaseSelectInputProps<
+  DataProps,
+  ValueProps
+> {
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   label?: string;
@@ -17,7 +20,10 @@ interface SelectInputProps<DataProps> extends BaseSelectInputProps<DataProps> {
   helpTextStyle?: StyleProp<TextStyle>;
 }
 
-export default function SelectInput<DataProps>({
+export default function SelectInput<
+  DataProps,
+  ValueProps extends BaseSelectValueProps,
+>({
   endIcon,
   startIcon,
   label,
@@ -27,7 +33,7 @@ export default function SelectInput<DataProps>({
   error,
   helpTextStyle,
   ...rest
-}: SelectInputProps<DataProps>) {
+}: SelectInputProps<DataProps, ValueProps>) {
   const theme = useTheme();
 
   return (

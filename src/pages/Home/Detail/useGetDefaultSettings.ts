@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function useGetDefaultSettings() {
   const [settingsGroupedByKey, setSettingsGroupedByKey] = useState<
-    Record<ConfigKeyProps, string | boolean | number>
+    Record<ConfigKeyProps<"TEXT_FONT_SIZE">, string | boolean | number>
   >({
     TEXT_FONT_SIZE: 12,
   });

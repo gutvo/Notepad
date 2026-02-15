@@ -1,10 +1,17 @@
 export default function getDefaultValues(configs?: ConfigDataProps[]) {
-  const findConfig = configs?.find(({ key }) => key === "TEXT_FONT_SIZE");
+  const defaultProps = configs?.reduce(
+    (accumulator, config) => {
+      if (config.key === "TEXT_FONT_SIZE") {
+        accumulator.textFontSize = config.value;
+      }
 
-  const formattedTextFontSize = (findConfig?.value as number) ?? 16;
+      return accumulator;
+    },
+    { textFontSize: 12 },
+  );
 
   const defaultValues = {
-    textFontSize: formattedTextFontSize,
+    textFontSize: defaultProps?.textFontSize,
   };
 
   return defaultValues;

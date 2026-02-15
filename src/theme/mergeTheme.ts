@@ -1,4 +1,4 @@
-import { merge } from "lodash";
+import merge from "lodash.merge";
 import { darkBackground, lightBackground } from "./backgroundTheme";
 import defaultColors from "./defaultColors";
 import { themes } from "./themes";

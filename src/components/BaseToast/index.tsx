@@ -1,13 +1,8 @@
 import BaseTypography from "@Components/BaseTypography";
+import CustomModal from "@Components/CustomModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useTheme from "@Hooks/useTheme";
-import {
-  Animated,
-  Dimensions,
-  Modal,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useToastConfig from "./toastConfig";
 import useAnimation from "./useAnimation";
@@ -41,7 +36,7 @@ export default function BaseToast({
   }
 
   return (
-    <Modal transparent statusBarTranslucent>
+    <CustomModal priority={1}>
       <Animated.View
         style={{
           top: insets.top + 10 + index * 90,
@@ -50,7 +45,6 @@ export default function BaseToast({
           position: "absolute",
           width: "100%",
           alignItems: "center",
-          zIndex: 999,
         }}
       >
         <TouchableOpacity onPress={resetDuration}>
@@ -95,6 +89,6 @@ export default function BaseToast({
           </View>
         </TouchableOpacity>
       </Animated.View>
-    </Modal>
+    </CustomModal>
   );
 }

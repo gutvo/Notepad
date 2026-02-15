@@ -2,7 +2,6 @@ import BaseDrawer from "@Components/BaseDrawer";
 import BaseTypography from "@Components/BaseTypography";
 import Divider from "@Components/List/Divider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import useChangeTheme from "@Hooks/useChangeTheme";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
@@ -11,7 +10,6 @@ import { TouchableOpacity } from "react-native";
 
 export default function Drawer() {
   const theme = useTheme();
-  const changeTheme = useChangeTheme();
   const openModal = useOpenModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
 
@@ -26,16 +24,20 @@ export default function Drawer() {
           size={24}
         />
       ),
-      onclick: () => {
-        openModal("CONFIG");
-      },
+      onclick: () => openModal("CONFIG"),
     },
-    // {
-    //   name: "teste2",
-    //   label: "teste",
-    //   icon: <MaterialCommunityIcons name="cog" />,
-    //   onclick: () => {},
-    // },
+    {
+      name: "theme",
+      label: "Temas",
+      icon: (
+        <MaterialCommunityIcons
+          name="theme-light-dark"
+          color={theme.palette.background.textPrimary}
+          size={24}
+        />
+      ),
+      onclick: () => openModal("THEME"),
+    },
   ];
 
   return (
@@ -63,25 +65,6 @@ export default function Drawer() {
         )}
         ItemSeparatorComponent={() => <Divider />}
       />
-
-      <TouchableOpacity
-        style={{
-          padding: theme.spacing(4),
-          display: "flex",
-          flexDirection: "row",
-          gap: theme.spacing(3),
-        }}
-        onPress={() => {
-          changeTheme({ darkMode: !theme.palette.isDarkMode });
-        }}
-      >
-        <MaterialCommunityIcons
-          name={theme.palette.isDarkMode ? "weather-night" : "brightness-7"}
-          color={theme.palette.background.textPrimary}
-          size={24}
-        />
-        <BaseTypography>Alterar modo escuro</BaseTypography>
-      </TouchableOpacity>
     </BaseDrawer>
   );
 }

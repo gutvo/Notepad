@@ -1,9 +1,9 @@
+import CustomModal from "@Components/CustomModal";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
-  Modal,
   Pressable,
   StyleSheet,
   View,
@@ -66,7 +66,7 @@ export default function BaseDrawer({
   if (!isMounted) return null;
 
   return (
-    <Modal transparent animationType="none">
+    <CustomModal>
       <View style={StyleSheet.absoluteFill}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
           <Animated.View
@@ -95,6 +95,6 @@ export default function BaseDrawer({
           {children}
         </Animated.View>
       </View>
-    </Modal>
+    </CustomModal>
   );
 }
