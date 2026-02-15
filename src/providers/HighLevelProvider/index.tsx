@@ -1,5 +1,5 @@
 import ConfigModal from "@Components/ConfigModal";
-import MigrationModal from "@Components/MigrationModal";
+import MigrationModal from "@Components/modals/MigrationModal";
 import database from "@Database";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useSaveSeeds from "@Hooks/useSaveSeeds";
