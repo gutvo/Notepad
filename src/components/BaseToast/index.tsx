@@ -1,6 +1,6 @@
 import BaseIcon from "@Components/BaseIcon";
 import BaseTypography from "@Components/BaseTypography";
-import CustomModal from "@Components/CustomModal";
+import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
 import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -36,7 +36,7 @@ export default function BaseToast({
   }
 
   return (
-    <CustomModal priority={1}>
+    <BaseModalWrapper priority={1}>
       <Animated.View
         style={{
           top: insets.top + 10 + index * 90,
@@ -89,6 +89,6 @@ export default function BaseToast({
           </View>
         </TouchableOpacity>
       </Animated.View>
-    </CustomModal>
+    </BaseModalWrapper>
   );
 }

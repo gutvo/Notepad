@@ -1,4 +1,4 @@
-import CustomModal from "@Components/CustomModal";
+import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef, useState } from "react";
@@ -74,7 +74,7 @@ export default function BaseDrawer({
   if (!isMounted) return null;
 
   return (
-    <CustomModal>
+    <BaseModalWrapper>
       <View style={StyleSheet.absoluteFill}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
           <Animated.View
@@ -103,6 +103,6 @@ export default function BaseDrawer({
           {children}
         </Animated.View>
       </View>
-    </CustomModal>
+    </BaseModalWrapper>
   );
 }

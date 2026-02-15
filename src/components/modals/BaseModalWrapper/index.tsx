@@ -3,12 +3,15 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Portal } from "./Portal";
 
-interface CustomModalProps {
+interface BaseModalWrapperProps {
   children: ReactNode;
   priority?: number;
 }
 
-export default function CustomModal({ children, priority }: CustomModalProps) {
+export default function BaseModalWrapper({
+  children,
+  priority,
+}: BaseModalWrapperProps) {
   const insets = useSafeAreaInsets();
 
   return (

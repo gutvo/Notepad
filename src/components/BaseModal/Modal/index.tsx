@@ -1,4 +1,4 @@
-import CustomModal from "@Components/CustomModal";
+import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
@@ -37,7 +37,7 @@ export default function BaseModalModal({
   if (!visible) return null;
 
   return (
-    <CustomModal>
+    <BaseModalWrapper>
       <TouchableWithoutFeedback onPress={onClose}>
         <View
           style={{
@@ -71,6 +71,6 @@ export default function BaseModalModal({
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </CustomModal>
+    </BaseModalWrapper>
   );
 }
