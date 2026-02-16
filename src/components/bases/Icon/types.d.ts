@@ -18,4 +18,6 @@ type BaseIconNameProps =
   | "alert-circle-outline"
   | "information-outline"
   | "bell-outline"
-  | "theme-light-dark";
+  | "theme-light-dark"
+  | "bell-plus-outline"
+  | "arrow-right";

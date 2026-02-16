@@ -2,8 +2,10 @@ import BaseModalContainer from "./Container";
 import BaseModalFooter from "./Footer";
 import BaseModalModal from "./Modal";
 
-export default {
+const BaseModal = {
   Modal: BaseModalModal,
   Container: BaseModalContainer,
   Footer: BaseModalFooter,
 };
+
+export default BaseModal;
