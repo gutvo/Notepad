@@ -15,22 +15,22 @@ export default function useToastConfig() {
   const toastConfig: ToastConfigProps = {
     success: {
       color: theme.palette.success.main,
-      icon: "check-circle",
+      icon: "check-circle-outline",
       title: "Sucesso",
     },
     error: {
       color: theme.palette.error.main,
-      icon: "x-circle",
+      icon: "close-circle-outline",
       title: "Erro",
     },
     warning: {
       color: theme.palette.warning.main,
-      icon: "alert-circle",
+      icon: "alert-circle-outline",
       title: "Alerta",
     },
     info: {
       color: theme.palette.info.main,
-      icon: "info",
+      icon: "information-outline",
       title: "Informação",
     },
   };
