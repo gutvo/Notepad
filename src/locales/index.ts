@@ -30,6 +30,7 @@ const locales = {
         actions: {
           view: "Visualizar",
           duplicate: "Duplicar",
+          reminder: "Adicionar Lembrete",
           delete: "Deletar",
         },
         success: {
