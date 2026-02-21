@@ -4,8 +4,11 @@ interface UseGetDaysProps {
   year: number;
   month: number;
   todayTimestamp: number;
-  selectedTimestamp: number;
+  selectedTimestamp: number | undefined;
   disabledPast?: boolean;
+  disabledToday?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export default function useGetDays({
@@ -14,7 +17,25 @@ export default function useGetDays({
   todayTimestamp,
   year,
   disabledPast,
+  disabledToday,
+  minDate,
+  maxDate,
 }: UseGetDaysProps) {
+  // Normaliza minDate e maxDate para começar do dia (00:00:00)
+  const minTimestamp = useMemo(() => {
+    if (!minDate) return undefined;
+    const date = new Date(minDate);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }, [minDate]);
+
+  const maxTimestamp = useMemo(() => {
+    if (!maxDate) return undefined;
+    const date = new Date(maxDate);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }, [maxDate]);
+
   const monthStructure = useMemo(() => {
     const firstDayOfMonth = new Date(year, month, 1);
     const startDay = firstDayOfMonth.getDay();
@@ -22,12 +43,15 @@ export default function useGetDays({
 
     const daysArray: (number | null)[] = [];
 
+    // Preenche dias vazios do início do mês
     for (let i = 0; i < startDay; i++) {
       daysArray.push(null);
     }
 
+    // Adiciona todos os dias do mês normalizados
     for (let day = 1; day <= totalDays; day++) {
       const date = new Date(year, month, day);
+      date.setHours(0, 0, 0, 0); // IMPORTANTE: Normaliza para 00:00:00
       daysArray.push(date.getTime());
     }
 
@@ -35,13 +59,11 @@ export default function useGetDays({
   }, [year, month]);
 
   const selectedDayTimestamp = useMemo(() => {
-    const date = new Date(selectedTimestamp);
+    if (!selectedTimestamp) return undefined;
 
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-    ).getTime();
+    const date = new Date(selectedTimestamp);
+    date.setHours(0, 0, 0, 0); // Normaliza
+    return date.getTime();
   }, [selectedTimestamp]);
 
   const days: (BaseCalendarDayDataProps | null)[] = useMemo(
@@ -49,14 +71,42 @@ export default function useGetDays({
       monthStructure.map((dayTimestamp) => {
         if (!dayTimestamp) return null;
 
+        // Verifica se está no passado
+        const isPast = disabledPast && dayTimestamp < todayTimestamp;
+
+        // Verifica se é hoje
+        const isToday = dayTimestamp === todayTimestamp;
+
+        // Verifica se hoje está desabilitado
+        const isTodayDisabled = disabledToday && isToday;
+
+        // Verifica minDate
+        const isBeforeMin =
+          minTimestamp !== undefined && dayTimestamp < minTimestamp;
+
+        // Verifica maxDate
+        const isAfterMax =
+          maxTimestamp !== undefined && dayTimestamp > maxTimestamp;
+
+        // Dia está desabilitado se qualquer condição for verdadeira
+        const disabled = isPast || isTodayDisabled || isBeforeMin || isAfterMax;
+
         return {
           timestamp: dayTimestamp,
           isSelected: dayTimestamp === selectedDayTimestamp,
-          isToday: dayTimestamp === todayTimestamp,
-          disabled: disabledPast ? todayTimestamp > dayTimestamp : false,
+          isToday,
+          disabled,
         };
       }),
-    [disabledPast, monthStructure, selectedDayTimestamp, todayTimestamp],
+    [
+      disabledPast,
+      disabledToday,
+      monthStructure,
+      selectedDayTimestamp,
+      todayTimestamp,
+      minTimestamp,
+      maxTimestamp,
+    ],
   );
 
   return days;

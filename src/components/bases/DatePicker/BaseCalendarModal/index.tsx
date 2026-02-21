@@ -1,12 +1,10 @@
-import BaseCalendar from "@Components/bases/Calendar";
+import BaseCalendar, { BaseCalendarProps } from "@Components/bases/Calendar";
 import BaseModal from "@Components/bases/Modal";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-interface BaseCalendarModalProps {
+export interface BaseCalendarModalProps extends BaseCalendarProps {
   isOpenModal: boolean;
   onClose: () => void;
-  value?: Date;
-  onChange?: (data: Date) => void;
 }
 
 export default function BaseCalendarModal({
@@ -14,9 +12,9 @@ export default function BaseCalendarModal({
   onClose,
   onChange,
   value,
+  ...rest
 }: BaseCalendarModalProps) {
-  const today = useMemo(() => new Date(), []);
-  const [internalValue, setInternalValue] = useState(value ?? today);
+  const [internalValue, setInternalValue] = useState(value);
 
   function handleConfirm() {
     if (onChange) {
@@ -37,7 +35,7 @@ export default function BaseCalendarModal({
         <BaseCalendar
           value={internalValue}
           onChange={setInternalValue}
-          disabledPast
+          {...rest}
         />
       </BaseModal.Container>
 

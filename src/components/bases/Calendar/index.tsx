@@ -7,19 +7,21 @@ import { useCalendarMonth } from "./hooks/useCalendarMonth";
 import { useCalendarState } from "./hooks/useCalendarState";
 import useGetDays from "./hooks/useGetDays";
 
-interface BaseCalendarProps {
+export interface BaseCalendarProps {
   value?: Date;
-  onChange?: (date: Date) => void;
+  onChange?: (date?: Date) => void;
   disabledPast?: boolean;
+  disabledToday?: boolean;
 }
 
 export default function BaseCalendar({
   value,
   onChange,
   disabledPast,
+  disabledToday,
 }: BaseCalendarProps) {
   const { selectedTimestamp, handleChangeDate, todayTimestamp } =
-    useCalendarState({ value, onChange });
+    useCalendarState({ value, onChange, disabledToday });
 
   const { viewDate, setViewDate, year, month } = useCalendarMonth({ value });
 
@@ -29,6 +31,7 @@ export default function BaseCalendar({
     todayTimestamp,
     year,
     disabledPast,
+    disabledToday,
   });
 
   return (

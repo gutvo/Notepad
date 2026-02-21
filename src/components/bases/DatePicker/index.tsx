@@ -1,13 +1,14 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import BaseButton from "../Button";
 import BaseTypography from "../Typography";
-import BaseCalendarModal from "./BaseCalendarModal";
+import BaseCalendarModal, { BaseCalendarModalProps } from "./BaseCalendarModal";
 
-export interface BaseSelectInputProps {
+export interface BaseDatePickerProps extends Omit<
+  BaseCalendarModalProps,
+  "isOpenModal" | "onClose"
+> {
   placeholder?: string;
-  value?: Date;
   defaultValue?: Date;
-  onChange?: (data: Date) => void;
   disabled?: boolean;
   renderInputValue?: (value: Date) => ReactNode;
 }
@@ -18,44 +19,67 @@ export default function BaseDatePicker({
   value,
   defaultValue,
   renderInputValue,
-}: BaseSelectInputProps) {
+  placeholder,
+  ...modalRest
+}: BaseDatePickerProps) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [internalValue, setInternalValue] = useState<Date | undefined>(
     defaultValue,
   );
 
+  // Determina se o componente é controlado
   const isControlled = value !== undefined;
-
   const currentValue = isControlled ? value : internalValue;
 
-  function handleOpenModal() {
-    setIsOpenModal(true);
-  }
-
-  function handleCloseModal() {
-    setIsOpenModal(false);
-  }
-
-  function handleChange(newDate: Date) {
-    if (!isControlled) {
-      setInternalValue(newDate);
+  // Memoiza os handlers para evitar re-renders desnecessários
+  const handleOpenModal = useCallback(() => {
+    if (!disabled) {
+      setIsOpenModal(true);
     }
+  }, [disabled]);
 
-    onChange?.(newDate);
-  }
+  const handleCloseModal = useCallback(() => {
+    setIsOpenModal(false);
+  }, []);
+
+  const handleChange = useCallback(
+    (newDate?: Date) => {
+      // Atualiza estado interno apenas se não for controlado
+      if (!isControlled) {
+        setInternalValue(newDate);
+      }
+
+      // Chama onChange
+      onChange?.(newDate);
+
+      // Fecha o modal após a seleção
+      setIsOpenModal(false);
+    },
+    [isControlled, onChange],
+  );
 
   return (
     <>
       <BaseButton
         onPress={handleOpenModal}
         disabled={disabled}
-        style={{ flex: 1 }}
+        style={{ flex: 1, zIndex: 2 }}
       >
-        {currentValue && (
+        {renderInputValue &&
+          internalValue !== undefined &&
+          renderInputValue(internalValue)}
+
+        {!renderInputValue && (
           <>
-            {renderInputValue ? (
-              renderInputValue(currentValue)
-            ) : (
+            {placeholder &&
+              value === undefined &&
+              internalValue === undefined && (
+                <BaseTypography variant="PLACEHOLDER">
+                  {placeholder}
+                </BaseTypography>
+              )}
+
+            {currentValue && (
               <BaseTypography>
                 {currentValue.toLocaleDateString("pt-BR")}
               </BaseTypography>
@@ -70,6 +94,7 @@ export default function BaseDatePicker({
           onClose={handleCloseModal}
           onChange={handleChange}
           value={currentValue}
+          {...modalRest}
         />
       )}
     </>

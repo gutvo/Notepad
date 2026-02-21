@@ -20,4 +20,5 @@ type BaseIconNameProps =
   | "bell-outline"
   | "theme-light-dark"
   | "bell-plus-outline"
-  | "arrow-right";
+  | "arrow-right"
+  | "calendar-outline";
