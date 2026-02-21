@@ -1,10 +1,17 @@
 import database from "@Database";
 import { reminderSchema } from "@Schemas";
-import { desc } from "drizzle-orm";
+import { desc, like } from "drizzle-orm";
 
-export default async function listReminders() {
+interface ListRemindersProps {
+  search?: string;
+}
+
+export default async function listReminders({
+  search,
+}: ListRemindersProps = {}) {
   return database
     .select()
     .from(reminderSchema)
+    .where(search ? like(reminderSchema.title, `%${search}%`) : undefined)
     .orderBy(desc(reminderSchema.notificate_at));
 }

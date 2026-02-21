@@ -1,10 +1,15 @@
 import database from "@Database";
 import { noteSchema } from "@Schemas";
-import { desc } from "drizzle-orm";
+import { desc, like } from "drizzle-orm";
 
-export default async function listNotes() {
+interface ListNotesProps {
+  search?: string;
+}
+
+export default async function listNotes({ search }: ListNotesProps = {}) {
   return database
     .select()
     .from(noteSchema)
+    .where(search ? like(noteSchema.description, `%${search}%`) : undefined)
     .orderBy(desc(noteSchema.created_at));
 }
