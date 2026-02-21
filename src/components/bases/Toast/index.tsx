@@ -35,7 +35,7 @@ export default function BaseToast({
   }
 
   return (
-    <BaseModalWrapper priority={1}>
+    <BaseModalWrapper>
       <Animated.View
         style={{
           top: index * 90,
