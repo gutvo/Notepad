@@ -28,7 +28,6 @@ export default async function createNotification({
       async (transaction) => {
         const createdReminderIds: number[] = [];
 
-        // 1️⃣ Cria a notificação principal (do dia)
         const mainNotificationId =
           await Notifications.scheduleNotificationAsync({
             content: {
@@ -38,19 +37,13 @@ export default async function createNotification({
               data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
             },
             trigger: {
-              type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-              year: date.getFullYear(),
-              month: date.getMonth(),
-              day: date.getDate(),
-              hour: date.getHours() || 9,
-              minute: date.getMinutes() || 0,
-              repeats: false,
+              type: Notifications.SchedulableTriggerInputTypes.DATE,
+              date: date,
             },
           });
 
         scheduledNotificationIds.push(mainNotificationId);
 
-        // Salva a notificação principal no banco
         const mainReminder = await actions.reminder.create(
           {
             notification_id: mainNotificationId,
@@ -58,7 +51,7 @@ export default async function createNotification({
             title,
             message: body,
             notificate_at: date,
-            parent_id: null, // principal
+            parent_id: null,
           },
           { transaction },
         );
@@ -69,7 +62,7 @@ export default async function createNotification({
           const subDate = new Date(date);
           subDate.setDate(subDate.getDate() - index);
 
-          if (subDate <= new Date()) continue; // ignora datas passadas
+          if (subDate <= new Date()) continue;
 
           const subNotificationId =
             await Notifications.scheduleNotificationAsync({
@@ -77,15 +70,11 @@ export default async function createNotification({
                 title,
                 body: `Lembrete antecipado: ${body}`,
                 sound: true,
+                data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
               },
               trigger: {
-                type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-                year: subDate.getFullYear(),
-                month: subDate.getMonth(),
-                day: subDate.getDate(),
-                hour: subDate.getHours() || 9,
-                minute: subDate.getMinutes() || 0,
-                repeats: false,
+                type: Notifications.SchedulableTriggerInputTypes.DATE,
+                date: subDate,
               },
             });
 
@@ -98,7 +87,7 @@ export default async function createNotification({
               title,
               message: `Lembrete antecipado: ${body}`,
               notificate_at: subDate,
-              parent_id: mainReminder.id, // vincula à principal
+              parent_id: mainReminder.id,
             },
             { transaction },
           );
@@ -112,7 +101,6 @@ export default async function createNotification({
 
     return allCreatedReminderIds;
   } catch (error) {
-    // Se algo deu errado, cancela todas notificações já agendadas
     for (const id of scheduledNotificationIds) {
       await Notifications.cancelScheduledNotificationAsync(id);
     }

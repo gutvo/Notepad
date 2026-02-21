@@ -12,6 +12,8 @@ const lightBackground = {
   textPrimary: defaultColors.grey[900],
   /** Cor para texto secundário */
   textSecondary: defaultColors.grey[700],
+  /** Cor do placeholder */
+  textPlaceholder: "rgba(0, 0, 0, 0.4)",
   /** Cor para bordas e separadores */
   border: defaultColors.grey[400],
   /** Efeito ao pressionar componentes */
@@ -32,6 +34,8 @@ const darkBackground = {
   textPrimary: defaultColors.grey[50],
   /** Cor para texto secundário */
   textSecondary: defaultColors.grey[200],
+  /** Cor do placeholder */
+  textPlaceholder: "rgba(255, 255, 255, 0.4)",
   /** Cor para bordas e separadores */
   border: defaultColors.grey[600],
   /** Efeito ao pressionar componentes */

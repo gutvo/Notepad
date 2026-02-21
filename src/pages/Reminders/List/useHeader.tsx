@@ -3,7 +3,6 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
 import useNavigation from "@Hooks/useNavigation";
-import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
@@ -11,7 +10,6 @@ import { View } from "react-native";
 export default function useHeader() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const openModal = useOpenModal();
 
   const [search, setSearch] = useState("");
   const [inputSearch, setInputSearch] = useState("");
@@ -26,39 +24,28 @@ export default function useHeader() {
     setIsSearching((value) => !value);
   }, [inputSearch, isSearching]);
 
-  function handleGoBack() {
+  const handleGoBack = useCallback(() => {
+    if (!isSearching) {
+      navigation.back();
+      return;
+    }
+
     setSearch("");
     setInputSearch("");
     setIsSearching(false);
-  }
+  }, [isSearching, navigation]);
 
   const headerLeft = useCallback(
     () => (
-      <>
-        {isSearching ? (
-          <BaseButton onPress={handleGoBack}>
-            <BaseIcon
-              name="arrow-left"
-              color={theme.palette.primary.contrast}
-              style={{ marginRight: theme.spacing(3) }}
-            />
-          </BaseButton>
-        ) : (
-          <BaseButton
-            onPress={() => {
-              openModal("SIDEBAR");
-            }}
-          >
-            <BaseIcon
-              name="menu"
-              color={theme.palette.primary.contrast}
-              style={{ marginRight: theme.spacing(3) }}
-            />
-          </BaseButton>
-        )}
-      </>
+      <BaseButton onPress={handleGoBack}>
+        <BaseIcon
+          name="arrow-left"
+          color={theme.palette.primary.contrast}
+          style={{ marginRight: theme.spacing(3) }}
+        />
+      </BaseButton>
     ),
-    [isSearching, openModal, theme],
+    [handleGoBack, theme],
   );
 
   const headerCenter = useCallback(
@@ -71,7 +58,7 @@ export default function useHeader() {
           />
         ) : (
           <BaseTypography style={{ color: theme.palette.primary.contrast }}>
-            Página incial
+            Lembretes
           </BaseTypography>
         )}
       </View>
