@@ -25,8 +25,6 @@ export default function TextField({
   children,
   disabled,
   required,
-  value,
-  onChangeText,
   ...rest
 }: TextFieldProps) {
   const theme = useTheme();
@@ -63,8 +61,6 @@ export default function TextField({
         placeholderTextColor={theme.palette.background.textPlaceholder}
         editable={!disabled}
         selectTextOnFocus={!disabled}
-        value={value ?? ""}
-        onChangeText={onChangeText}
         {...rest}
       />
     </BaseInputWrapper>

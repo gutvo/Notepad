@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { Animated } from "react-native";
+import { Animated, PanResponder } from "react-native";
 
 interface UseAnimationProps {
   duration: number;
@@ -20,12 +20,12 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
       Animated.timing(translateY, {
         toValue: -150,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(opacity, {
         toValue: 0,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(onHide);
   }, [onHide, opacity, translateY]);
@@ -35,12 +35,12 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
       Animated.timing(translateY, {
         toValue: 0,
         duration: 350,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(opacity, {
         toValue: 1,
         duration: 350,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start();
 
@@ -53,5 +53,27 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
     open();
   }, [open]);
 
-  return { translateY, opacity, close };
+  const pan = useRef(new Animated.ValueXY()).current;
+
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gestureState) =>
+      Math.abs(gestureState.dx) > 5, // agora olha para o movimento horizontal
+    onPanResponderMove: Animated.event([null, { dx: pan.x }], {
+      useNativeDriver: false,
+    }),
+    onPanResponderRelease: (_, gestureState) => {
+      if (gestureState.dx > 150 || gestureState.dx < -150) {
+        // deslizou para direita ou esquerda
+        onHide();
+      } else {
+        // volta para posição original
+        Animated.spring(pan, {
+          toValue: { x: 0, y: 0 },
+          useNativeDriver: false,
+        }).start();
+      }
+    },
+  });
+
+  return { translateY, opacity, close, panResponder, pan };
 }
