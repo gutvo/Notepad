@@ -1,24 +1,12 @@
+import BaseInputWrapper, {
+  BaseInputWrapperProps,
+} from "@Components/bases/InputWrapper";
 import BaseSelectInput, {
   BaseSelectInputProps,
 } from "@Components/bases/SelectInput";
-import BaseTypography from "@Components/bases/Typography";
-import useTheme from "@Hooks/useTheme";
-import { ReactNode } from "react";
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native";
 
-interface SelectInputProps<DataProps, ValueProps> extends BaseSelectInputProps<
-  DataProps,
-  ValueProps
-> {
-  startIcon?: ReactNode;
-  endIcon?: ReactNode;
-  label?: string;
-  containerStyle?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-  error?: boolean;
-  helpText?: string;
-  helpTextStyle?: StyleProp<TextStyle>;
-}
+interface SelectInputProps<DataProps, ValueProps>
+  extends BaseSelectInputProps<DataProps, ValueProps>, BaseInputWrapperProps {}
 
 export default function SelectInput<
   DataProps,
@@ -32,68 +20,24 @@ export default function SelectInput<
   helpText,
   error,
   helpTextStyle,
+  required,
   ...rest
 }: SelectInputProps<DataProps, ValueProps>) {
-  const theme = useTheme();
+  const wrapperProps = {
+    containerStyle,
+    endIcon,
+    error,
+    helpText,
+    helpTextStyle,
+    label,
+    startIcon,
+    textStyle,
+    required,
+  };
 
   return (
-    <View style={{ marginTop: theme.spacing(3) }}>
-      {label && (
-        <BaseTypography
-          variant="BODY2"
-          style={[
-            {
-              position: "absolute",
-              top: -10,
-              left: 12,
-              paddingHorizontal: theme.spacing(1),
-              backgroundColor: theme.palette.background.body,
-              color: theme.palette.background.textPrimary,
-              zIndex: 1,
-            },
-            textStyle,
-          ]}
-        >
-          {label}
-        </BaseTypography>
-      )}
-
-      <View
-        style={[
-          {
-            borderWidth: 1,
-            borderRadius: 4,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: theme.spacing(2),
-            height: 48,
-            backgroundColor: theme.palette.background.body,
-            borderColor: theme.palette.background.border,
-          },
-          containerStyle,
-        ]}
-      >
-        {startIcon}
-
-        <BaseSelectInput {...rest} />
-
-        {endIcon}
-      </View>
-
-      {helpText && (
-        <BaseTypography
-          style={[
-            {
-              color: error
-                ? theme.palette.error.main
-                : theme.palette.background.textPrimary,
-            },
-            helpTextStyle,
-          ]}
-        >
-          {helpText}
-        </BaseTypography>
-      )}
-    </View>
+    <BaseInputWrapper {...wrapperProps}>
+      <BaseSelectInput {...rest} />
+    </BaseInputWrapper>
   );
 }

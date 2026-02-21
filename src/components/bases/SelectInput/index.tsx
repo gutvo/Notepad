@@ -1,7 +1,6 @@
 import BaseButton from "@Components/bases/Button";
 import BaseTypography from "@Components/bases/Typography";
-import useTheme from "@Hooks/useTheme";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import BaseSelectModal from "./BaseSelectModal";
 
 export interface BaseSelectInputProps<DataProps, ValueProps> {
@@ -28,7 +27,6 @@ export default function BaseSelectInput<
   renderInputValue,
   getOptionValue,
 }: BaseSelectInputProps<DataProps, ValueProps>) {
-  const theme = useTheme();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
   const [selectedItem, setSelectedItem] = useState<DataProps | undefined>(
@@ -49,13 +47,15 @@ export default function BaseSelectInput<
     setInternalValue(value);
   }, [value]);
 
-  function handleOpenModal() {
-    setIsOpenModal(true);
-  }
+  const handleOpenModal = useCallback(() => {
+    if (!disabled) {
+      setIsOpenModal(true);
+    }
+  }, [disabled]);
 
-  function handleCloseModal() {
+  const handleCloseModal = useCallback(() => {
     setIsOpenModal(false);
-  }
+  }, []);
 
   return (
     <>
@@ -73,11 +73,7 @@ export default function BaseSelectInput<
             {placeholder &&
               value === undefined &&
               internalValue === undefined && (
-                <BaseTypography
-                  style={{
-                    backgroundColor: theme.palette.background.textSecondary,
-                  }}
-                >
+                <BaseTypography variant="PLACEHOLDER">
                   {placeholder}
                 </BaseTypography>
               )}
