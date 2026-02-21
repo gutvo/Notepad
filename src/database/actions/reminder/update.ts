@@ -2,10 +2,11 @@ import database from "@Database";
 import { dataEvents } from "@Lib/dataEvents";
 import { reminderSchema } from "@Schemas";
 import { eq } from "drizzle-orm";
+import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import findReminder from "./find";
 
 interface UpdateReminderOptionsProps {
-  transaction?: typeof database;
+  transaction?: ExpoSQLiteDatabase;
 }
 
 export default async function updateReminder(

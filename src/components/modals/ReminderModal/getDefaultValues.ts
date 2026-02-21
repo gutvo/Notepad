@@ -1,23 +1,8 @@
-export default function getDefaultValues(configs?: ConfigDataProps[]) {
-  const defaultProps = configs?.reduce(
-    (accumulator, config) => {
-      if (config.key === "DAYS_BEFORE_REMINDER") {
-        accumulator.textFontSize = config.value;
-      }
-
-      return accumulator;
-    },
-    { textFontSize: 12, daysBeforeReminder: 0 },
-  );
-
-  const defaultValues = {
-    textFontSize: defaultProps?.textFontSize ?? 12,
-    daysBeforeReminder: defaultProps?.daysBeforeReminder ?? 0,
+export default function getDefaultValues(reminder?: ReminderDataProps) {
+  return {
+    name: reminder?.title || "",
+    notify_at: reminder?.notificate_at || undefined,
   };
-
-  return defaultValues;
 }
 
-export type ConfigDefaultValueProps = Awaited<
-  ReturnType<typeof getDefaultValues>
->;
+export type ReminderFormDataProps = ReturnType<typeof getDefaultValues>;

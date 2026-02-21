@@ -3,12 +3,16 @@ import BaseModal from "@Components/bases/Modal";
 import DatePicker from "@Components/inputs/DatePicker";
 import TextField from "@Components/inputs/TextField";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useForm from "@Hooks/useForm";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
-import { Controller, useForm } from "react-hook-form";
-import createNotification from "./createNotification";
+import { Controller } from "react-hook-form";
+import createNotification from "../../../utils/createNotification";
+import deleteNotification from "../../../utils/deleteNotification";
+import getDefaultValues from "./getDefaultValues";
 import useGetConfigs from "./useGetConfigs";
+import useGetReminder from "./useGetReminder";
 
 interface ReminderFormDataProps {
   name: string;
@@ -20,7 +24,9 @@ export default function ReminderModal() {
   const theme = useTheme();
   const { isOpen, closeModal, data } = useCurrentModal("REMINDER");
   const isUpdate = !!data?.id;
+
   const [daysBeforeSetting] = useGetConfigs();
+  const [reminder] = useGetReminder({ id: data?.id });
 
   const {
     handleSubmit,
@@ -28,10 +34,7 @@ export default function ReminderModal() {
     formState: { errors, isDirty },
     setValue,
   } = useForm<ReminderFormDataProps>({
-    defaultValues: {
-      name: "",
-      notify_at: undefined,
-    },
+    defaultValues: getDefaultValues(reminder),
   });
 
   function formatDescriptionAsName(
@@ -55,15 +58,19 @@ export default function ReminderModal() {
     if (!isDirty || !data?.noteId) return;
 
     try {
-      const notification = await actions.note.find(data.noteId);
+      const note = await actions.note.find(data.noteId);
 
-      if (!notification) {
+      if (!note) {
         toast.error("Notificação não encontrada!");
         return;
       }
 
       const formattedTitle =
-        formData.name ?? formatDescriptionAsName(notification.description);
+        formData.name ?? formatDescriptionAsName(note.description);
+
+      if (data.id) {
+        await deleteNotification({ noteId: data.noteId });
+      }
 
       await createNotification({
         title: formattedTitle,
@@ -74,8 +81,18 @@ export default function ReminderModal() {
       });
 
       closeModal();
+
+      if (data.id) {
+        toast.success("Lembrete atualizado com sucesso!");
+      } else {
+        toast.success("Lembrete adicionado com sucesso!");
+      }
     } catch {
-      toast.error("Erro ao adicionar lembrete");
+      if (data.id) {
+        toast.success("Erro ao atualizado lembrete!");
+      } else {
+        toast.success("Erro ao criar lembrete!");
+      }
     }
   }
 

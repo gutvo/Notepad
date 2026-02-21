@@ -1,9 +1,10 @@
+import useForm from "@Hooks/useForm";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { TextInput, View } from "react-native";
 import defaultValues from "./defaultValues";
 import useGetDefaultSettings from "./useGetDefaultSettings";

@@ -4,11 +4,12 @@ import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/bases/Typography";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useForm from "@Hooks/useForm";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
-import { useEffect, useMemo } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useMemo } from "react";
+import { Controller } from "react-hook-form";
 import { View } from "react-native";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
 import useGetConfigs from "./useGetConfigs";
@@ -24,16 +25,9 @@ export default function ConfigModal() {
     handleSubmit,
     control,
     formState: { errors, isDirty, defaultValues },
-    reset,
   } = useForm<ConfigDefaultValueProps>({
-    defaultValues: getDefaultValues(),
+    defaultValues: getDefaultValues(configs),
   });
-
-  useEffect(() => {
-    if (configs.length) {
-      reset(getDefaultValues(configs));
-    }
-  }, [configs, reset]);
 
   async function handleConfirm(data: ConfigDefaultValueProps) {
     if (!isDirty) {
