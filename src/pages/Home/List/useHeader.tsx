@@ -2,6 +2,7 @@ import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
+import useDebounce from "@Hooks/useDebounce";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
@@ -13,21 +14,11 @@ export default function useHeader() {
   const navigation = useNavigation();
   const { openModal } = useModal();
 
-  const [search, setSearch] = useState("");
   const [inputSearch, setInputSearch] = useState("");
+  const debouncedSearch = useDebounce(inputSearch, 500);
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleOnClick = useCallback(() => {
-    if (isSearching) {
-      setSearch(inputSearch);
-      return;
-    }
-
-    setIsSearching((value) => !value);
-  }, [inputSearch, isSearching]);
-
   function handleGoBack() {
-    setSearch("");
     setInputSearch("");
     setIsSearching(false);
   }
@@ -80,16 +71,17 @@ export default function useHeader() {
   );
 
   const headerRight = useCallback(
-    () => (
-      <BaseButton onPress={handleOnClick}>
-        <BaseIcon
-          name="magnify"
-          color={theme.palette.primary.contrast}
-          style={{ marginLeft: theme.spacing(3) }}
-        />
-      </BaseButton>
-    ),
-    [handleOnClick, theme],
+    () =>
+      !isSearching && (
+        <BaseButton onPress={() => setIsSearching((value) => !value)}>
+          <BaseIcon
+            name="magnify"
+            color={theme.palette.primary.contrast}
+            style={{ marginLeft: theme.spacing(3) }}
+          />
+        </BaseButton>
+      ),
+    [isSearching, theme],
   );
 
   useLayoutEffect(() => {
@@ -100,5 +92,5 @@ export default function useHeader() {
     });
   }, [navigation, headerRight, headerCenter, headerLeft]);
 
-  return { search };
+  return { search: debouncedSearch };
 }
