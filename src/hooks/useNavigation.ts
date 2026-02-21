@@ -1,30 +1,43 @@
 import { useNavigation as useReactNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useRouter, type Router } from "expo-router";
+import { useCallback, useMemo } from "react";
+import useModal from "./useModal";
 
 export default function useNavigation() {
   const navigation = useReactNavigation();
   const router = useRouter();
+  const { closeAllModals } = useModal();
 
-  return useMemo(
-    () => ({
-      push: router.push,
-      navigate: router.navigate,
-      replace: router.replace,
-      back: router.back,
-      canGoBack: router.canGoBack,
+  const wrapNavigationMethod = useCallback(
+    <DataProps extends (...args: any[]) => any>(
+      method: DataProps,
+    ): DataProps => {
+      return ((...args: any[]) => {
+        closeAllModals();
+        return method(...args);
+      }) as DataProps;
+    },
+    [closeAllModals],
+  );
+
+  return useMemo(() => {
+    const typedRouter: Router = router;
+
+    return {
+      push: wrapNavigationMethod(typedRouter.push),
+      navigate: wrapNavigationMethod(typedRouter.navigate),
+      replace: wrapNavigationMethod(typedRouter.replace),
+      back: wrapNavigationMethod(typedRouter.back),
+
+      canGoBack: typedRouter.canGoBack,
 
       setOptions: navigation.setOptions,
       addListener: navigation.addListener,
-    }),
-    [
-      router.push,
-      router.navigate,
-      router.replace,
-      router.back,
-      router.canGoBack,
-      navigation.setOptions,
-      navigation.addListener,
-    ],
-  );
+    };
+  }, [
+    router,
+    wrapNavigationMethod,
+    navigation.setOptions,
+    navigation.addListener,
+  ]);
 }

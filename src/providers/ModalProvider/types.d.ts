@@ -17,12 +17,19 @@ type ModalInstanceProps<NameProps extends ModalNameProps = ModalNameProps> = {
   data: ModalMapProps[NameProps];
 };
 
+type OpenModalFunctionProps = <Name extends ModalNameProps>(
+  name: Name,
+  ...args: ModalMapProps[Name] extends undefined
+    ? []
+    : [data: ModalMapProps[Name]]
+) => void;
+
 interface ModalContextProps {
   openedModals: ModalInstanceProps[];
-  openModal: (
-    name: ModalNameProps,
-    data?: ModalMapProps[ModalNameProps],
-  ) => void;
-  closeModal: () => void;
+
+  openModal: OpenModalFunctionProps;
+
+  closeModal: (name?: ModalNameProps) => void;
+
   closeAllModals: () => void;
 }

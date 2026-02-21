@@ -2,8 +2,8 @@ import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
+import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
-import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
@@ -11,7 +11,7 @@ import { View } from "react-native";
 export default function useHeader() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
 
   const [search, setSearch] = useState("");
   const [inputSearch, setInputSearch] = useState("");

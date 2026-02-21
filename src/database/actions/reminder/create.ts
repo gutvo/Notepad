@@ -20,5 +20,9 @@ export default async function createReminder(
 
   const createdReminder = await findReminder(created.lastInsertRowId);
 
+  if (!createdReminder) {
+    throw new Error("Erro ao criar reminder");
+  }
+
   return createdReminder;
 }

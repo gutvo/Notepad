@@ -32,7 +32,6 @@ export default function ReminderModal() {
     handleSubmit,
     control,
     formState: { errors, isDirty },
-    setValue,
   } = useForm<ReminderFormDataProps>({
     defaultValues: getDefaultValues(reminder),
   });
@@ -69,12 +68,11 @@ export default function ReminderModal() {
         formData.name ?? formatDescriptionAsName(note.description);
 
       if (data.id) {
-        await deleteNotification({ noteId: data.noteId });
+        await deleteNotification({ reminderId: data.id });
       }
 
       await createNotification({
         title: formattedTitle,
-        body: formattedTitle,
         date: formData.notify_at,
         daysBefore: daysBeforeSetting,
         noteId: data.noteId,
@@ -82,17 +80,15 @@ export default function ReminderModal() {
 
       closeModal();
 
-      if (data.id) {
-        toast.success("Lembrete atualizado com sucesso!");
-      } else {
-        toast.success("Lembrete adicionado com sucesso!");
-      }
+      toast.success(
+        data.id
+          ? "Lembrete atualizado com sucesso!"
+          : "Lembrete adicionado com sucesso!",
+      );
     } catch {
-      if (data.id) {
-        toast.success("Erro ao atualizado lembrete!");
-      } else {
-        toast.success("Erro ao criar lembrete!");
-      }
+      toast.success(
+        data.id ? "Erro ao atualizar lembrete!" : "Erro ao criar lembrete!",
+      );
     }
   }
 
@@ -117,10 +113,10 @@ export default function ReminderModal() {
         <Controller
           control={control}
           name="name"
-          render={({ field: { value, disabled, onBlur } }) => (
+          render={({ field: { value, disabled, onBlur, onChange } }) => (
             <TextField
               value={value}
-              onChangeText={(textValue) => setValue("name", textValue)}
+              onChangeText={onChange}
               label="Título da notificação"
               disabled={disabled}
               error={Boolean(errors.name?.message)}

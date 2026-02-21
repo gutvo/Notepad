@@ -3,14 +3,14 @@ import BaseButton from "@Components/bases/Button";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseTypography from "@Components/bases/Typography";
 import { useActionList } from "@Hooks/useActionList";
-import useOpenModal from "@Hooks/useOpenModal";
+import useModal from "@Hooks/useModal";
 import useTheme from "@Hooks/useTheme";
 import useHeader from "./useHeader";
 
 export default function RemindersList() {
   const theme = useTheme();
   const { search } = useHeader();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
 
   const { data } = useActionList(actions.reminder.list, { search });
 

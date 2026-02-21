@@ -4,15 +4,15 @@ import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
-import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import locales from "@Locales";
 
 export default function Drawer() {
   const navigation = useNavigation();
   const theme = useTheme();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
 
   const options = [

@@ -70,7 +70,11 @@ export default function BaseDrawer({
   if (!isMounted) return null;
 
   return (
-    <BaseModalWrapper visible={visible} onRequestClose={onClose}>
+    <BaseModalWrapper
+      visible={visible}
+      animationType="none"
+      onRequestClose={onClose}
+    >
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
         <Animated.View
           style={[

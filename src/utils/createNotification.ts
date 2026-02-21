@@ -5,7 +5,6 @@ import { Href } from "expo-router";
 
 interface CreateNotificationProps {
   title: string;
-  body: string;
   date: Date;
   daysBefore: number;
   noteId: number;
@@ -15,7 +14,6 @@ const DETAIL_PAGE_URL: Href = "/home/detail";
 
 export default async function createNotification({
   title,
-  body,
   date,
   daysBefore,
   noteId,
@@ -28,17 +26,22 @@ export default async function createNotification({
       async (transaction) => {
         const createdReminderIds: number[] = [];
 
+        // Corpo e título principal
+        const mainBody = `Faltam ${days} dias`;
+        const formattedTitle = `Lembrete: ${title}`;
+
+        // Notificação principal
         const mainNotificationId =
           await Notifications.scheduleNotificationAsync({
             content: {
-              title,
-              body,
+              title: formattedTitle,
+              body: mainBody,
               sound: true,
               data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
             },
             trigger: {
               type: Notifications.SchedulableTriggerInputTypes.DATE,
-              date: date,
+              date,
             },
           });
 
@@ -49,7 +52,7 @@ export default async function createNotification({
             notification_id: mainNotificationId,
             note_id: noteId,
             title,
-            message: body,
+            message: mainBody,
             notificate_at: date,
             parent_id: null,
           },
@@ -58,17 +61,19 @@ export default async function createNotification({
 
         createdReminderIds.push(mainReminder.id);
 
+        // Notificações antecipadas
         for (let index = 1; index <= days; index++) {
           const subDate = new Date(date);
           subDate.setDate(subDate.getDate() - index);
-
           if (subDate <= new Date()) continue;
+
+          const subBody = `Faltam ${days - index} dias`;
 
           const subNotificationId =
             await Notifications.scheduleNotificationAsync({
               content: {
-                title,
-                body: `Lembrete antecipado: ${body}`,
+                title: formattedTitle,
+                body: subBody,
                 sound: true,
                 data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
               },
@@ -84,8 +89,8 @@ export default async function createNotification({
             {
               notification_id: subNotificationId,
               note_id: noteId,
-              title,
-              message: `Lembrete antecipado: ${body}`,
+              title: formattedTitle,
+              message: subBody,
               notificate_at: subDate,
               parent_id: mainReminder.id,
             },
@@ -101,10 +106,10 @@ export default async function createNotification({
 
     return allCreatedReminderIds;
   } catch (error) {
+    // Cancela todas notificações caso dê erro
     for (const id of scheduledNotificationIds) {
       await Notifications.cancelScheduledNotificationAsync(id);
     }
-
     throw error;
   }
 }

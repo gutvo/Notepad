@@ -3,8 +3,8 @@ import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import ReminderModal from "@Components/modals/ReminderModal";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
-import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
@@ -27,7 +27,7 @@ export default function ActionModal({
   const theme = useTheme();
   const toast = useToast();
   const navigation = useNavigation();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
 
   const { isOpen } = useCurrentModal("REMINDER");
 

@@ -8,5 +8,30 @@ export default async function findReminder(id: number) {
     .from(reminderSchema)
     .where(eq(reminderSchema.id, id));
 
-  return reminder ?? null;
+  if (!reminder) return null;
+
+  async function getChildren() {
+    const children = await database
+      .select()
+      .from(reminderSchema)
+      .where(eq(reminderSchema.parent_id, id));
+
+    // Você pode opcionalmente adicionar a mesma função recursivamente para os filhos
+    return children.map((child) => ({
+      ...child,
+      getChildren: async () => {
+        const grandChildren = await database
+          .select()
+          .from(reminderSchema)
+          .where(eq(reminderSchema.parent_id, child.id));
+
+        return grandChildren.map((gc) => ({
+          ...gc,
+          getChildren: async () => [], // você pode recursivamente repetir
+        }));
+      },
+    }));
+  }
+
+  return { ...reminder, getChildren };
 }
