@@ -65,7 +65,7 @@ export default function ReminderModal() {
       }
 
       const formattedTitle =
-        formData.name ?? formatDescriptionAsName(note.description);
+        formData.name || formatDescriptionAsName(note.description);
 
       if (data.id) {
         await deleteNotification({ reminderId: data.id });
@@ -78,13 +78,13 @@ export default function ReminderModal() {
         noteId: data.noteId,
       });
 
-      closeModal();
-
       toast.success(
         data.id
           ? "Lembrete atualizado com sucesso!"
           : "Lembrete adicionado com sucesso!",
       );
+
+      closeModal();
     } catch {
       toast.success(
         data.id ? "Erro ao atualizar lembrete!" : "Erro ao criar lembrete!",

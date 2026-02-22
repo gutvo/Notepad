@@ -10,23 +10,22 @@ export default async function deleteNotification({
   reminderId,
 }: DeleteNotificationProps) {
   await database.transaction(async (transaction) => {
-    // 1️⃣ Buscar reminders vinculados
-    const oldReminders = await actions.reminder.find(reminderId);
+    const parenReminder = await actions.reminder.find(reminderId);
 
-    if (!oldReminders) return;
+    if (!parenReminder) return;
 
-    const childrens = await oldReminders.getChildren();
+    const childrenReminders = await parenReminder.getChildren();
 
-    // 2️⃣ Cancelar notificações no sistema
-    for (const reminder of childrens) {
+    const allReminderIds = [parenReminder.id];
+
+    for (const reminder of childrenReminders) {
       await Notifications.cancelScheduledNotificationAsync(
         reminder.notification_id,
       );
+
+      allReminderIds.push(reminder.id);
     }
 
-    await actions.reminder.delete(reminderId);
-
-    // 3️⃣ Deletar reminders do banco
-    await actions.reminder.delete(reminderId, { transaction });
+    await actions.reminder.delete(allReminderIds, { transaction });
   });
 }

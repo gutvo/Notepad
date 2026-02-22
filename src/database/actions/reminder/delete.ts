@@ -1,7 +1,7 @@
 import database from "@Database";
 import { dataEvents } from "@Lib/dataEvents";
 import { reminderSchema } from "@Schemas";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 
 interface DeleteReminderOptionsProps {
@@ -9,12 +9,20 @@ interface DeleteReminderOptionsProps {
 }
 
 export default async function deleteReminder(
-  id: number,
+  id: number | number[],
   options?: DeleteReminderOptionsProps,
 ) {
   const finalDatabase = options?.transaction || database;
 
-  await finalDatabase.delete(reminderSchema).where(eq(reminderSchema.id, id));
+  if (Array.isArray(id)) {
+    if (id.length > 0) {
+      await finalDatabase
+        .delete(reminderSchema)
+        .where(inArray(reminderSchema.id, id));
+    }
+  } else {
+    await finalDatabase.delete(reminderSchema).where(eq(reminderSchema.id, id));
+  }
 
   dataEvents.emit();
 }

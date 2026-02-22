@@ -89,7 +89,7 @@ export default async function createNotification({
             {
               notification_id: subNotificationId,
               note_id: noteId,
-              title: formattedTitle,
+              title,
               message: subBody,
               notificate_at: subDate,
               parent_id: mainReminder.id,
