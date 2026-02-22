@@ -2,13 +2,8 @@ import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Animated, Dimensions, Pressable, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 const Drawer_WIDTH = width * 0.65;
@@ -24,6 +19,7 @@ export default function BaseDrawer({
   onClose,
   children,
 }: BaseDrawerProps) {
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
 
   function onBackPress() {
@@ -74,35 +70,37 @@ export default function BaseDrawer({
   if (!isMounted) return null;
 
   return (
-    <BaseModalWrapper>
-      <View style={StyleSheet.absoluteFill}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
-          <Animated.View
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                backgroundColor: theme.palette.common.black,
-                opacity: overlayOpacity,
-              },
-            ]}
-          />
-        </Pressable>
-
+    <BaseModalWrapper
+      visible={visible}
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
         <Animated.View
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: Drawer_WIDTH,
-            backgroundColor: theme.palette.background.body,
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: theme.palette.common.black,
+              opacity: overlayOpacity,
+            },
+          ]}
+        />
+      </Pressable>
 
-            transform: [{ translateX }],
-          }}
-        >
-          {children}
-        </Animated.View>
-      </View>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: 0,
+          top: insets.top,
+          bottom: insets.bottom,
+          width: Drawer_WIDTH,
+          backgroundColor: theme.palette.background.body,
+
+          transform: [{ translateX }],
+        }}
+      >
+        {children}
+      </Animated.View>
     </BaseModalWrapper>
   );
 }

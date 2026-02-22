@@ -3,7 +3,7 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
-import { Animated, Dimensions, View } from "react-native";
+import { Animated, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useToastConfig from "./toastConfig";
 import useAnimation from "./useAnimation";
@@ -23,12 +23,15 @@ export default function BaseToast({
   onHide,
   index,
 }: BaseToastProps) {
-  const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const theme = useTheme();
 
   const toastConfig = useToastConfig();
 
-  const { opacity, translateY, close } = useAnimation({ duration, onHide });
+  const { opacity, translateY, close, panResponder, pan } = useAnimation({
+    duration,
+    onHide,
+  });
 
   const { color, icon, title } = toastConfig[type];
 
@@ -37,11 +40,12 @@ export default function BaseToast({
   }
 
   return (
-    <BaseModalWrapper priority={1}>
+    <BaseModalWrapper onRequestClose={close} transparent>
       <Animated.View
+        {...panResponder.panHandlers}
         style={{
-          top: insets.top + 10 + index * 90,
-          transform: [{ translateY }],
+          top: insets.top + index * 90,
+          transform: [{ translateY }, ...pan.getTranslateTransform()],
           opacity,
           position: "absolute",
           width: "100%",
@@ -51,39 +55,29 @@ export default function BaseToast({
         <BaseButton onPress={resetDuration}>
           <View
             style={{
-              width: Dimensions.get("window").width * 0.92,
+              width: "92%",
+              paddingHorizontal: theme.spacing(4),
               backgroundColor: theme.palette.background.body,
               borderRadius: 16,
               padding: theme.spacing(4),
               flexDirection: "row",
               gap: theme.spacing(3),
               alignItems: "center",
-
               borderLeftWidth: 6,
-
-              // iOS shadow
-              shadowColor: "#000",
+              shadowColor: theme.palette.common.black,
               shadowOpacity: 0.15,
               shadowRadius: 10,
               shadowOffset: { width: 0, height: 4 },
-
-              // Android elevation
               elevation: 6,
-
               borderLeftColor: color,
             }}
           >
             <BaseIcon name={icon} color={color} />
-
             <View style={{ flex: 1 }}>
               <BaseTypography variant="H6">
                 {title.toUpperCase()}
               </BaseTypography>
-
-              <BaseTypography
-                variant="BODY2"
-                style={{ marginTop: theme.spacing(1) }}
-              >
+              <BaseTypography style={{ marginTop: theme.spacing(1) }}>
                 {message}
               </BaseTypography>
             </View>

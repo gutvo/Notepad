@@ -37,7 +37,7 @@ export default function BaseModalModal({
   if (!visible) return null;
 
   return (
-    <BaseModalWrapper>
+    <BaseModalWrapper visible={visible} onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View
           style={{

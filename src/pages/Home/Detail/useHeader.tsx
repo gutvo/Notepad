@@ -1,9 +1,9 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
+import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
-import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import locales from "@Locales";
 import { useCallback, useLayoutEffect } from "react";
@@ -15,14 +15,14 @@ interface UseHeaderProps {
 
 export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
   const theme = useTheme();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
   const navigation = useNavigation();
 
   const handleGoBack = useCallback(() => {
     if (!navigation.canGoBack()) return true;
 
     if (!isDirty) {
-      navigation.goBack();
+      navigation.back();
       return true;
     }
 
@@ -61,7 +61,7 @@ export default function useHeader({ onSubmit, isDirty }: UseHeaderProps) {
   const headerRight = useCallback(
     () => (
       <BaseButton onPress={() => openModal("CONFIG")}>
-        <BaseIcon color={theme.palette.primary.contrast} name="settings" />
+        <BaseIcon color={theme.palette.primary.contrast} name="cog-outline" />
       </BaseButton>
     ),
     [openModal, theme.palette.primary.contrast],

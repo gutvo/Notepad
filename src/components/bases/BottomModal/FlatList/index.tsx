@@ -1,7 +1,6 @@
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import useTheme from "@Hooks/useTheme";
 import { StyleProp, ViewStyle } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomModal } from "../context";
 import BottomModalTitle from "../Title";
 
@@ -24,7 +23,6 @@ export default function BottomModalFlatList<DataProps>({
   contentContainerStyle,
 }: BottomModalFlatListProps<DataProps>) {
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
   const { title } = useBottomModal();
 
   return (
@@ -34,7 +32,6 @@ export default function BottomModalFlatList<DataProps>({
       keyExtractor={keyExtractor}
       contentContainerStyle={[
         {
-          paddingBottom: insets.bottom,
           backgroundColor: theme.palette.background.body,
         },
         contentContainerStyle,

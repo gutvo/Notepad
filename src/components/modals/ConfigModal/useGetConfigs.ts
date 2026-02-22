@@ -6,7 +6,7 @@ export default function useGetConfigs() {
 
   const getConfigs = useCallback(async () => {
     const settings = await actions.config.list({
-      findBy: { keys: ["TEXT_FONT_SIZE"] },
+      findBy: { keys: ["TEXT_FONT_SIZE", "DAYS_BEFORE_REMINDER"] },
     });
 
     setConfigs(settings);

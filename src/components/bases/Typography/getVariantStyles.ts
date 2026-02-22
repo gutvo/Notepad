@@ -72,6 +72,12 @@ export default function getVariantStyles(
       fontWeight: "600",
       textTransform: "uppercase",
     },
+
+    PLACEHOLDER: {
+      fontSize: theme.fontSize(3.5),
+      paddingHorizontal: theme.spacing(1),
+      color: theme.palette.background.textPlaceholder,
+    },
   };
 
   return typographyVariants[variant];

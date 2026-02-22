@@ -1,24 +1,13 @@
-import BaseTypography from "@Components/bases/Typography";
+import BaseInputWrapper, {
+  BaseInputWrapperProps,
+} from "@Components/bases/InputWrapper";
 import useTheme from "@Hooks/useTheme";
-import { ReactNode, useState } from "react";
-import {
-  StyleProp,
-  TextInput,
-  TextInputProps,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
+import { useState } from "react";
+import { TextInput, TextInputProps } from "react-native";
 
-interface TextFieldProps extends TextInputProps {
-  startIcon?: ReactNode;
-  endIcon?: ReactNode;
-  label?: string;
-  containerStyle?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-  error?: boolean;
-  helpText?: string;
-  helpTextStyle?: StyleProp<TextStyle>;
+interface TextFieldProps
+  extends Omit<TextInputProps, "onChange">, BaseInputWrapperProps {
+  disabled?: boolean;
 }
 
 export default function TextField({
@@ -33,81 +22,47 @@ export default function TextField({
   helpText,
   error,
   helpTextStyle,
+  children,
+  disabled,
+  required,
   ...rest
 }: TextFieldProps) {
   const theme = useTheme();
   const [focused, setFocused] = useState(false);
 
+  const wrapperProps = {
+    containerStyle,
+    endIcon,
+    error,
+    helpText,
+    helpTextStyle,
+    label,
+    startIcon,
+    textStyle,
+    focused: focused,
+    required,
+  };
+
   return (
-    <View style={{ marginTop: theme.spacing(3) }}>
-      {label && (
-        <BaseTypography
-          variant="BODY2"
-          style={[
-            {
-              position: "absolute",
-              top: -10,
-              left: 12,
-              paddingHorizontal: theme.spacing(1),
-              backgroundColor: theme.palette.background.body,
-              color: theme.palette.background.textPrimary,
-              zIndex: 1,
-            },
-            textStyle,
-          ]}
-        >
-          {label}
-        </BaseTypography>
-      )}
-
-      <View
+    <BaseInputWrapper {...wrapperProps}>
+      <TextInput
         style={[
-          {
-            borderWidth: 1,
-            borderColor: focused
-              ? theme.palette.primary.main
-              : theme.palette.background.border,
-            borderRadius: 4,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: theme.spacing(2),
-            height: 48,
-          },
-          containerStyle,
+          { flex: 1, color: theme.palette.background.textPrimary },
+          style,
         ]}
-      >
-        {startIcon}
-
-        <TextInput
-          style={[{ flex: 1, paddingHorizontal: theme.spacing(2) }, style]}
-          onFocus={(event) => {
-            onFocus?.(event);
-            setFocused(true);
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            setFocused(false);
-          }}
-          {...rest}
-        />
-
-        {endIcon}
-      </View>
-
-      {helpText && (
-        <BaseTypography
-          style={[
-            {
-              color: error
-                ? theme.palette.error.main
-                : theme.palette.background.textPrimary,
-            },
-            helpTextStyle,
-          ]}
-        >
-          {helpText}
-        </BaseTypography>
-      )}
-    </View>
+        onFocus={(event) => {
+          setFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          onBlur?.(event);
+        }}
+        placeholderTextColor={theme.palette.background.textPlaceholder}
+        editable={!disabled}
+        selectTextOnFocus={!disabled}
+        {...rest}
+      />
+    </BaseInputWrapper>
   );
 }

@@ -1,7 +1,12 @@
 import BaseButton, { BaseButtonProps } from "@Components/bases/Button";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
-import { StyleProp, TextStyle } from "react-native";
+import {
+  PressableStateCallbackType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 
 interface ButtonProps extends BaseButtonProps {
   textStyle?: StyleProp<TextStyle>;
@@ -17,25 +22,26 @@ export default function Button({
 
   return (
     <BaseButton
-      activeOpacity={0.8}
-      style={[
+      style={(state: PressableStateCallbackType): StyleProp<ViewStyle> => [
         {
           backgroundColor: theme.palette.primary.main,
           borderRadius: 4,
           padding: theme.spacing(2),
         },
-        style,
+        typeof style === "function" ? style(state) : style,
       ]}
       {...rest}
     >
-      <BaseTypography
-        style={[
-          { textAlign: "center", color: theme.palette.primary.contrast },
-          textStyle,
-        ]}
-      >
-        {children}
-      </BaseTypography>
+      {(state: PressableStateCallbackType) => (
+        <BaseTypography
+          style={[
+            { textAlign: "center", color: theme.palette.primary.contrast },
+            textStyle,
+          ]}
+        >
+          {typeof children === "function" ? children(state) : children}
+        </BaseTypography>
+      )}
     </BaseButton>
   );
 }

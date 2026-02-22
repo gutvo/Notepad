@@ -1,23 +1,23 @@
-import {
-  StyleProp,
-  TextStyle,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from "react-native";
+import { Pressable, PressableProps } from "react-native";
 
-export interface BaseButtonProps extends TouchableOpacityProps {
-  textStyle?: StyleProp<TextStyle>;
-}
+export type BaseButtonProps = PressableProps;
 
 export default function BaseButton({
-  textStyle,
   style,
   children,
   ...rest
 }: BaseButtonProps) {
   return (
-    <TouchableOpacity activeOpacity={0.8} style={style} {...rest}>
+    <Pressable
+      {...rest}
+      style={(state) => {
+        const resolvedStyle =
+          typeof style === "function" ? style(state) : style;
+
+        return [resolvedStyle, state.pressed && { opacity: 0.8 }];
+      }}
+    >
       {children}
-    </TouchableOpacity>
+    </Pressable>
   );
 }

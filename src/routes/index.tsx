@@ -1,29 +1,5 @@
-import useTheme from "@Hooks/useTheme";
-
-import HomeDetail from "@Pages/Home/Detail";
 import HomeList from "@Pages/Home/List";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-export type RootStackParamList = {
-  HomeList: undefined;
-  HomeDetail: { id: number } | undefined;
-};
-
-export type PageNames = keyof RootStackParamList;
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Routes() {
-  const theme = useTheme();
-
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: theme.palette.primary.main },
-      }}
-    >
-      <Stack.Screen name="HomeList" component={HomeList} />
-      <Stack.Screen name="HomeDetail" component={HomeDetail} />
-    </Stack.Navigator>
-  );
+  return <HomeList />;
 }

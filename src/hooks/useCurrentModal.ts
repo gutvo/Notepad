@@ -1,7 +1,9 @@
 import ModalContext from "@Providers/ModalProvider/context";
 import { useContext, useMemo } from "react";
 
-export function useCurrentModal<T = any>(name: ModalNameProps) {
+export function useCurrentModal<NameProps extends ModalNameProps>(
+  name: NameProps,
+) {
   const modalContext = useContext(ModalContext);
 
   if (!modalContext) {
@@ -11,12 +13,15 @@ export function useCurrentModal<T = any>(name: ModalNameProps) {
   const { openedModals, closeModal } = modalContext;
 
   const modal = useMemo(
-    () => openedModals.find((m) => m.name === name),
+    () =>
+      openedModals.find(
+        (modal): modal is ModalInstanceProps<NameProps> => modal.name === name,
+      ),
     [openedModals, name],
   );
 
   const isOpen = !!modal;
-  const data = (modal?.data as T) ?? null;
+  const data = modal?.data ?? undefined;
 
   return { isOpen, data, closeModal };
 }

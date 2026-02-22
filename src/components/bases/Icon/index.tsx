@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
 import { StyleProp, TextStyle } from "react-native";
@@ -23,6 +23,11 @@ export default function BaseIcon({
   const finalColor = color ?? theme.palette.background.textPrimary;
 
   return (
-    <Feather name={name} size={finalSize} color={finalColor} style={style} />
+    <MaterialCommunityIcons
+      name={name}
+      size={finalSize}
+      color={finalColor}
+      style={style}
+    />
   );
 }

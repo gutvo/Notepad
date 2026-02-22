@@ -1,9 +1,10 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
-import BaseTextField from "@Components/bases/TextField";
 import BaseTypography from "@Components/bases/Typography";
+import SearchInput from "@Components/inputs/SearchInput";
+import useDebounce from "@Hooks/useDebounce";
+import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
-import useOpenModal from "@Hooks/useOpenModal";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
@@ -11,23 +12,13 @@ import { View } from "react-native";
 export default function useHeader() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
 
-  const [search, setSearch] = useState("");
   const [inputSearch, setInputSearch] = useState("");
+  const debouncedSearch = useDebounce(inputSearch, 500);
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleOnClick = useCallback(() => {
-    if (isSearching) {
-      setSearch(inputSearch);
-      return;
-    }
-
-    setIsSearching((value) => !value);
-  }, [inputSearch, isSearching]);
-
   function handleGoBack() {
-    setSearch("");
     setInputSearch("");
     setIsSearching(false);
   }
@@ -65,15 +56,9 @@ export default function useHeader() {
     () => (
       <View>
         {isSearching ? (
-          <BaseTextField
-            onChangeText={(value) => setInputSearch(value)}
-            value={inputSearch}
-            style={{
-              borderColor: theme.palette.primary.contrast,
-              color: theme.palette.primary.contrast,
-            }}
-            placeholderTextColor={theme.palette.primary.contrast}
-            placeholder="Pesquisar"
+          <SearchInput
+            inputSearch={inputSearch}
+            setInputSearch={setInputSearch}
           />
         ) : (
           <BaseTypography style={{ color: theme.palette.primary.contrast }}>
@@ -86,16 +71,17 @@ export default function useHeader() {
   );
 
   const headerRight = useCallback(
-    () => (
-      <BaseButton onPress={handleOnClick}>
-        <BaseIcon
-          name="search"
-          color={theme.palette.primary.contrast}
-          style={{ marginLeft: theme.spacing(3) }}
-        />
-      </BaseButton>
-    ),
-    [handleOnClick, theme],
+    () =>
+      !isSearching && (
+        <BaseButton onPress={() => setIsSearching((value) => !value)}>
+          <BaseIcon
+            name="magnify"
+            color={theme.palette.primary.contrast}
+            style={{ marginLeft: theme.spacing(3) }}
+          />
+        </BaseButton>
+      ),
+    [isSearching, theme],
   );
 
   useLayoutEffect(() => {
@@ -106,5 +92,5 @@ export default function useHeader() {
     });
   }, [navigation, headerRight, headerCenter, headerLeft]);
 
-  return { search };
+  return { search: debouncedSearch };
 }

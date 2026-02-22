@@ -1,30 +1,40 @@
 import BaseButton from "@Components/bases/Button";
-import BaseDivider from "@Components/bases/Divider";
 import BaseDrawer from "@Components/bases/Drawer";
+import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
-import useOpenModal from "@Hooks/useOpenModal";
+import useModal from "@Hooks/useModal";
+import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import locales from "@Locales";
-import { FlashList } from "@shopify/flash-list";
 
 export default function Drawer() {
+  const navigation = useNavigation();
   const theme = useTheme();
-  const openModal = useOpenModal();
+  const { openModal } = useModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
 
   const options = [
     {
+      name: "reminder",
+      label: locales.home.list.drawer.reminder,
+      icon: <BaseIcon name="bell-outline" />,
+      onclick: () => {
+        navigation.navigate("/reminders/list");
+        closeModal();
+      },
+    },
+    {
       name: "config",
       label: locales.home.list.drawer.config,
-      icon: <BaseIcon name="settings" />,
+      icon: <BaseIcon name="cog-outline" />,
       onclick: () => openModal("CONFIG"),
     },
     {
       name: "theme",
       label: locales.home.list.drawer.theme,
-      icon: <BaseIcon name="sun" />,
+      icon: <BaseIcon name="theme-light-dark" />,
       onclick: () => openModal("THEME"),
     },
   ];
@@ -35,7 +45,7 @@ export default function Drawer() {
         {locales.home.list.drawer.title}
       </BaseTypography>
 
-      <FlashList
+      <BaseFlashList
         data={options}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
@@ -52,7 +62,6 @@ export default function Drawer() {
             <BaseTypography>{item.label}</BaseTypography>
           </BaseButton>
         )}
-        ItemSeparatorComponent={() => <BaseDivider />}
       />
     </BaseDrawer>
   );

@@ -1,5 +1,6 @@
 type ConfigValueMapProps = {
   TEXT_FONT_SIZE: number;
+  DAYS_BEFORE_REMINDER: number;
 };
 
 type ConfigTypeProps = "STRING" | "NUMBER" | "BOOLEAN";

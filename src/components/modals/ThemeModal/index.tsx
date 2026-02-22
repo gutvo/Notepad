@@ -3,12 +3,13 @@ import BaseSwitch from "@Components/bases/Switch";
 import SelectInput from "@Components/inputs/SelectInput";
 import useChangeTheme from "@Hooks/useChangeTheme";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useForm from "@Hooks/useForm";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
 import { themes } from "@Theme/themes";
-import { useCallback, useEffect, useMemo } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useCallback, useMemo } from "react";
+import { Controller } from "react-hook-form";
 import getDefaultValues, { ThemeDefaultValueProps } from "./getDefaultValues";
 import ThemeOption from "./ThemeOption";
 import useGetThemeConfigs from "./useGetThemeConfigs";
@@ -25,16 +26,9 @@ export default function ThemeModal() {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm<ThemeDefaultValueProps>({
-    defaultValues: getDefaultValues(),
+    defaultValues: getDefaultValues(themeConfigs),
   });
-
-  useEffect(() => {
-    if (themeConfigs) {
-      reset(getDefaultValues(themeConfigs));
-    }
-  }, [reset, themeConfigs]);
 
   const handleConfirm = useCallback(
     (data: ThemeDefaultValueProps) => {
@@ -124,8 +118,8 @@ export default function ThemeModal() {
           render={({ field: { onChange, value, disabled } }) => (
             <BaseSwitch
               label={locales.theme.modal.section.darkMode.label}
-              disableIconName="sun"
-              enableIconName="moon"
+              disableIconName="weather-sunny"
+              enableIconName="moon-waning-crescent"
               value={value}
               onChange={onChange}
               disabled={disabled}

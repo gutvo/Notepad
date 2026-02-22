@@ -9,4 +9,5 @@ type BaseTypographyVariantProps =
   | "SUBTITLE2"
   | "BODY1"
   | "BODY2"
-  | "BUTTON";
+  | "BUTTON"
+  | "PLACEHOLDER";

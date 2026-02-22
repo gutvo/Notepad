@@ -23,12 +23,14 @@ const locales = {
         title: "Menu",
         config: "Configuração",
         theme: "Temas",
+        reminder: "Lembretes",
       },
       actionModal: {
         title: "Opções",
         actions: {
           view: "Visualizar",
           duplicate: "Duplicar",
+          reminder: "Adicionar Lembrete",
           delete: "Deletar",
         },
         success: {
