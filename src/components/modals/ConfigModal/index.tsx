@@ -10,6 +10,7 @@ import useGetPrinters from "@Hooks/useGetPrinters";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
+import { PAPER_SIZES } from "@Services/PrinterService";
 import { useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { View } from "react-native";
@@ -55,6 +56,10 @@ export default function ConfigModal() {
       await actions.config.update("PRINTER_ID", { value: data.printerId });
     }
 
+    if (defaultValues?.paperSize !== data?.paperSize) {
+      await actions.config.update("PAPER_SIZE", { value: data?.paperSize });
+    }
+
     closeModal();
 
     toast.success(locales.config.modal.success);
@@ -82,9 +87,7 @@ export default function ConfigModal() {
       visible={isOpen}
       onClose={closeModal}
     >
-      <BaseModal.Container
-        style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
-      >
+      <BaseModal.Container style={{ padding: theme.spacing(4) }}>
         <Controller
           control={control}
           name="textFontSize"
@@ -106,6 +109,42 @@ export default function ConfigModal() {
                   }}
                 >
                   <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
+
+                  {item === selectedItem && <BaseIcon name="check" />}
+                </View>
+              )}
+              error={Boolean(errors.textFontSize?.message)}
+              helpText={errors.textFontSize?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="daysBeforeReminder"
+          rules={{ required: locales.validations.required }}
+          render={({ field: { onChange, value, disabled } }) => (
+            <SelectInput
+              value={value}
+              onChange={(itemValue) => onChange(itemValue)}
+              label="Notificar dias antes do lembrete"
+              disabled={disabled}
+              options={daysBeforeOptions}
+              renderInputValue={(inputValue) => (
+                <BaseTypography>{inputValue} dias</BaseTypography>
+              )}
+              renderItem={({ item, selectedItem }) => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: theme.spacing(3),
+                  }}
+                >
+                  <BaseTypography style={{ flex: 1 }}>
+                    {item} dias
+                  </BaseTypography>
 
                   {item === selectedItem && <BaseIcon name="check" />}
                 </View>
@@ -165,17 +204,16 @@ export default function ConfigModal() {
 
         <Controller
           control={control}
-          name="daysBeforeReminder"
-          rules={{ required: locales.validations.required }}
+          name="paperSize"
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue)}
-              label="Notificar dias antes do lembrete"
+              label="Selecionar impressora térmica"
               disabled={disabled}
-              options={daysBeforeOptions}
+              options={Object.keys(PAPER_SIZES)}
               renderInputValue={(inputValue) => (
-                <BaseTypography>{inputValue} dias</BaseTypography>
+                <BaseTypography>{inputValue}</BaseTypography>
               )}
               renderItem={({ item, selectedItem }) => (
                 <View
@@ -186,15 +224,13 @@ export default function ConfigModal() {
                     gap: theme.spacing(3),
                   }}
                 >
-                  <BaseTypography style={{ flex: 1 }}>
-                    {item} dias
-                  </BaseTypography>
+                  <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
 
                   {item === selectedItem && <BaseIcon name="check" />}
                 </View>
               )}
-              error={Boolean(errors.textFontSize?.message)}
-              helpText={errors.textFontSize?.message}
+              error={Boolean(errors.printerId?.message)}
+              helpText={errors.printerId?.message}
             />
           )}
         />

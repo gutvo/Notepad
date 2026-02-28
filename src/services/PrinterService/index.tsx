@@ -3,7 +3,7 @@ import PrinterCommandService from "./PrinterCommandService";
 
 type ConnectionTypeProps = "bluetooth";
 
-const PAPER_SIZES = {
+export const PAPER_SIZES = {
   "58mm": 32,
   "58mm-compact": 30,
   "58mm-small": 24,

@@ -86,7 +86,11 @@ export default function ActionModal({
     const allLines = selectedNote?.description?.split(/\r?\n/) ?? [];
     const lines = allLines.filter((text) => text.trim() !== "");
 
-    const printerService = new PrinterService({ paperSize: "58mm" });
+    const paperSizeConfig = await actions.config.find("PAPER_SIZE");
+
+    const printerService = new PrinterService({
+      paperSize: paperSizeConfig?.value,
+    });
     const devices = await printerService.getAvailablePrinters();
     const printerId = await handleGetPrinterId(devices);
 
