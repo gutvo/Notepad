@@ -111,16 +111,13 @@ export default class PrinterCommandService {
       left: leftOpts = {},
       right: rightOpts = {},
       newLine = 0,
-      gap = 2, // valor padrão de gap em colunas
+      gap = 2,
     } = options || {};
 
     const leftWidthPercent = leftOpts.widthPercent ?? 70;
     const leftCols = Math.floor(totalColumns * (leftWidthPercent / 100));
-
-    // rightCols deve considerar o gap
     const rightCols = totalColumns - leftCols - gap;
 
-    // função segura para quebrar texto
     const wrap = (text: string, max: number) => {
       const result: string[] = [];
       while (text.length > max) {
@@ -140,18 +137,19 @@ export default class PrinterCommandService {
       let leftPart = leftLines[i] || "";
       let rightPart = rightLines[i] || "";
 
-      // alinhamento direito dentro da coluna
-      if (rightOpts.align === "right") {
-        rightPart =
-          " ".repeat(Math.max(0, rightCols - rightPart.length)) + rightPart;
-      }
+      // preenche left até a largura da coluna
+      leftPart = leftPart + " ".repeat(Math.max(0, leftCols - leftPart.length));
+
+      // alinhamento do right sempre à direita dentro da coluna
+      rightPart =
+        " ".repeat(Math.max(0, rightCols - rightPart.length)) + rightPart;
 
       // aplica bold left
       if (leftOpts.bold) this.buffer.push(this.ESC + "E\x01");
       this.buffer.push(leftPart);
       if (leftOpts.bold) this.buffer.push(this.ESC + "E\x00");
 
-      // preenche o gap
+      // preenche gap
       this.buffer.push(" ".repeat(Math.max(0, gap)));
 
       // aplica bold right
