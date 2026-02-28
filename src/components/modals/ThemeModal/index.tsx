@@ -87,15 +87,19 @@ export default function ThemeModal() {
               disabled={disabled}
               getOptionValue={(item) => item.index}
               options={Object.values(formattedThemes)}
-              renderInputValue={(renderValue) => (
-                <ThemeOption
-                  color={formattedThemes[renderValue].main}
-                  label={locales.theme.modal.section.theme.optionLabel.replace(
-                    "{index}",
-                    String(renderValue + 1),
-                  )}
-                />
-              )}
+              renderInputValue={(renderValue) => {
+                if (!renderValue) return;
+
+                return (
+                  <ThemeOption
+                    color={formattedThemes[renderValue.index].main}
+                    label={locales.theme.modal.section.theme.optionLabel.replace(
+                      "{index}",
+                      String(renderValue.index + 1),
+                    )}
+                  />
+                );
+              }}
               renderItem={({ item, selectedItem, index }) => (
                 <ThemeOption
                   color={item.main}
