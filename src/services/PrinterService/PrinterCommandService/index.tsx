@@ -1,8 +1,8 @@
-type TextAlign = "left" | "center" | "right";
+type TextAlignProps = "left" | "center" | "right";
 
-interface AddTextOptions {
+interface AddTextOptionsProps {
   bold?: boolean;
-  align?: TextAlign;
+  align?: TextAlignProps;
   newLine?: number;
 }
 
@@ -15,7 +15,7 @@ export default class PrinterCommandService {
   private readonly ESC = "\x1B";
   private readonly GS = "\x1D";
 
-  private readonly alignMap: Record<TextAlign, string> = {
+  private readonly alignMap: Record<TextAlignProps, string> = {
     left: "\x00",
     center: "\x01",
     right: "\x02",
@@ -29,7 +29,7 @@ export default class PrinterCommandService {
     this.buffer.push(this.ESC + "@");
   }
 
-  addText(text: string, options?: AddTextOptions) {
+  addText(text: string, options?: AddTextOptionsProps) {
     const { bold = false, align = "left", newLine = 1 } = options || {};
 
     // alinhamento
