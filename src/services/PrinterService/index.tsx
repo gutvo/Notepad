@@ -20,10 +20,7 @@ interface PrinterServiceConfig {
   customColumns?: number;
 }
 
-export type PrintBuilderProps = Omit<
-  PrinterService,
-  "connect" | "disconnect" | "getAvailablePrinters" | "isConnected" | "print"
->;
+export type PrintBuilderProps = PrinterCommandService;
 
 export default class PrinterService extends PrinterCommandService {
   private connection: BluetoothConnectionService;
