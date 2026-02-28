@@ -3,11 +3,14 @@ import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import ReminderModal from "@Components/modals/ReminderModal";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import { PrinterProps } from "@Hooks/useGetPrinters";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
+import PrinterService from "@Services/PrinterService";
+import CustomError from "@Utils/CustomError";
 import { Dispatch, SetStateAction } from "react";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
@@ -70,6 +73,88 @@ export default function ActionModal({
     openModal("REMINDER", { noteId: selectedNote.id });
   }
 
+  async function handleGetPrinterId(devices: PrinterProps[]) {
+    const defaultPrinterConfig = await actions.config.find("PRINTER_ID");
+    const findPrinter = devices.find(
+      (device) => device.id === defaultPrinterConfig?.value,
+    );
+
+    return findPrinter?.id;
+  }
+
+  async function handlePreparePrinter() {
+    const allLines = selectedNote?.description?.split(/\r?\n/) ?? [];
+    const lines = allLines.filter((text) => text.trim() !== "");
+
+    const paperSizeConfig = await actions.config.find("PAPER_SIZE");
+
+    const printerService = new PrinterService({
+      paperSize: paperSizeConfig?.value,
+    });
+    const devices = await printerService.getAvailablePrinters();
+    const printerId = await handleGetPrinterId(devices);
+
+    if (!printerId) {
+      throw new CustomError("Impressora térmica não encontrada!");
+    }
+
+    await printerService.connect(printerId);
+
+    return { printerService, lines };
+  }
+
+  async function handlePrintNote() {
+    try {
+      const { lines, printerService } = await handlePreparePrinter();
+
+      await printerService.print(async (printer) => {
+        lines.forEach((line) => {
+          printer.addText(line);
+          // printer.addDivider();
+        });
+
+        printer.cut();
+      });
+    } catch (error) {
+      if (error instanceof CustomError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao imprimir!");
+      }
+    }
+  }
+
+  async function handlePrintList() {
+    try {
+      const { lines, printerService } = await handlePreparePrinter();
+
+      const formattedLines = lines.map((line) => {
+        const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
+
+        if (!match) {
+          return { text: line.trim(), value: "" };
+        }
+
+        return { text: match[1].trim(), value: match[2].trim() };
+      });
+
+      await printerService.print(async (printer) => {
+        formattedLines.forEach(({ text, value }) => {
+          printer.addRow(text, value);
+          // printer.addDivider();
+        });
+
+        printer.cut();
+      });
+    } catch (error) {
+      if (error instanceof CustomError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao imprimir!");
+      }
+    }
+  }
+
   const options: CustomItemProps[] = [
     {
       name: locales.home.list.actionModal.actions.view,
@@ -77,14 +162,24 @@ export default function ActionModal({
       Icon: <BaseIcon name="eye-outline" />,
     },
     {
-      name: locales.home.list.actionModal.actions.duplicate,
-      onClick: handleDuplicateNote,
-      Icon: <BaseIcon name="content-copy" />,
+      name: "Imprimir",
+      onClick: handlePrintNote,
+      Icon: <BaseIcon name="printer-outline" />,
+    },
+    {
+      name: "Imprimir lista",
+      onClick: handlePrintList,
+      Icon: <BaseIcon name="printer-outline" />,
     },
     {
       name: locales.home.list.actionModal.actions.reminder,
       onClick: handleAddReminder,
       Icon: <BaseIcon name="bell-plus-outline" />,
+    },
+    {
+      name: locales.home.list.actionModal.actions.duplicate,
+      onClick: handleDuplicateNote,
+      Icon: <BaseIcon name="content-copy" />,
     },
     {
       name: locales.home.list.actionModal.actions.delete,

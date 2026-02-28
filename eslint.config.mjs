@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig([
   {
-    ignores: ["dist/*", "src/database/drizzle/**/*"],
+    ignores: ["dist/*", "src/database/drizzle/**/*", "expo-env.d.ts"],
   },
   expoConfig,
   eslintPluginPrettierRecommended,

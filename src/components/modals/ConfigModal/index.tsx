@@ -1,13 +1,16 @@
 import actions from "@Actions";
+import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
 import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/bases/Typography";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
+import useGetPrinters from "@Hooks/useGetPrinters";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
+import { PAPER_SIZES } from "@Services/PrinterService";
 import { useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { View } from "react-native";
@@ -20,10 +23,12 @@ export default function ConfigModal() {
   const { isOpen, closeModal } = useCurrentModal("CONFIG");
 
   const [configs] = useGetConfigs();
+  const { printers } = useGetPrinters();
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors, isDirty, defaultValues },
   } = useForm<ConfigDefaultValueProps>({
     defaultValues: getDefaultValues(configs),
@@ -45,6 +50,14 @@ export default function ConfigModal() {
       await actions.config.update("DAYS_BEFORE_REMINDER", {
         value: data.daysBeforeReminder,
       });
+    }
+
+    if (defaultValues?.printerId !== data.printerId) {
+      await actions.config.update("PRINTER_ID", { value: data.printerId });
+    }
+
+    if (defaultValues?.paperSize !== data?.paperSize) {
+      await actions.config.update("PAPER_SIZE", { value: data?.paperSize });
     }
 
     closeModal();
@@ -74,9 +87,7 @@ export default function ConfigModal() {
       visible={isOpen}
       onClose={closeModal}
     >
-      <BaseModal.Container
-        style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
-      >
+      <BaseModal.Container style={{ padding: theme.spacing(4) }}>
         <Controller
           control={control}
           name="textFontSize"
@@ -140,6 +151,86 @@ export default function ConfigModal() {
               )}
               error={Boolean(errors.textFontSize?.message)}
               helpText={errors.textFontSize?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="printerId"
+          render={({ field: { onChange, value, disabled } }) => (
+            <SelectInput
+              value={value}
+              onChange={(itemValue) => onChange(itemValue.id)}
+              label="Selecionar impressora térmica"
+              disabled={disabled}
+              options={printers}
+              endIcon={
+                value && (
+                  <BaseButton
+                    onPress={() => {
+                      setValue("printerId", "", { shouldDirty: true });
+                    }}
+                  >
+                    <BaseIcon name="close" />
+                  </BaseButton>
+                )
+              }
+              renderInputValue={(inputValue) => (
+                <BaseTypography>{inputValue?.name}</BaseTypography>
+              )}
+              getOptionValue={(option) => option.id}
+              renderItem={({ item, selectedItem }) => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: theme.spacing(3),
+                  }}
+                >
+                  <BaseTypography style={{ flex: 1 }}>
+                    {item.name}
+                  </BaseTypography>
+
+                  {item.id === selectedItem?.id && <BaseIcon name="check" />}
+                </View>
+              )}
+              error={Boolean(errors.printerId?.message)}
+              helpText={errors.printerId?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="paperSize"
+          render={({ field: { onChange, value, disabled } }) => (
+            <SelectInput
+              value={value}
+              onChange={(itemValue) => onChange(itemValue)}
+              label="Selecionar impressora térmica"
+              disabled={disabled}
+              options={Object.keys(PAPER_SIZES)}
+              renderInputValue={(inputValue) => (
+                <BaseTypography>{inputValue}</BaseTypography>
+              )}
+              renderItem={({ item, selectedItem }) => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: theme.spacing(3),
+                  }}
+                >
+                  <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
+
+                  {item === selectedItem && <BaseIcon name="check" />}
+                </View>
+              )}
+              error={Boolean(errors.printerId?.message)}
+              helpText={errors.printerId?.message}
             />
           )}
         />
