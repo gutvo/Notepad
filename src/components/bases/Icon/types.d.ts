@@ -22,4 +22,5 @@ type BaseIconNameProps =
   | "bell-plus-outline"
   | "arrow-right"
   | "calendar-outline"
-  | "pencil-outline";
+  | "pencil-outline"
+  | "printer-outline";

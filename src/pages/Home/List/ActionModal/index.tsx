@@ -8,6 +8,7 @@ import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
+import PrinterService from "@Services/PrinterService";
 import { Dispatch, SetStateAction } from "react";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
@@ -70,6 +71,48 @@ export default function ActionModal({
     openModal("REMINDER", { noteId: selectedNote.id });
   }
 
+  async function handlePrint() {
+    const allLines = selectedNote?.description?.split(/\r?\n/) ?? [];
+
+    const lines = allLines.filter((text) => text.trim() !== "");
+
+    const formattedLines = lines.map((line) => {
+      const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
+
+      if (!match) {
+        return {
+          text: line.trim(),
+          value: "",
+        };
+      }
+
+      return {
+        text: match[1].trim(),
+        value: match[2].trim(),
+      };
+    });
+
+    const printerService = new PrinterService({ paperSize: "58mm" });
+
+    const devices = await printerService.getAvailablePrinters();
+
+    await printerService.connect(devices[2].id);
+
+    await printerService.print(async (printer) => {
+      formattedLines.forEach(({ text, value }) => {
+        printer.addRow(text, value);
+        // printer.addDivider();
+      });
+
+      // lines.forEach((line) => {
+      //   printer.addText(line);
+      //   printer.addDivider();
+      // });
+
+      printer.cut();
+    });
+  }
+
   const options: CustomItemProps[] = [
     {
       name: locales.home.list.actionModal.actions.view,
@@ -77,14 +120,19 @@ export default function ActionModal({
       Icon: <BaseIcon name="eye-outline" />,
     },
     {
-      name: locales.home.list.actionModal.actions.duplicate,
-      onClick: handleDuplicateNote,
-      Icon: <BaseIcon name="content-copy" />,
+      name: "Imprimir",
+      onClick: handlePrint,
+      Icon: <BaseIcon name="printer-outline" />,
     },
     {
       name: locales.home.list.actionModal.actions.reminder,
       onClick: handleAddReminder,
       Icon: <BaseIcon name="bell-plus-outline" />,
+    },
+    {
+      name: locales.home.list.actionModal.actions.duplicate,
+      onClick: handleDuplicateNote,
+      Icon: <BaseIcon name="content-copy" />,
     },
     {
       name: locales.home.list.actionModal.actions.delete,
