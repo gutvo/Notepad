@@ -1,6 +1,7 @@
 type ConfigValueMapProps = {
   TEXT_FONT_SIZE: number;
   DAYS_BEFORE_REMINDER: number;
+  PRINTER_ID: string;
 };
 
 type ConfigTypeProps = "STRING" | "NUMBER" | "BOOLEAN";

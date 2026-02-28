@@ -9,14 +9,19 @@ export default function getDefaultValues(configs?: ConfigDataProps[]) {
         accumulator.daysBeforeReminder = config.value;
       }
 
+      if (config.key === "PRINTER_ID") {
+        accumulator.printerId = config.value;
+      }
+
       return accumulator;
     },
-    { textFontSize: 12, daysBeforeReminder: 0 },
+    { textFontSize: 12, daysBeforeReminder: 0, printerId: "" },
   );
 
   const defaultValues = {
     textFontSize: defaultProps?.textFontSize ?? 12,
     daysBeforeReminder: defaultProps?.daysBeforeReminder ?? 0,
+    printerId: defaultProps?.printerId ?? "",
   };
 
   return defaultValues;
