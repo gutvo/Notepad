@@ -10,6 +10,7 @@ import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import locales from "@Locales";
 import PrinterService from "@Services/PrinterService";
+import CustomError from "@Utils/CustomError";
 import { Dispatch, SetStateAction } from "react";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
@@ -73,18 +74,15 @@ export default function ActionModal({
   }
 
   async function handleGetPrinterId(devices: PrinterProps[]) {
-    const [defaultPrinterConfig] = await actions.config.list({
-      findBy: { keys: ["PRINTER_ID"] },
-    });
-
+    const defaultPrinterConfig = await actions.config.find("PRINTER_ID");
     const findPrinter = devices.find(
-      (device) => device.id === defaultPrinterConfig.value,
+      (device) => device.id === defaultPrinterConfig?.value,
     );
 
     return findPrinter?.id;
   }
 
-  async function handlePrintNote() {
+  async function handlePreparePrinter() {
     const allLines = selectedNote?.description?.split(/\r?\n/) ?? [];
     const lines = allLines.filter((text) => text.trim() !== "");
 
@@ -93,53 +91,64 @@ export default function ActionModal({
     const printerId = await handleGetPrinterId(devices);
 
     if (!printerId) {
-      toast.error("Impressora térmica não encontrada!");
-      return;
+      throw new CustomError("Impressora térmica não encontrada!");
     }
 
     await printerService.connect(printerId);
 
-    await printerService.print(async (printer) => {
-      lines.forEach((line) => {
-        printer.addText(line);
-        // printer.addDivider();
-      });
+    return { printerService, lines };
+  }
 
-      printer.cut();
-    });
+  async function handlePrintNote() {
+    try {
+      const { lines, printerService } = await handlePreparePrinter();
+
+      await printerService.print(async (printer) => {
+        lines.forEach((line) => {
+          printer.addText(line);
+          // printer.addDivider();
+        });
+
+        printer.cut();
+      });
+    } catch (error) {
+      if (error instanceof CustomError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao imprimir!");
+      }
+    }
   }
 
   async function handlePrintList() {
-    const allLines = selectedNote?.description?.split(/\r?\n/) ?? [];
-    const lines = allLines.filter((text) => text.trim() !== "");
+    try {
+      const { lines, printerService } = await handlePreparePrinter();
 
-    const formattedLines = lines.map((line) => {
-      const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
+      const formattedLines = lines.map((line) => {
+        const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
 
-      if (!match) {
-        return { text: line.trim(), value: "" };
-      }
+        if (!match) {
+          return { text: line.trim(), value: "" };
+        }
 
-      return { text: match[1].trim(), value: match[2].trim() };
-    });
-
-    const printerService = new PrinterService({ paperSize: "58mm" });
-    const devices = await printerService.getAvailablePrinters();
-    const printerId = await handleGetPrinterId(devices);
-
-    if (!printerId) {
-      toast.error("Impressora térmica não encontrada!");
-      return;
-    }
-
-    await printerService.print(async (printer) => {
-      formattedLines.forEach(({ text, value }) => {
-        printer.addRow(text, value);
-        // printer.addDivider();
+        return { text: match[1].trim(), value: match[2].trim() };
       });
 
-      printer.cut();
-    });
+      await printerService.print(async (printer) => {
+        formattedLines.forEach(({ text, value }) => {
+          printer.addRow(text, value);
+          // printer.addDivider();
+        });
+
+        printer.cut();
+      });
+    } catch (error) {
+      if (error instanceof CustomError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao imprimir!");
+      }
+    }
   }
 
   const options: CustomItemProps[] = [
