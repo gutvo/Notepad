@@ -45,10 +45,7 @@ const config: ExpoConfig = {
         },
       },
     ],
-    [
-      "expo-notifications",
-      // { icon: "./assets/images/notification-icon.ico" }
-    ],
+    ["expo-notifications", { icon: "./assets/images/notification-icon.png" }],
   ],
   experiments: {
     typedRoutes: true,
