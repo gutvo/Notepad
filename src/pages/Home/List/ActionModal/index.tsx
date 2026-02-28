@@ -102,7 +102,7 @@ export default function ActionModal({
     await printerService.print(async (printer) => {
       lines.forEach((line) => {
         printer.addText(line);
-        printer.addDivider();
+        // printer.addDivider();
       });
 
       printer.cut();
@@ -135,7 +135,7 @@ export default function ActionModal({
     await printerService.print(async (printer) => {
       formattedLines.forEach(({ text, value }) => {
         printer.addRow(text, value);
-        printer.addDivider();
+        // printer.addDivider();
       });
 
       printer.cut();
