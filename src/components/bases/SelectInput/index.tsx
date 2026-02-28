@@ -11,7 +11,7 @@ export interface BaseSelectInputProps<DataProps, ValueProps> {
   onChange?: (data: DataProps) => void;
   disabled?: boolean;
   getOptionValue?: (option: DataProps) => ValueProps;
-  renderInputValue?: (value: ValueProps) => ReactNode;
+  renderInputValue?: (option?: DataProps) => ReactNode;
 }
 
 export default function BaseSelectInput<
@@ -64,9 +64,7 @@ export default function BaseSelectInput<
         disabled={disabled}
         style={{ flex: 1 }}
       >
-        {renderInputValue &&
-          internalValue !== undefined &&
-          renderInputValue(internalValue)}
+        {renderInputValue && renderInputValue(selectedItem)}
 
         {!renderInputValue && (
           <>
