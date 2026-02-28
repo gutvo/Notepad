@@ -1,38 +1,46 @@
 import BluetoothConnectionService from "./BluetoothConnectionService";
 import PrinterCommandService from "./PrinterCommandService";
 
-type ConnectionType = "bluetooth";
+type ConnectionTypeProps = "bluetooth";
+
+const PAPER_SIZES = {
+  "58mm": 32,
+  "58mm-compact": 30,
+  "58mm-small": 24,
+  "80mm": 48,
+  "80mm-compact": 42,
+  "80mm-wide": 64,
+} as const;
+
+type PaperSizeProps = keyof typeof PAPER_SIZES;
 
 interface PrinterServiceConfig {
-  type?: ConnectionType;
+  type?: ConnectionTypeProps;
+  paperSize?: PaperSizeProps;
+  customColumns?: number;
 }
 
-export interface PrintBuilderProps {
-  text(
-    text: string,
-    options?: {
-      bold?: boolean;
-      align?: "left" | "center" | "right";
-      newLine?: number;
-    },
-  ): this;
+export type PrintBuilderProps = Omit<
+  PrinterService,
+  "connect" | "disconnect" | "getAvailablePrinters" | "isConnected" | "print"
+>;
 
-  cut(): this;
-  newLine(lines?: number): this;
-}
-
-export default class PrinterService implements PrintBuilderProps {
+export default class PrinterService extends PrinterCommandService {
   private connection: BluetoothConnectionService;
-  private commandService: PrinterCommandService;
 
   constructor(config: PrinterServiceConfig = {}) {
     const type = config.type ?? "bluetooth";
+    const paperSize = config.paperSize ?? "80mm";
+
+    const columns =
+      config.customColumns ?? PAPER_SIZES[paperSize] ?? PAPER_SIZES["80mm"];
+
+    super(columns); // 🔥 herança correta
 
     this.connection = this.createConnection(type);
-    this.commandService = new PrinterCommandService();
   }
 
-  private createConnection(type: ConnectionType) {
+  private createConnection(type: ConnectionTypeProps) {
     switch (type) {
       case "bluetooth":
         return new BluetoothConnectionService();
@@ -63,33 +71,7 @@ export default class PrinterService implements PrintBuilderProps {
   }
 
   // =========================
-  // 🖨️ COMANDOS
-  // =========================
-
-  text(
-    text: string,
-    options?: {
-      bold?: boolean;
-      align?: "left" | "center" | "right";
-      newLine?: number;
-    },
-  ) {
-    this.commandService.addText(text, options);
-    return this;
-  }
-
-  cut() {
-    this.commandService.cut();
-    return this;
-  }
-
-  newLine(lines = 1) {
-    this.commandService.newLine(lines);
-    return this;
-  }
-
-  // =========================
-  // 🚀 NOVO MÉTODO PRINT
+  // 🚀 MÉTODO PRINT
   // =========================
 
   async print(callback: (printer: PrintBuilderProps) => void | Promise<void>) {
@@ -100,14 +82,14 @@ export default class PrinterService implements PrintBuilderProps {
     }
 
     try {
-      this.commandService.init();
+      this.init(); // vem do PrinterCommandService
 
       await callback(this);
 
-      const content = this.commandService.build();
+      const content = this.build(); // vem do PrinterCommandService
       await this.connection.write(content);
     } finally {
-      this.commandService.clear();
+      this.clear(); // vem do PrinterCommandService
     }
   }
 }
