@@ -1,8 +1,8 @@
 import BaseButton from "@Components/bases/Button";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseModal from "@Components/bases/Modal";
+import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
-import locales from "@Locales";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
 
@@ -31,6 +31,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   setSelectedItem,
   itemHeight = 60, // ajuste esse valor baseado no seu item
 }: BaseSelectModalProps<DataProps, ValueProps>) {
+  const { formatMessage } = useLocale();
   const theme = useTheme();
   const { height: screenHeight } = useWindowDimensions();
 
@@ -58,7 +59,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   return (
     <BaseModal.Modal
       visible={isOpenModal}
-      title={locales.selectModal.title}
+      title={formatMessage({ id: "modals.select.title" })}
       onClose={onClose}
       style={{ minHeight: 0 }}
     >
