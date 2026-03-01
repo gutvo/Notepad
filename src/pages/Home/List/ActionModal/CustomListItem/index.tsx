@@ -1,13 +1,14 @@
+import BaseButton from "@Components/bases/Button";
 import BaseDivider from "@Components/bases/Divider";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode } from "react";
-import { Pressable } from "react-native";
 
 export interface CustomItemProps {
   name: string;
   onClick?: () => void;
   Icon?: ReactNode;
+  disabled?: boolean;
 }
 
 interface CustomListItemProps {
@@ -19,7 +20,7 @@ export default function CustomListItem({ item }: CustomListItemProps) {
 
   return (
     <>
-      <Pressable
+      <BaseButton
         style={({ pressed }) => [
           {
             paddingVertical: theme.spacing(5),
@@ -28,16 +29,18 @@ export default function CustomListItem({ item }: CustomListItemProps) {
             flexDirection: "row",
             alignItems: "center",
             gap: theme.spacing(4),
+            opacity: item.disabled ? 0.5 : 1,
           },
           pressed && {
             backgroundColor: theme.palette.background.button.pressed,
           },
         ]}
         onPress={item.onClick}
+        disabled={item.disabled}
       >
         {item.Icon && item.Icon}
         <BaseTypography>{item.name}</BaseTypography>
-      </Pressable>
+      </BaseButton>
 
       <BaseDivider />
     </>

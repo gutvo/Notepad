@@ -11,7 +11,7 @@ import useToast from "@Hooks/useToast";
 import locales from "@Locales";
 import PrinterService from "@Services/PrinterService";
 import CustomError from "@Utils/CustomError";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {
@@ -34,6 +34,8 @@ export default function ActionModal({
 
   const { isOpen } = useCurrentModal("REMINDER");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function handleVisualizeNote() {
     if (!selectedNote) return;
 
@@ -48,23 +50,38 @@ export default function ActionModal({
   async function handleDeleteNote() {
     if (!selectedNote) return;
 
-    await actions.note.delete(selectedNote.id);
+    setIsLoading(true);
 
-    setSelectedNote(null);
-    handleCloseModal();
+    try {
+      await actions.note.delete(selectedNote.id);
 
-    toast.success(locales.home.list.actionModal.success.delete);
+      setSelectedNote(null);
+      handleCloseModal();
+
+      toast.success(locales.home.list.actionModal.success.delete);
+    } catch {
+      toast.error("Erro ao deletar nota!");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function handleDuplicateNote() {
     if (!selectedNote) return;
 
-    await actions.note.create({ description: selectedNote.description });
+    setIsLoading(true);
+    try {
+      await actions.note.create({ description: selectedNote.description });
 
-    setSelectedNote(null);
-    handleCloseModal();
+      setSelectedNote(null);
+      handleCloseModal();
 
-    toast.success(locales.home.list.actionModal.success.duplicate);
+      toast.success(locales.home.list.actionModal.success.duplicate);
+    } catch {
+      toast.error("Erro ao duplicar nota!");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function handleAddReminder() {
@@ -104,6 +121,8 @@ export default function ActionModal({
   }
 
   async function handlePrintNote() {
+    setIsLoading(true);
+
     try {
       const { lines, printerService } = await handlePreparePrinter();
 
@@ -121,10 +140,14 @@ export default function ActionModal({
       } else {
         toast.error("Erro ao imprimir!");
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function handlePrintList() {
+    setIsLoading(true);
+
     try {
       const { lines, printerService } = await handlePreparePrinter();
 
@@ -152,6 +175,8 @@ export default function ActionModal({
       } else {
         toast.error("Erro ao imprimir!");
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -160,31 +185,37 @@ export default function ActionModal({
       name: locales.home.list.actionModal.actions.view,
       onClick: handleVisualizeNote,
       Icon: <BaseIcon name="eye-outline" />,
+      disabled: isLoading,
     },
     {
       name: "Imprimir",
       onClick: handlePrintNote,
       Icon: <BaseIcon name="printer-outline" />,
+      disabled: isLoading,
     },
     {
       name: "Imprimir lista",
       onClick: handlePrintList,
       Icon: <BaseIcon name="printer-outline" />,
+      disabled: isLoading,
     },
     {
       name: locales.home.list.actionModal.actions.reminder,
       onClick: handleAddReminder,
       Icon: <BaseIcon name="bell-plus-outline" />,
+      disabled: isLoading,
     },
     {
       name: locales.home.list.actionModal.actions.duplicate,
       onClick: handleDuplicateNote,
       Icon: <BaseIcon name="content-copy" />,
+      disabled: isLoading,
     },
     {
       name: locales.home.list.actionModal.actions.delete,
       onClick: handleDeleteNote,
       Icon: <BaseIcon name="trash-can-outline" />,
+      disabled: isLoading,
     },
   ];
 
