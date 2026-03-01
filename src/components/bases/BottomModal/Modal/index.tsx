@@ -46,7 +46,7 @@ export default function BottomModalModal({
       )}
       backgroundStyle={{ backgroundColor: theme.palette.background.body }}
       handleIndicatorStyle={{
-        backgroundColor: theme.palette.background.textSecondary,
+        backgroundColor: theme.palette.text.secondary,
       }}
     >
       <BottomModalContext.Provider value={{ title }}>

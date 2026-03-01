@@ -46,7 +46,7 @@ export default function BaseInputWrapper({
               backgroundColor: theme.palette.background.body,
               color: focused
                 ? theme.palette.primary.main
-                : theme.palette.background.textPrimary,
+                : theme.palette.text.primary,
               zIndex: 1,
             },
             textStyle,
@@ -87,7 +87,7 @@ export default function BaseInputWrapper({
               paddingHorizontal: theme.spacing(1),
               color: error
                 ? theme.palette.error.main
-                : theme.palette.background.textPrimary,
+                : theme.palette.text.primary,
             },
             helpTextStyle,
           ]}

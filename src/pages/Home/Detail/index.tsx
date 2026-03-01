@@ -105,7 +105,7 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
                   (defaultSettings.TEXT_FONT_SIZE as number) ??
                   theme.fontSize(4),
                 backgroundColor: theme.palette.background.body,
-                color: theme.palette.background.textPrimary,
+                color: theme.palette.text.primary,
               }}
             />
           )}

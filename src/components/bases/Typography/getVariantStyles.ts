@@ -76,7 +76,7 @@ export default function getVariantStyles(
     PLACEHOLDER: {
       fontSize: theme.fontSize(3.5),
       paddingHorizontal: theme.spacing(1),
-      color: theme.palette.background.textPlaceholder,
+      color: theme.palette.text.placeholder,
     },
   };
 

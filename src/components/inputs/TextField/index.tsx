@@ -46,10 +46,7 @@ export default function TextField({
   return (
     <BaseInputWrapper {...wrapperProps}>
       <TextInput
-        style={[
-          { flex: 1, color: theme.palette.background.textPrimary },
-          style,
-        ]}
+        style={[{ flex: 1, color: theme.palette.text.primary }, style]}
         onFocus={(event) => {
           setFocused(true);
           onFocus?.(event);
@@ -58,7 +55,7 @@ export default function TextField({
           setFocused(false);
           onBlur?.(event);
         }}
-        placeholderTextColor={theme.palette.background.textPlaceholder}
+        placeholderTextColor={theme.palette.text.placeholder}
         editable={!disabled}
         selectTextOnFocus={!disabled}
         {...rest}

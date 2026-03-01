@@ -17,7 +17,7 @@ export default function BaseTypography({
   const variantStyle = getVariantStyles(variant, theme);
 
   const customStyle: StyleProp<TextStyle> = [
-    { color: theme.palette.background.textPrimary },
+    { color: theme.palette.text.primary },
     variantStyle,
     style,
   ];

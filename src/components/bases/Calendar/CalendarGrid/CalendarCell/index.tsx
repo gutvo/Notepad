@@ -49,7 +49,7 @@ export default function CalendarCell({ day, onPress }: CalendarCellProps) {
               color: theme.palette.primary.contrast,
             },
             day.disabled && {
-              color: theme.palette.background.textPlaceholder,
+              color: theme.palette.text.placeholder,
             },
           ]}
         >

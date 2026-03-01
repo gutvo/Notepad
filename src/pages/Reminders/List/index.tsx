@@ -47,7 +47,7 @@ export default function RemindersList() {
             style={({ pressed }) => [
               { padding: theme.spacing(4) },
               pressed && {
-                backgroundColor: theme.palette.background.button.pressed,
+                backgroundColor: theme.palette.action.pressed,
               },
             ]}
           >

@@ -57,7 +57,7 @@ export default function BaseListItemButton({
             opacity: disabled ? 0.5 : 1,
           },
           pressed && {
-            backgroundColor: theme.palette.background.button.pressed,
+            backgroundColor: theme.palette.action.pressed,
           },
           style,
         ]}
