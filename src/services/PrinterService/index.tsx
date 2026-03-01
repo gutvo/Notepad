@@ -5,11 +5,10 @@ type ConnectionTypeProps = "BLUETOOTH";
 
 export const PAPER_SIZES = {
   "58mm": 32,
-  "58mm-compact": 30,
-  "58mm-small": 24,
+  "65mm": 36,
+  "70mm": 40,
+  "76mm": 44,
   "80mm": 48,
-  "80mm-compact": 42,
-  "80mm-wide": 64,
 } as const;
 
 type PaperSizeProps = keyof typeof PAPER_SIZES;

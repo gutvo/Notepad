@@ -45,6 +45,15 @@ export default class PrinterCommandService {
 
   constructor(private columns: number = 48) {}
 
+  private getWidthMultiplier(fontSize: FontSizeProps) {
+    const value = FONT_SIZE[fontSize];
+
+    // bit 4 = largura
+    const widthBits = (value >> 4) & 0x0f;
+
+    return widthBits + 1;
+  }
+
   private wrapText(text: string, maxChars: number) {
     const result: string[] = [];
 
@@ -101,7 +110,11 @@ export default class PrinterCommandService {
       fontSize = "NORMAL",
     } = options;
 
-    const maxChars = Math.max(1, this.percentToColumns(widthPercent));
+    const widthMultiplier = this.getWidthMultiplier(fontSize);
+
+    const baseColumns = this.percentToColumns(widthPercent);
+
+    const maxChars = Math.floor(baseColumns / widthMultiplier);
 
     this.setAlign(align);
     this.setFont(font);
