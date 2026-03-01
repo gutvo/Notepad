@@ -6,7 +6,7 @@ import { Animated, Dimensions, Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
-const Drawer_WIDTH = width * 0.65;
+const DRAWER_WIDTH = width * 0.65;
 
 interface BaseDrawerProps {
   visible: boolean;
@@ -30,7 +30,7 @@ export default function BaseDrawer({
   useOnGoBack({ onBackPress });
 
   const [isMounted, setIsMounted] = useState(visible);
-  const translateX = useRef(new Animated.Value(-Drawer_WIDTH)).current;
+  const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function BaseDrawer({
     } else {
       Animated.parallel([
         Animated.timing(translateX, {
-          toValue: -Drawer_WIDTH,
+          toValue: -DRAWER_WIDTH,
           duration: 250,
           useNativeDriver: true,
         }),
@@ -93,7 +93,7 @@ export default function BaseDrawer({
           left: 0,
           top: insets.top,
           bottom: insets.bottom,
-          width: Drawer_WIDTH,
+          width: DRAWER_WIDTH,
           backgroundColor: theme.palette.background.body,
 
           transform: [{ translateX }],
