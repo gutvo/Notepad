@@ -4,11 +4,11 @@ import BaseIcon from "@Components/bases/Icon";
 import ReminderModal from "@Components/modals/ReminderModal";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import { PrinterProps } from "@Hooks/useGetPrinters";
+import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
 import PrinterService from "@Services/PrinterService";
 import CustomError from "@Utils/CustomError";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -30,6 +30,7 @@ export default function ActionModal({
   const theme = useTheme();
   const toast = useToast();
   const navigation = useNavigation();
+  const { formatMessage } = useLocale();
   const { openModal } = useModal();
 
   const { isOpen } = useCurrentModal("REMINDER");
@@ -58,9 +59,9 @@ export default function ActionModal({
       setSelectedNote(null);
       handleCloseModal();
 
-      toast.success(locales.home.list.actionModal.success.delete);
+      toast.success(formatMessage({ id: "messages.success.delete-note" }));
     } catch {
-      toast.error("Erro ao deletar nota!");
+      toast.error(formatMessage({ id: "messages.failure.delete-note" }));
     } finally {
       setIsLoading(false);
     }
@@ -76,9 +77,9 @@ export default function ActionModal({
       setSelectedNote(null);
       handleCloseModal();
 
-      toast.success(locales.home.list.actionModal.success.duplicate);
+      toast.success(formatMessage({ id: "messages.success.duplicate-note" }));
     } catch {
-      toast.error("Erro ao duplicar nota!");
+      toast.error(formatMessage({ id: "messages.failure.duplicate-note" }));
     } finally {
       setIsLoading(false);
     }
@@ -112,7 +113,9 @@ export default function ActionModal({
     const printerId = await handleGetPrinterId(devices);
 
     if (!printerId) {
-      throw new CustomError("Impressora térmica não encontrada!");
+      throw new CustomError(
+        formatMessage({ id: "messages.failure.not-found-thermal" }),
+      );
     }
 
     await printerService.connect(printerId);
@@ -138,7 +141,7 @@ export default function ActionModal({
       if (error instanceof CustomError) {
         toast.error(error.message);
       } else {
-        toast.error("Erro ao imprimir!");
+        toast.error(formatMessage({ id: "messages.failure.print" }));
       }
     } finally {
       setIsLoading(false);
@@ -173,7 +176,7 @@ export default function ActionModal({
       if (error instanceof CustomError) {
         toast.error(error.message);
       } else {
-        toast.error("Erro ao imprimir!");
+        toast.error(formatMessage({ id: "messages.failure.print" }));
       }
     } finally {
       setIsLoading(false);
@@ -182,37 +185,37 @@ export default function ActionModal({
 
   const options: CustomItemProps[] = [
     {
-      name: locales.home.list.actionModal.actions.view,
+      name: formatMessage({ id: "modals.home-actions.action.view" }),
       onClick: handleVisualizeNote,
       Icon: <BaseIcon name="eye-outline" />,
       disabled: isLoading,
     },
     {
-      name: "Imprimir",
+      name: formatMessage({ id: "modals.home-actions.action.print" }),
       onClick: handlePrintNote,
       Icon: <BaseIcon name="printer-outline" />,
       disabled: isLoading,
     },
     {
-      name: "Imprimir lista",
+      name: formatMessage({ id: "modals.home-actions.action.print-list" }),
       onClick: handlePrintList,
       Icon: <BaseIcon name="printer-outline" />,
       disabled: isLoading,
     },
     {
-      name: locales.home.list.actionModal.actions.reminder,
+      name: formatMessage({ id: "modals.home-actions.action.add-reminder" }),
       onClick: handleAddReminder,
       Icon: <BaseIcon name="bell-plus-outline" />,
       disabled: isLoading,
     },
     {
-      name: locales.home.list.actionModal.actions.duplicate,
+      name: formatMessage({ id: "modals.home-actions.action.duplicate" }),
       onClick: handleDuplicateNote,
       Icon: <BaseIcon name="content-copy" />,
       disabled: isLoading,
     },
     {
-      name: locales.home.list.actionModal.actions.delete,
+      name: formatMessage({ id: "modals.home-actions.action.delete" }),
       onClick: handleDeleteNote,
       Icon: <BaseIcon name="trash-can-outline" />,
       disabled: isLoading,
@@ -222,7 +225,7 @@ export default function ActionModal({
   return (
     <BaseBottomModal.Modal
       isOpen={isOpenModal}
-      title={locales.home.list.actionModal.title}
+      title={formatMessage({ id: "modals.home-actions.title" })}
       onClose={handleCloseModal}
     >
       <BaseBottomModal.FlatList

@@ -3,6 +3,7 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
 import useDebounce from "@Hooks/useDebounce";
+import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
@@ -12,6 +13,7 @@ import { View } from "react-native";
 export default function useHeader() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const { formatMessage } = useLocale();
   const { openModal } = useModal();
 
   const [inputSearch, setInputSearch] = useState("");
@@ -62,12 +64,12 @@ export default function useHeader() {
           />
         ) : (
           <BaseTypography style={{ color: theme.palette.primary.contrast }}>
-            Página incial
+            {formatMessage({ id: "pages.home-list.title" })}
           </BaseTypography>
         )}
       </View>
     ),
-    [isSearching, inputSearch, theme.palette.primary.contrast],
+    [isSearching, inputSearch, theme.palette.primary.contrast, formatMessage],
   );
 
   const headerRight = useCallback(
