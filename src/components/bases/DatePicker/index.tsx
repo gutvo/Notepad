@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useState } from "react";
 import BaseButton from "../Button";
+import BaseCalendarModal, { BaseCalendarModalProps } from "../CalendarModal";
 import BaseTypography from "../Typography";
-import BaseCalendarModal, { BaseCalendarModalProps } from "./BaseCalendarModal";
 
 export interface BaseDatePickerProps extends Omit<
   BaseCalendarModalProps,

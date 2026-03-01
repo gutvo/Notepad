@@ -28,7 +28,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   getOptionValue,
   selectedItem,
   setSelectedItem,
-  itemHeight = 58, // ajuste esse valor baseado no seu item
+  itemHeight = 60.5, // ajuste esse valor baseado no seu item
 }: BaseSelectModalProps<DataProps, ValueProps>) {
   const { formatMessage } = useLocale();
   const { height: screenHeight } = useWindowDimensions();
@@ -61,7 +61,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
       onClose={onClose}
       style={{ minHeight: 0 }}
     >
-      <BaseModal.Container style={{ flex: undefined }}>
+      <BaseModal.Container>
         <View style={{ height: listHeight }}>
           <BaseFlashList
             data={options}
