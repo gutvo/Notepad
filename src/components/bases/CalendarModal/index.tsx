@@ -1,5 +1,6 @@
 import BaseCalendar, { BaseCalendarProps } from "@Components/bases/Calendar";
 import BaseModal from "@Components/bases/Modal";
+import useLocale from "@Hooks/useLocale";
 import { useState } from "react";
 
 export interface BaseCalendarModalProps extends BaseCalendarProps {
@@ -14,6 +15,8 @@ export default function BaseCalendarModal({
   value,
   ...rest
 }: BaseCalendarModalProps) {
+  const { formatMessage } = useLocale();
+
   const [internalValue, setInternalValue] = useState(value);
 
   function handleConfirm() {
@@ -30,7 +33,11 @@ export default function BaseCalendarModal({
   ];
 
   return (
-    <BaseModal.Modal title="Calendário" onClose={onClose} visible={isOpenModal}>
+    <BaseModal.Modal
+      title={formatMessage({ id: "modals.calendar.title" })}
+      onClose={onClose}
+      visible={isOpenModal}
+    >
       <BaseModal.Container style={{ flex: 0 }}>
         <BaseCalendar
           value={internalValue}

@@ -88,6 +88,7 @@ const locales = {
     "Adicione uma data da notificação",
 
   "modals.select.title": "Selecionar",
+  "modals.calendar.title": "Calendário",
 
   "pages.home-list.title": "Página Inicial",
 
