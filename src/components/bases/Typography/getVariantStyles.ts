@@ -71,6 +71,7 @@ export default function getVariantStyles(
       lineHeight: theme.fontSize(4),
       fontWeight: "600",
       textTransform: "uppercase",
+      textAlign: "center",
     },
 
     PLACEHOLDER: {
