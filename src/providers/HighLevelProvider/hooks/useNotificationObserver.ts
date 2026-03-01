@@ -1,7 +1,7 @@
 import * as Notifications from "expo-notifications";
 import { Href } from "expo-router";
 import { useCallback, useEffect } from "react";
-import useNavigation from "./useNavigation";
+import useNavigation from "../../../hooks/useNavigation";
 
 interface NotificationDataProps {
   url?: Href;
