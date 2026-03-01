@@ -4,21 +4,22 @@ import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
-import locales from "@Locales";
 
 export default function Drawer() {
   const navigation = useNavigation();
   const theme = useTheme();
+  const { formatMessage } = useLocale();
   const { openModal } = useModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
 
   const options = [
     {
       name: "reminder",
-      label: locales.home.list.drawer.reminder,
+      label: formatMessage({ id: "modals.sidebar.option.reminder" }),
       icon: <BaseIcon name="bell-outline" />,
       onclick: () => {
         navigation.navigate("/reminders/list");
@@ -27,13 +28,13 @@ export default function Drawer() {
     },
     {
       name: "config",
-      label: locales.home.list.drawer.config,
+      label: formatMessage({ id: "modals.sidebar.option.config" }),
       icon: <BaseIcon name="cog-outline" />,
       onclick: () => openModal("CONFIG"),
     },
     {
       name: "theme",
-      label: locales.home.list.drawer.theme,
+      label: formatMessage({ id: "modals.sidebar.option.theme" }),
       icon: <BaseIcon name="theme-light-dark" />,
       onclick: () => openModal("THEME"),
     },
@@ -42,7 +43,7 @@ export default function Drawer() {
   return (
     <BaseDrawer visible={isOpen} onClose={closeModal}>
       <BaseTypography variant="H4" style={{ padding: theme.spacing(5) }}>
-        {locales.home.list.drawer.title}
+        {formatMessage({ id: "modals.sidebar.title" })}
       </BaseTypography>
 
       <BaseFlashList

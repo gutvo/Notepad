@@ -2,12 +2,12 @@ import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import ReminderModal from "@Components/modals/ReminderModal";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
+import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
 import deleteNotification from "@Utils/deleteNotification";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {
@@ -25,9 +25,12 @@ export default function ActionModal({
 }: ActionModalProps) {
   const theme = useTheme();
   const toast = useToast();
+  const { formatMessage } = useLocale();
 
   const { isOpen } = useCurrentModal("REMINDER");
   const { openModal } = useModal();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleUpdateReminder() {
     if (!selectedReminder) return;
@@ -44,22 +47,31 @@ export default function ActionModal({
   async function handleDeleteNote() {
     if (!selectedReminder) return;
 
-    await deleteNotification({ reminderId: selectedReminder.id });
+    setIsLoading(true);
 
-    setSelectedReminder(null);
-    handleCloseModal();
+    try {
+      await deleteNotification({ reminderId: selectedReminder.id });
 
-    toast.success(locales.home.list.actionModal.success.delete);
+      setSelectedReminder(null);
+      handleCloseModal();
+
+      toast.success(formatMessage({ id: "messages.success.delete-reminder" }));
+    } catch {
+      toast.success(formatMessage({ id: "messages.failure.delete-reminder" }));
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const options: CustomItemProps[] = [
     {
-      name: "Atualizar",
+      name: formatMessage({ id: "modals.reminder-actions.action.update" }),
       onClick: handleUpdateReminder,
       Icon: <BaseIcon name="pencil-outline" />,
+      disabled: isLoading,
     },
     {
-      name: locales.home.list.actionModal.actions.delete,
+      name: formatMessage({ id: "modals.reminder-actions.action.delete" }),
       onClick: handleDeleteNote,
       Icon: <BaseIcon name="trash-can-outline" />,
     },
@@ -68,7 +80,7 @@ export default function ActionModal({
   return (
     <BaseBottomModal.Modal
       isOpen={isOpenModal}
-      title={locales.home.list.actionModal.title}
+      title={formatMessage({ id: "modals.reminder-actions.title" })}
       onClose={handleCloseModal}
     >
       <BaseBottomModal.FlatList

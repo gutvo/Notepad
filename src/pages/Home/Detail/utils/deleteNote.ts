@@ -1,13 +1,18 @@
 import actions from "@Actions";
-import locales from "@Locales";
+import { FormatMessageProps } from "@Hooks/useLocale";
 
 interface DeleteNoteProps {
   id: number;
   toast: ToastContextProps;
+  formatMessage: FormatMessageProps;
 }
 
-export default async function deleteNote({ id, toast }: DeleteNoteProps) {
+export default async function deleteNote({
+  id,
+  toast,
+  formatMessage,
+}: DeleteNoteProps) {
   await actions.note.delete(id);
 
-  toast.success(locales.home.detail.note.success.delete);
+  toast.success(formatMessage({ id: "messages.success.delete-note" }));
 }

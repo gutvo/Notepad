@@ -1,13 +1,21 @@
 import locales, { LocaleKeysProps } from "@Locales";
 import { useCallback } from "react";
 
-interface FormatMessageProps {
+interface FormatMessageDataProps {
   id: LocaleKeysProps;
 }
 
+export type FormatMessageProps = (
+  { id }: FormatMessageDataProps,
+  values?: Record<string, string | number | undefined>,
+) => string;
+
 export default function useLocale() {
   const formatMessage = useCallback(
-    ({ id }: FormatMessageProps, values?: Record<string, string | number>) => {
+    (
+      { id }: FormatMessageDataProps,
+      values?: Record<string, string | number | undefined>,
+    ) => {
       let message: string = locales[id];
 
       if (values) {

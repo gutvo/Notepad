@@ -7,11 +7,11 @@ import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
 import useGetPrinters from "@Hooks/useGetPrinters";
+import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
 import { PAPER_SIZES } from "@Services/PrinterService";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import { View } from "react-native";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
@@ -20,10 +20,13 @@ import useGetConfigs from "./useGetConfigs";
 export default function ConfigModal() {
   const theme = useTheme();
   const toast = useToast();
+  const { formatMessage } = useLocale();
   const { isOpen, closeModal } = useCurrentModal("CONFIG");
 
   const [configs] = useGetConfigs();
   const { printers } = useGetPrinters();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -40,34 +43,46 @@ export default function ConfigModal() {
       return;
     }
 
-    if (data.textFontSize !== defaultValues?.textFontSize) {
-      await actions.config.update("TEXT_FONT_SIZE", {
-        value: data.textFontSize,
-      });
+    setIsLoading(true);
+
+    try {
+      if (data.textFontSize !== defaultValues?.textFontSize) {
+        await actions.config.update("TEXT_FONT_SIZE", {
+          value: data.textFontSize,
+        });
+      }
+
+      if (defaultValues?.daysBeforeReminder !== data.daysBeforeReminder) {
+        await actions.config.update("DAYS_BEFORE_REMINDER", {
+          value: data.daysBeforeReminder,
+        });
+      }
+
+      if (defaultValues?.printerId !== data.printerId) {
+        await actions.config.update("PRINTER_ID", { value: data.printerId });
+      }
+
+      if (defaultValues?.paperSize !== data?.paperSize) {
+        await actions.config.update("PAPER_SIZE", { value: data?.paperSize });
+      }
+
+      closeModal();
+
+      toast.success(formatMessage({ id: "messages.success.update-config" }));
+    } catch {
+      toast.success(formatMessage({ id: "messages.failure.update-config" }));
+    } finally {
+      setIsLoading(false);
     }
-
-    if (defaultValues?.daysBeforeReminder !== data.daysBeforeReminder) {
-      await actions.config.update("DAYS_BEFORE_REMINDER", {
-        value: data.daysBeforeReminder,
-      });
-    }
-
-    if (defaultValues?.printerId !== data.printerId) {
-      await actions.config.update("PRINTER_ID", { value: data.printerId });
-    }
-
-    if (defaultValues?.paperSize !== data?.paperSize) {
-      await actions.config.update("PAPER_SIZE", { value: data?.paperSize });
-    }
-
-    closeModal();
-
-    toast.success(locales.config.modal.success);
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
     { name: "CANCEL", onClick: closeModal },
-    { name: "CONFIRM", onClick: handleSubmit(handleConfirm) },
+    {
+      name: "CONFIRM",
+      onClick: handleSubmit(handleConfirm),
+      disabled: isLoading,
+    },
   ];
 
   const textFontOptions = useMemo(
@@ -83,7 +98,7 @@ export default function ConfigModal() {
 
   return (
     <BaseModal.Modal
-      title={locales.config.modal.title}
+      title={formatMessage({ id: "modals.config.title" })}
       visible={isOpen}
       onClose={closeModal}
     >
@@ -91,12 +106,12 @@ export default function ConfigModal() {
         <Controller
           control={control}
           name="textFontSize"
-          rules={{ required: locales.validations.required }}
+          rules={{ required: formatMessage({ id: "validations.required" }) }}
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue)}
-              label={locales.config.modal.section.fontSize.label}
+              label={formatMessage({ id: "modals.config.fields.font-size" })}
               disabled={disabled}
               options={textFontOptions}
               renderItem={({ item, selectedItem }) => (
@@ -122,16 +137,23 @@ export default function ConfigModal() {
         <Controller
           control={control}
           name="daysBeforeReminder"
-          rules={{ required: locales.validations.required }}
+          rules={{ required: formatMessage({ id: "validations.required" }) }}
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue)}
-              label="Notificar dias antes do lembrete"
+              label={formatMessage({
+                id: "modals.config.fields.days-before-reminder",
+              })}
               disabled={disabled}
               options={daysBeforeOptions}
               renderInputValue={(inputValue) => (
-                <BaseTypography>{inputValue} dias</BaseTypography>
+                <BaseTypography>
+                  {formatMessage(
+                    { id: "modals.config.fields.days-before-reminder-value" },
+                    { value: inputValue },
+                  )}
+                </BaseTypography>
               )}
               renderItem={({ item, selectedItem }) => (
                 <View
@@ -143,7 +165,10 @@ export default function ConfigModal() {
                   }}
                 >
                   <BaseTypography style={{ flex: 1 }}>
-                    {item} dias
+                    {formatMessage(
+                      { id: "modals.config.fields.days-before-reminder-value" },
+                      { value: item },
+                    )}
                   </BaseTypography>
 
                   {item === selectedItem && <BaseIcon name="check" />}
@@ -162,15 +187,15 @@ export default function ConfigModal() {
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue.id)}
-              label="Selecionar impressora térmica"
+              label={formatMessage({ id: "modals.config.fields.printer" })}
               disabled={disabled}
               options={printers}
               endIcon={
                 value && (
                   <BaseButton
-                    onPress={() => {
-                      setValue("printerId", "", { shouldDirty: true });
-                    }}
+                    onPress={() =>
+                      setValue("printerId", "", { shouldDirty: true })
+                    }
                   >
                     <BaseIcon name="close" />
                   </BaseButton>
@@ -209,7 +234,7 @@ export default function ConfigModal() {
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue)}
-              label="Selecionar impressora térmica"
+              label={formatMessage({ id: "modals.config.fields.paper-size" })}
               disabled={disabled}
               options={Object.keys(PAPER_SIZES)}
               renderInputValue={(inputValue) => (

@@ -1,8 +1,8 @@
 import useForm from "@Hooks/useForm";
+import useLocale from "@Hooks/useLocale";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 import { TextInput, View } from "react-native";
@@ -22,6 +22,7 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
   const theme = useTheme();
   const toast = useToast();
   const navigation = useNavigation();
+  const { formatMessage } = useLocale();
 
   const [note] = useGetNote({ noteId });
 
@@ -42,25 +43,36 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
 
     try {
       if (isDelete) {
-        await deleteNote({ id: noteId, toast });
+        await deleteNote({ id: noteId, toast, formatMessage });
         navigation.back();
       } else if (isUpdate) {
-        await updateNote({ id: noteId, description: data.description, toast });
+        await updateNote({
+          id: noteId,
+          description: data.description,
+          toast,
+          formatMessage,
+        });
         navigation.back();
       } else {
-        await createNote({ description: data.description, toast });
+        await createNote({
+          description: data.description,
+          toast,
+          formatMessage,
+        });
         navigation.back();
       }
     } catch {
       if (isDelete) {
-        toast.error(locales.home.detail.note.error.delete);
+        toast.error(formatMessage({ id: "messages.failure.delete-note" }));
         return;
       }
 
       toast.error(
-        noteId
-          ? locales.home.detail.note.error.update
-          : locales.home.detail.note.error.create,
+        formatMessage({
+          id: noteId
+            ? "messages.failure.update-note"
+            : "messages.failure.create-note",
+        }),
       );
     }
   });

@@ -8,6 +8,7 @@ export interface CustomItemProps {
   name: string;
   onClick?: () => void;
   Icon?: ReactNode;
+  disabled?: boolean;
 }
 
 interface CustomListItemProps {
@@ -28,12 +29,14 @@ export default function CustomListItem({ item }: CustomListItemProps) {
             flexDirection: "row",
             alignItems: "center",
             gap: theme.spacing(4),
+            opacity: item.disabled ? 0.4 : 1,
           },
           pressed && {
             backgroundColor: theme.palette.background.button.pressed,
           },
         ]}
         onPress={item.onClick}
+        disabled={item.disabled}
       >
         {item.Icon && item.Icon}
         <BaseTypography>{item.name}</BaseTypography>

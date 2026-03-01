@@ -1,5 +1,6 @@
 import BaseDivider from "@Components/bases/Divider";
 import Button from "@Components/buttons/Button";
+import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import { View } from "react-native";
 import getDefaultButtons from "./getDefaultButtons";
@@ -14,8 +15,9 @@ export default function BaseModalFooter({
   customButtons = [],
 }: BaseModalFooterProps) {
   const theme = useTheme();
+  const { formatMessage } = useLocale();
 
-  const defaultButtons = getDefaultButtons({ buttons, theme });
+  const defaultButtons = getDefaultButtons({ buttons, theme, formatMessage });
   const mergedButtons = defaultButtons.concat(customButtons);
 
   const sortedButtons = mergedButtons.sort((a, b) => {
