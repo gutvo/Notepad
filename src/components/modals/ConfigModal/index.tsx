@@ -77,10 +77,10 @@ export default function ConfigModal() {
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: closeModal },
+    { name: "CANCEL", onPress: closeModal },
     {
       name: "CONFIRM",
-      onClick: handleSubmit(handleConfirm),
+      onPress: handleSubmit(handleConfirm),
       disabled: isLoading,
     },
   ];

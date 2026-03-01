@@ -107,13 +107,13 @@ export default function ReminderModal() {
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: closeModal },
+    { name: "CANCEL", onPress: closeModal },
     {
       name: "CONFIRM",
       label: formatMessage({
         id: isUpdate ? "buttons.save" : "buttons.create",
       }),
-      onClick: handleSubmit(handleConfirm),
+      onPress: handleSubmit(handleConfirm),
       disabled: isLoading,
     },
   ];

@@ -25,8 +25,8 @@ export default function BaseCalendarModal({
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: onClose },
-    { name: "CONFIRM", onClick: handleConfirm },
+    { name: "CANCEL", onPress: onClose },
+    { name: "CONFIRM", onPress: handleConfirm },
   ];
 
   return (

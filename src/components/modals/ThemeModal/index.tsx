@@ -48,8 +48,8 @@ export default function ThemeModal() {
   );
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: closeModal },
-    { name: "CONFIRM", onClick: handleSubmit(handleConfirm) },
+    { name: "CANCEL", onPress: closeModal },
+    { name: "CONFIRM", onPress: handleSubmit(handleConfirm) },
   ];
 
   const formattedThemes = useMemo(
