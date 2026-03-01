@@ -1,11 +1,12 @@
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Animated, View } from "react-native";
 import useCalculateDimensions from "./useCalculateDimensions";
 
 import BaseButton from "@Components/bases/Button";
-import BaseIcon from "@Components/bases/Icon";
+import BaseIcon from "../Icon";
+import useAnimation from "./useAnimation";
 
 interface BaseSwitchProps {
   label?: string;
@@ -30,9 +31,23 @@ export default function BaseSwitch({
 }: BaseSwitchProps) {
   const theme = useTheme();
 
+  const [internalIsEnabled, setInternalIsEnabled] = useState(value ?? false);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalIsEnabled(value);
+    }
+  }, [value]);
+
   const dimensions = useCalculateDimensions({
     height,
     width,
+  });
+
+  const { backgroundColor, translateX } = useAnimation({
+    internalIsEnabled,
+    thumbWidth: dimensions.thumbWidth,
+    trackWidth: dimensions.trackWidth,
   });
 
   function handleChangeIsEnabled() {
@@ -56,23 +71,17 @@ export default function BaseSwitch({
       )}
 
       <BaseButton onPress={handleChangeIsEnabled} disabled={disabled}>
-        <View
+        <Animated.View
           style={{
             width: dimensions.trackWidth,
             height: dimensions.trackHeight,
             borderRadius: dimensions.trackRadius,
-            backgroundColor: value
-              ? theme.palette.primary.light
-              : theme.palette.isDarkMode
-                ? theme.palette.grey[800]
-                : theme.palette.grey[200],
-            justifyContent: value ? "flex-start" : "flex-end",
-            display: "flex",
+            backgroundColor,
           }}
         >
-          <View
+          <Animated.View
             style={{
-              backgroundColor: value
+              backgroundColor: internalIsEnabled
                 ? theme.palette.primary.dark
                 : theme.palette.grey[700],
               height: dimensions.thumbHeight,
@@ -80,7 +89,7 @@ export default function BaseSwitch({
               borderRadius: dimensions.thumbRadius,
               position: "absolute",
               top: dimensions.thumbTop,
-              left: value ? dimensions.trackWidth - dimensions.thumbWidth : 0,
+              transform: [{ translateX }],
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -98,8 +107,8 @@ export default function BaseSwitch({
                 color={theme.palette.primary.contrast}
               />
             ) : null}
-          </View>
-        </View>
+          </Animated.View>
+        </Animated.View>
       </BaseButton>
     </View>
   );
