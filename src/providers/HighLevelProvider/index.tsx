@@ -8,8 +8,8 @@ import useSaveSeeds from "@Hooks/useSaveSeeds";
 import migrations from "@Migrations";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { ReactNode } from "react";
+import Sidebar from "../../components/modals/Sidebar";
 import BlankView from "./BlankView";
-import Drawer from "./Drawer";
 import Footer from "./Footer";
 
 interface HighLevelProviderProps {
@@ -44,7 +44,7 @@ export default function HighLevelProvider({
       {children}
 
       {isOpen && <ConfigModal />}
-      {sideBarIsOpen && <Drawer />}
+      {sideBarIsOpen && <Sidebar />}
 
       <Footer />
     </BlankView>

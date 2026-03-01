@@ -1,4 +1,4 @@
-import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
+import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { ReactNode, useEffect, useRef, useState } from "react";

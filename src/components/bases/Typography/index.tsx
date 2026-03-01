@@ -2,7 +2,7 @@ import useTheme from "@Hooks/useTheme";
 import { StyleProp, Text, TextProps, TextStyle } from "react-native";
 import getVariantStyles from "./getVariantStyles";
 
-interface BaseTypographyProps extends TextProps {
+export interface BaseTypographyProps extends TextProps {
   variant?: BaseTypographyVariantProps;
 }
 

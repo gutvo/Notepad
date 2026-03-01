@@ -1,7 +1,9 @@
-import BaseButton from "@Components/bases/Button";
 import BaseDrawer from "@Components/bases/Drawer";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
+import BaseListItemButton, {
+  BaseListItemButtonProps,
+} from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useLocale from "@Hooks/useLocale";
@@ -9,34 +11,31 @@ import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 
-export default function Drawer() {
+export default function Sidebar() {
   const navigation = useNavigation();
   const theme = useTheme();
   const { formatMessage } = useLocale();
   const { openModal } = useModal();
   const { isOpen, closeModal } = useCurrentModal("SIDEBAR");
 
-  const options = [
+  const options: BaseListItemButtonProps[] = [
     {
-      name: "reminder",
       label: formatMessage({ id: "modals.sidebar.option.reminder" }),
-      icon: <BaseIcon name="bell-outline" />,
-      onclick: () => {
+      Left: <BaseIcon name="bell-outline" />,
+      onPress: () => {
         navigation.navigate("/reminders/list");
         closeModal();
       },
     },
     {
-      name: "config",
       label: formatMessage({ id: "modals.sidebar.option.config" }),
-      icon: <BaseIcon name="cog-outline" />,
-      onclick: () => openModal("CONFIG"),
+      Left: <BaseIcon name="cog-outline" />,
+      onPress: () => openModal("CONFIG"),
     },
     {
-      name: "theme",
       label: formatMessage({ id: "modals.sidebar.option.theme" }),
-      icon: <BaseIcon name="theme-light-dark" />,
-      onclick: () => openModal("THEME"),
+      Left: <BaseIcon name="theme-light-dark" />,
+      onPress: () => openModal("THEME"),
     },
   ];
 
@@ -48,21 +47,8 @@ export default function Drawer() {
 
       <BaseFlashList
         data={options}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <BaseButton
-            style={{
-              padding: theme.spacing(4),
-              display: "flex",
-              flexDirection: "row",
-              gap: theme.spacing(3),
-            }}
-            onPress={item.onclick}
-          >
-            {item.icon}
-            <BaseTypography>{item.label}</BaseTypography>
-          </BaseButton>
-        )}
+        keyExtractor={(item) => item.label}
+        renderItem={({ item }) => <BaseListItemButton {...item} />}
       />
     </BaseDrawer>
   );

@@ -1,5 +1,8 @@
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
+import BaseListItemButton, {
+  BaseListItemButtonProps,
+} from "@Components/bases/ListItemButton";
 import ReminderModal from "@Components/modals/ReminderModal";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useLocale from "@Hooks/useLocale";
@@ -8,7 +11,6 @@ import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import deleteNotification from "@Utils/deleteNotification";
 import { Dispatch, SetStateAction, useState } from "react";
-import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {
   isOpenModal: boolean;
@@ -63,17 +65,17 @@ export default function ActionModal({
     }
   }
 
-  const options: CustomItemProps[] = [
+  const options: BaseListItemButtonProps[] = [
     {
-      name: formatMessage({ id: "modals.reminder-actions.action.update" }),
-      onClick: handleUpdateReminder,
-      Icon: <BaseIcon name="pencil-outline" />,
+      label: formatMessage({ id: "modals.reminder-actions.action.update" }),
+      onPress: handleUpdateReminder,
+      Left: <BaseIcon name="pencil-outline" />,
       disabled: isLoading,
     },
     {
-      name: formatMessage({ id: "modals.reminder-actions.action.delete" }),
-      onClick: handleDeleteNote,
-      Icon: <BaseIcon name="trash-can-outline" />,
+      label: formatMessage({ id: "modals.reminder-actions.action.delete" }),
+      onPress: handleDeleteNote,
+      Left: <BaseIcon name="trash-can-outline" />,
     },
   ];
 
@@ -85,8 +87,8 @@ export default function ActionModal({
     >
       <BaseBottomModal.FlatList
         data={options}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <CustomListItem item={item} />}
+        keyExtractor={(item) => item.label}
+        renderItem={({ item }) => <BaseListItemButton {...item} />}
         contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
 

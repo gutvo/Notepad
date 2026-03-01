@@ -2,7 +2,6 @@ import BaseButton from "@Components/bases/Button";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseModal from "@Components/bases/Modal";
 import useLocale from "@Hooks/useLocale";
-import useTheme from "@Hooks/useTheme";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
 
@@ -29,10 +28,9 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   getOptionValue,
   selectedItem,
   setSelectedItem,
-  itemHeight = 60, // ajuste esse valor baseado no seu item
+  itemHeight = 58, // ajuste esse valor baseado no seu item
 }: BaseSelectModalProps<DataProps, ValueProps>) {
   const { formatMessage } = useLocale();
-  const theme = useTheme();
   const { height: screenHeight } = useWindowDimensions();
 
   function handleSelectOption(item: DataProps) {
@@ -49,7 +47,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
 
   // Calcula a altura ideal
   const listHeight = useMemo(() => {
-    const maxHeight = screenHeight * 0.7;
+    const maxHeight = screenHeight * 0.8;
     const contentHeight = options.length * itemHeight;
 
     // Retorna o menor valor entre o conteúdo e o máximo permitido
@@ -68,10 +66,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
           <BaseFlashList
             data={options}
             renderItem={({ item, index }) => (
-              <BaseButton
-                onPress={() => handleSelectOption(item)}
-                style={{ padding: theme.spacing(4) }}
-              >
+              <BaseButton onPress={() => handleSelectOption(item)}>
                 {renderItem({ item, selectedItem, index })}
               </BaseButton>
             )}

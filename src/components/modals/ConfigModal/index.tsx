@@ -1,6 +1,7 @@
 import actions from "@Actions";
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
+import BaseListItem from "@Components/bases/ListItem";
 import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/bases/Typography";
 import SelectInput from "@Components/inputs/SelectInput";
@@ -13,7 +14,6 @@ import useToast from "@Hooks/useToast";
 import { PAPER_SIZES } from "@Services/PrinterService";
 import { useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
-import { View } from "react-native";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
 import useGetConfigs from "./useGetConfigs";
 
@@ -115,18 +115,11 @@ export default function ConfigModal() {
               disabled={disabled}
               options={textFontOptions}
               renderItem={({ item, selectedItem }) => (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: theme.spacing(3),
-                  }}
-                >
-                  <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
-
-                  {item === selectedItem && <BaseIcon name="check" />}
-                </View>
+                <BaseListItem
+                  name={item}
+                  Right={item === selectedItem && <BaseIcon name="check" />}
+                  showDivider={false}
+                />
               )}
               error={Boolean(errors.textFontSize?.message)}
               helpText={errors.textFontSize?.message}
@@ -156,23 +149,14 @@ export default function ConfigModal() {
                 </BaseTypography>
               )}
               renderItem={({ item, selectedItem }) => (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: theme.spacing(3),
-                  }}
-                >
-                  <BaseTypography style={{ flex: 1 }}>
-                    {formatMessage(
-                      { id: "modals.config.fields.days-before-reminder-value" },
-                      { value: item },
-                    )}
-                  </BaseTypography>
-
-                  {item === selectedItem && <BaseIcon name="check" />}
-                </View>
+                <BaseListItem
+                  name={formatMessage(
+                    { id: "modals.config.fields.days-before-reminder-value" },
+                    { value: item },
+                  )}
+                  Right={item === selectedItem && <BaseIcon name="check" />}
+                  showDivider={false}
+                />
               )}
               error={Boolean(errors.textFontSize?.message)}
               helpText={errors.textFontSize?.message}
@@ -206,20 +190,11 @@ export default function ConfigModal() {
               )}
               getOptionValue={(option) => option.id}
               renderItem={({ item, selectedItem }) => (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: theme.spacing(3),
-                  }}
-                >
-                  <BaseTypography style={{ flex: 1 }}>
-                    {item.name}
-                  </BaseTypography>
-
-                  {item.id === selectedItem?.id && <BaseIcon name="check" />}
-                </View>
+                <BaseListItem
+                  name={item.name}
+                  Right={item === selectedItem && <BaseIcon name="check" />}
+                  showDivider={false}
+                />
               )}
               error={Boolean(errors.printerId?.message)}
               helpText={errors.printerId?.message}
@@ -241,18 +216,11 @@ export default function ConfigModal() {
                 <BaseTypography>{inputValue}</BaseTypography>
               )}
               renderItem={({ item, selectedItem }) => (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: theme.spacing(3),
-                  }}
-                >
-                  <BaseTypography style={{ flex: 1 }}>{item}</BaseTypography>
-
-                  {item === selectedItem && <BaseIcon name="check" />}
-                </View>
+                <BaseListItem
+                  name={item}
+                  Right={item === selectedItem && <BaseIcon name="check" />}
+                  showDivider={false}
+                />
               )}
               error={Boolean(errors.printerId?.message)}
               helpText={errors.printerId?.message}

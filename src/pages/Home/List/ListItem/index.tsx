@@ -1,7 +1,7 @@
+import BaseListItemButton from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { format } from "date-fns";
-import { Pressable } from "react-native";
 
 interface ListItemDataProps {
   id: number;
@@ -11,13 +11,13 @@ interface ListItemDataProps {
 
 interface ListItemProps {
   item: ListItemDataProps;
-  onClick?: (item: ListItemDataProps) => void;
+  onPress?: (item: ListItemDataProps) => void;
   onLongPress?: (item: ListItemDataProps) => void;
 }
 
 export default function ListItem({
   item,
-  onClick,
+  onPress,
   onLongPress,
 }: ListItemProps) {
   const theme = useTheme();
@@ -34,30 +34,27 @@ export default function ListItem({
     : "";
 
   return (
-    <Pressable
-      style={({ pressed }) => [
-        {
-          flexDirection: "row",
-          paddingHorizontal: theme.spacing(2),
-          paddingVertical: theme.spacing(4),
-          alignItems: "center",
-          gap: theme.spacing(1),
-        },
-        pressed && { backgroundColor: theme.palette.background.button.pressed },
-      ]}
-      onPress={() => onClick?.(item)}
+    <BaseListItemButton
+      style={{
+        flexDirection: "row",
+        paddingHorizontal: theme.spacing(2),
+        paddingVertical: theme.spacing(4),
+        alignItems: "center",
+        gap: theme.spacing(1),
+      }}
+      label={shortName}
+      nameProps={{
+        numberOfLines: 1,
+        ellipsizeMode: "tail",
+        style: { flexShrink: 1, marginRight: theme.spacing(2), flex: 1 },
+      }}
+      onPress={() => onPress?.(item)}
       onLongPress={() => onLongPress?.(item)}
-    >
-      <BaseTypography
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        style={{ flexShrink: 1, marginRight: theme.spacing(2), flex: 1 }}
-      >
-        {shortName}
-      </BaseTypography>
-      <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
-        {formattedDate}
-      </BaseTypography>
-    </Pressable>
+      Right={
+        <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
+          {formattedDate}
+        </BaseTypography>
+      }
+    />
   );
 }

@@ -1,6 +1,9 @@
 import actions from "@Actions";
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
+import BaseListItemButton, {
+  BaseListItemButtonProps,
+} from "@Components/bases/ListItemButton";
 import ReminderModal from "@Components/modals/ReminderModal";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import { PrinterProps } from "@Hooks/useGetPrinters";
@@ -12,7 +15,6 @@ import useToast from "@Hooks/useToast";
 import PrinterService from "@Services/PrinterService";
 import CustomError from "@Utils/CustomError";
 import { Dispatch, SetStateAction, useState } from "react";
-import CustomListItem, { CustomItemProps } from "./CustomListItem";
 
 interface ActionModalProps {
   isOpenModal: boolean;
@@ -183,41 +185,41 @@ export default function ActionModal({
     }
   }
 
-  const options: CustomItemProps[] = [
+  const options: BaseListItemButtonProps[] = [
     {
-      name: formatMessage({ id: "modals.home-actions.action.view" }),
-      onClick: handleVisualizeNote,
-      Icon: <BaseIcon name="eye-outline" />,
+      label: formatMessage({ id: "modals.home-actions.action.view" }),
+      onPress: handleVisualizeNote,
+      Left: <BaseIcon name="eye-outline" />,
       disabled: isLoading,
     },
     {
-      name: formatMessage({ id: "modals.home-actions.action.print" }),
-      onClick: handlePrintNote,
-      Icon: <BaseIcon name="printer-outline" />,
+      label: formatMessage({ id: "modals.home-actions.action.print" }),
+      onPress: handlePrintNote,
+      Left: <BaseIcon name="printer-outline" />,
       disabled: isLoading,
     },
     {
-      name: formatMessage({ id: "modals.home-actions.action.print-list" }),
-      onClick: handlePrintList,
-      Icon: <BaseIcon name="printer-outline" />,
+      label: formatMessage({ id: "modals.home-actions.action.print-list" }),
+      onPress: handlePrintList,
+      Left: <BaseIcon name="printer-outline" />,
       disabled: isLoading,
     },
     {
-      name: formatMessage({ id: "modals.home-actions.action.add-reminder" }),
-      onClick: handleAddReminder,
-      Icon: <BaseIcon name="bell-plus-outline" />,
+      label: formatMessage({ id: "modals.home-actions.action.add-reminder" }),
+      onPress: handleAddReminder,
+      Left: <BaseIcon name="bell-plus-outline" />,
       disabled: isLoading,
     },
     {
-      name: formatMessage({ id: "modals.home-actions.action.duplicate" }),
-      onClick: handleDuplicateNote,
-      Icon: <BaseIcon name="content-copy" />,
+      label: formatMessage({ id: "modals.home-actions.action.duplicate" }),
+      onPress: handleDuplicateNote,
+      Left: <BaseIcon name="content-copy" />,
       disabled: isLoading,
     },
     {
-      name: formatMessage({ id: "modals.home-actions.action.delete" }),
-      onClick: handleDeleteNote,
-      Icon: <BaseIcon name="trash-can-outline" />,
+      label: formatMessage({ id: "modals.home-actions.action.delete" }),
+      onPress: handleDeleteNote,
+      Left: <BaseIcon name="trash-can-outline" />,
       disabled: isLoading,
     },
   ];
@@ -230,8 +232,8 @@ export default function ActionModal({
     >
       <BaseBottomModal.FlatList
         data={options}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <CustomListItem item={item} />}
+        keyExtractor={(item) => item.label}
+        renderItem={({ item }) => <BaseListItemButton {...item} />}
         contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
 
