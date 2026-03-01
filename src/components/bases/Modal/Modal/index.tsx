@@ -60,6 +60,7 @@ export default function BaseModalModal({
                   shadowRadius: 10,
                   shadowOffset: { width: 0, height: 4 },
                   minHeight: "34%",
+                  maxHeight: "90%",
                   minWidth: "90%",
                 },
                 style,
