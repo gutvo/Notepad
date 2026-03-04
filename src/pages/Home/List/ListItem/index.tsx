@@ -1,7 +1,7 @@
 import BaseListItemButton from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
-import { format } from "date-fns";
+import getFormattedDate from "@Utils/getFormattedDate";
 
 interface ListItemDataProps {
   id: number;
@@ -21,8 +21,6 @@ export default function ListItem({
   onLongPress,
 }: ListItemProps) {
   const theme = useTheme();
-
-  const formattedDate = format(item.created_at, "dd/MM/yyyy HH:mm");
 
   const firstLine = item.description
     .split("\n")
@@ -52,7 +50,7 @@ export default function ListItem({
       onLongPress={() => onLongPress?.(item)}
       Right={
         <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
-          {formattedDate}
+          {getFormattedDate(item.created_at, "DATETIME")}
         </BaseTypography>
       }
     />

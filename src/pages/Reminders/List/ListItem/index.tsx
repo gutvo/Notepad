@@ -1,7 +1,7 @@
 import BaseListItemButton from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
-import { format } from "date-fns";
+import getFormattedDate from "@Utils/getFormattedDate";
 
 interface ListItemProps {
   item: ReminderDataProps;
@@ -15,8 +15,6 @@ export default function ListItem({
   onLongPress,
 }: ListItemProps) {
   const theme = useTheme();
-
-  const formattedDate = format(item.notificate_at, "dd/MM/yyyy HH:mm");
 
   return (
     <BaseListItemButton
@@ -37,7 +35,7 @@ export default function ListItem({
       onLongPress={() => onLongPress?.(item)}
       Right={
         <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
-          {formattedDate}
+          {getFormattedDate(item.notificate_at, "DATETIME")}
         </BaseTypography>
       }
     />
