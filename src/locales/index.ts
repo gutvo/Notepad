@@ -89,6 +89,8 @@ const locales = {
 
   "modals.select.title": "Selecionar",
   "modals.calendar.title": "Calendário",
+  "modals.calendars.button.date": "Data",
+  "modals.calendars.button.clock": "Hora",
 
   "pages.home-list.title": "Página Inicial",
 
