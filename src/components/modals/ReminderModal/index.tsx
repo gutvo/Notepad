@@ -94,7 +94,7 @@ export default function ReminderModal() {
 
       closeModal();
     } catch {
-      toast.success(
+      toast.error(
         formatMessage({
           id: isUpdate
             ? "messages.failure.update-reminder"
@@ -154,22 +154,25 @@ export default function ReminderModal() {
           control={control}
           name="notify_at"
           rules={{ required: formatMessage({ id: "validations.required" }) }}
-          render={({ field: { value, disabled, onChange } }) => (
-            <DatePicker
-              value={value}
-              onChange={onChange}
-              required
-              disabled={disabled}
-              label={formatMessage({ id: "modals.reminders.fields-notify-at" })}
-              error={Boolean(errors.notify_at?.message)}
-              helpText={errors.notify_at?.message}
-              placeholder={formatMessage({
-                id: "modals.reminders.fields-notify-at.placeholder",
-              })}
-              disabledToday
-              disabledPast
-            />
-          )}
+          render={({ field: { value, disabled, onChange } }) => {
+            return (
+              <DatePicker
+                value={value}
+                onChange={onChange}
+                required
+                disabled={disabled}
+                label={formatMessage({
+                  id: "modals.reminders.fields-notify-at",
+                })}
+                error={Boolean(errors.notify_at?.message)}
+                helpText={errors.notify_at?.message}
+                placeholder={formatMessage({
+                  id: "modals.reminders.fields-notify-at.placeholder",
+                })}
+                disabledPast
+              />
+            );
+          }}
         />
       </BaseModal.Container>
 
