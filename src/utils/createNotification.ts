@@ -22,6 +22,10 @@ export default async function createNotification({
   const scheduledNotificationIds: string[] = [];
 
   try {
+    if (date <= new Date()) {
+      throw new Error("Data da notificação está no passado");
+    }
+
     const allCreatedReminderIds = await database.transaction(
       async (transaction) => {
         const createdReminderIds: number[] = [];
