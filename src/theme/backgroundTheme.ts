@@ -2,7 +2,7 @@ import defaultColors from "./defaultColors";
 
 const lightBackground = {
   body: defaultColors.grey[50],
-  card: defaultColors.grey[100],
+  card: defaultColors.grey[200],
   border: defaultColors.grey[500],
 };
 
