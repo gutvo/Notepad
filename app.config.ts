@@ -2,8 +2,8 @@ import { ExpoConfig } from "expo/config";
 import "tsx/cjs"; // Add this to import TypeScript files
 
 const config: ExpoConfig = {
-  name: "notepad",
-  slug: "Bloco de notas",
+  name: "Bloco de notas",
+  slug: "bloco-de-notas",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
