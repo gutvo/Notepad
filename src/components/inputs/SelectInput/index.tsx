@@ -21,6 +21,7 @@ export default function SelectInput<
   error,
   helpTextStyle,
   required,
+  disabled,
   ...rest
 }: SelectInputProps<DataProps, ValueProps>) {
   const wrapperProps = {
@@ -33,11 +34,12 @@ export default function SelectInput<
     startIcon,
     textStyle,
     required,
+    disabled,
   };
 
   return (
     <BaseInputWrapper {...wrapperProps}>
-      <BaseSelectInput {...rest} />
+      <BaseSelectInput disabled={disabled} {...rest} />
     </BaseInputWrapper>
   );
 }

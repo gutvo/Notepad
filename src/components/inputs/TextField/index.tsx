@@ -41,6 +41,7 @@ export default function TextField({
     textStyle,
     focused: focused,
     required,
+    disabled,
   };
 
   return (

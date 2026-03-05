@@ -15,6 +15,7 @@ export interface BaseInputWrapperProps {
   children?: ReactNode;
   focused?: boolean;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export default function BaseInputWrapper({
@@ -29,6 +30,7 @@ export default function BaseInputWrapper({
   children,
   focused,
   required,
+  disabled,
 }: BaseInputWrapperProps) {
   const theme = useTheme();
 
@@ -48,6 +50,7 @@ export default function BaseInputWrapper({
                 ? theme.palette.primary.main
                 : theme.palette.text.primary,
               zIndex: 1,
+              opacity: disabled ? 0.5 : 1,
             },
             textStyle,
           ]}
@@ -68,6 +71,7 @@ export default function BaseInputWrapper({
             alignItems: "center",
             paddingHorizontal: theme.spacing(2),
             height: 48,
+            opacity: disabled ? 0.5 : 1,
           },
           containerStyle,
         ]}

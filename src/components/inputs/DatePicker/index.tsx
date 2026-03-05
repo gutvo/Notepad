@@ -18,6 +18,7 @@ export default function DatePicker({
   startIcon,
   textStyle,
   required,
+  disabled,
   ...rest
 }: DatePickerProps) {
   const wrapperProps = {
@@ -35,11 +36,12 @@ export default function DatePicker({
     startIcon,
     textStyle,
     required,
+    disabled,
   };
 
   return (
     <BaseInputWrapper {...wrapperProps}>
-      <BaseDatePicker {...rest} />
+      <BaseDatePicker {...rest} disabled={disabled} />
     </BaseInputWrapper>
   );
 }
