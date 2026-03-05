@@ -18,6 +18,8 @@ export default function useAnimation({
   // Animated value vai de 0 a 1
   const animation = useRef(new Animated.Value(0)).current;
 
+  const maxTranslate = trackWidth - thumbWidth;
+
   // Dispara a animação sempre que internalIsEnabled muda
   useEffect(() => {
     Animated.timing(animation, {
@@ -31,7 +33,7 @@ export default function useAnimation({
   // Interpolação do valor para posição do círculo
   const translateX = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, trackWidth - thumbWidth],
+    outputRange: [0, maxTranslate + thumbWidth * 0.1],
   });
 
   const backgroundColor = animation.interpolate({
