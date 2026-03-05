@@ -4,6 +4,7 @@ import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
 import useDebounce from "@Hooks/useDebounce";
 import useNavigation from "@Hooks/useNavigation";
+import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
@@ -17,14 +18,18 @@ export default function useHeader() {
   const [isSearching, setIsSearching] = useState(false);
 
   const handleGoBack = useCallback(() => {
-    if (!isSearching) {
-      navigation.back();
-      return;
+    if (isSearching) {
+      setInputSearch("");
+      setIsSearching(false);
+      return true;
     }
 
-    setInputSearch("");
-    setIsSearching(false);
+    navigation.back();
+
+    return true;
   }, [isSearching, navigation]);
+
+  useOnGoBack({ onBackPress: handleGoBack });
 
   const headerLeft = useCallback(
     () => (

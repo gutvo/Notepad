@@ -6,6 +6,7 @@ import useDebounce from "@Hooks/useDebounce";
 import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
+import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
@@ -20,10 +21,17 @@ export default function useHeader() {
   const debouncedSearch = useDebounce(inputSearch, 500);
   const [isSearching, setIsSearching] = useState(false);
 
-  function handleGoBack() {
-    setInputSearch("");
-    setIsSearching(false);
-  }
+  const handleGoBack = useCallback(() => {
+    if (isSearching) {
+      setInputSearch("");
+      setIsSearching(false);
+      return true;
+    }
+
+    return false;
+  }, [isSearching]);
+
+  useOnGoBack({ onBackPress: handleGoBack });
 
   const headerLeft = useCallback(
     () => (
@@ -51,7 +59,7 @@ export default function useHeader() {
         )}
       </>
     ),
-    [isSearching, openModal, theme],
+    [handleGoBack, isSearching, openModal, theme],
   );
 
   const headerCenter = useCallback(
