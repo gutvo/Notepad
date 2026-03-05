@@ -1,7 +1,7 @@
 import actions from "@Actions";
 import { useCallback, useEffect } from "react";
 
-export default function useClearOldReminders() {
+export default function useClearOldReminders(migrationsSuccess: boolean) {
   const getOldReminders = useCallback(async () => {
     const today = new Date();
     return actions.reminder.list({ lowerThan: today });
@@ -18,6 +18,8 @@ export default function useClearOldReminders() {
   }, [getOldReminders]);
 
   useEffect(() => {
-    deleteOldReminders();
-  }, [deleteOldReminders]);
+    if (migrationsSuccess) {
+      deleteOldReminders();
+    }
+  }, [deleteOldReminders, migrationsSuccess]);
 }

@@ -3,8 +3,6 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton, {
   BaseListItemButtonProps,
 } from "@Components/bases/ListItemButton";
-import ReminderModal from "@Components/modals/ReminderModal";
-import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useTheme from "@Hooks/useTheme";
@@ -29,7 +27,6 @@ export default function ActionModal({
   const toast = useToast();
   const { formatMessage } = useLocale();
 
-  const { isOpen } = useCurrentModal("REMINDER");
   const { openModal } = useModal();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -91,8 +88,6 @@ export default function ActionModal({
         renderItem={({ item }) => <BaseListItemButton {...item} />}
         contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
-
-      {isOpen && <ReminderModal />}
     </BaseBottomModal.Modal>
   );
 }

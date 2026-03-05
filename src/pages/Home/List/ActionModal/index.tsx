@@ -4,8 +4,6 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton, {
   BaseListItemButtonProps,
 } from "@Components/bases/ListItemButton";
-import ReminderModal from "@Components/modals/ReminderModal";
-import { useCurrentModal } from "@Hooks/useCurrentModal";
 import { PrinterProps } from "@Hooks/useGetPrinters";
 import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
@@ -34,8 +32,6 @@ export default function ActionModal({
   const navigation = useNavigation();
   const { formatMessage } = useLocale();
   const { openModal } = useModal();
-
-  const { isOpen } = useCurrentModal("REMINDER");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -236,8 +232,6 @@ export default function ActionModal({
         renderItem={({ item }) => <BaseListItemButton {...item} />}
         contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
-
-      {isOpen && <ReminderModal />}
     </BaseBottomModal.Modal>
   );
 }

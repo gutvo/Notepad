@@ -1,14 +1,16 @@
 import ConfigModal from "@Components/modals/ConfigModal";
 import MigrationModal from "@Components/modals/MigrationModal";
+import ReminderModal from "@Components/modals/ReminderModal";
 import database from "@Database";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useIsThemeLoading from "@Hooks/useIsThemeLoading";
-import useSaveSeeds from "@Hooks/useSaveSeeds";
 import migrations from "@Migrations";
+import useSaveSeeds from "@Providers/HighLevelProvider/hooks/useSaveSeeds";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { ReactNode } from "react";
 import Sidebar from "../../components/modals/Sidebar";
 import BlankView from "./BlankView";
+import CustomStatusBar from "./CustomStatusBar";
 import useClearOldReminders from "./hooks/useClearOldReminders";
 import useNotificationObserver from "./hooks/useNotificationObserver";
 import useNotificationPermission from "./hooks/useNotificationPermission";
@@ -23,14 +25,15 @@ export default function HighLevelProvider({
   const isThemeLoading = useIsThemeLoading();
   useNotificationObserver({ isThemeLoading });
   useNotificationPermission();
-  useClearOldReminders();
 
-  const { isOpen } = useCurrentModal("CONFIG");
+  const { isOpen: configIsOpen } = useCurrentModal("CONFIG");
   const { isOpen: sideBarIsOpen } = useCurrentModal("SIDEBAR");
+  const { isOpen: reminderIsOpen } = useCurrentModal("REMINDER");
 
   const { error, success } = useMigrations(database, migrations);
 
   useSaveSeeds(success);
+  useClearOldReminders(success);
 
   if (isThemeLoading) return <BlankView />;
 
@@ -46,8 +49,11 @@ export default function HighLevelProvider({
     <BlankView>
       {children}
 
-      {isOpen && <ConfigModal />}
+      <CustomStatusBar />
+
+      {configIsOpen && <ConfigModal />}
       {sideBarIsOpen && <Sidebar />}
+      {reminderIsOpen && <ReminderModal />}
     </BlankView>
   );
 }
