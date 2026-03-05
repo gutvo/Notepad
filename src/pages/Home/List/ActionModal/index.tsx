@@ -146,40 +146,40 @@ export default function ActionModal({
     }
   }
 
-  async function handlePrintList() {
-    setIsLoading(true);
+  // async function handlePrintList() {
+  //   setIsLoading(true);
 
-    try {
-      const { lines, printerService } = await handlePreparePrinter();
+  //   try {
+  //     const { lines, printerService } = await handlePreparePrinter();
 
-      const formattedLines = lines.map((line) => {
-        const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
+  //     const formattedLines = lines.map((line) => {
+  //       const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
 
-        if (!match) {
-          return { text: line.trim(), value: "" };
-        }
+  //       if (!match) {
+  //         return { text: line.trim(), value: "" };
+  //       }
 
-        return { text: match[1].trim(), value: match[2].trim() };
-      });
+  //       return { text: match[1].trim(), value: match[2].trim() };
+  //     });
 
-      await printerService.print(async (printer) => {
-        formattedLines.forEach(({ text, value }) => {
-          printer.addRow(text, value);
-          // printer.addDivider();
-        });
+  //     await printerService.print(async (printer) => {
+  //       formattedLines.forEach(({ text, value }) => {
+  //         printer.addRow(text, value);
+  //         // printer.addDivider();
+  //       });
 
-        printer.cut();
-      });
-    } catch (error) {
-      if (error instanceof CustomError) {
-        toast.error(error.message);
-      } else {
-        toast.error(formatMessage({ id: "messages.failure.print" }));
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  //       printer.cut();
+  //     });
+  //   } catch (error) {
+  //     if (error instanceof CustomError) {
+  //       toast.error(error.message);
+  //     } else {
+  //       toast.error(formatMessage({ id: "messages.failure.print" }));
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
 
   const options: BaseListItemButtonProps[] = [
     {
@@ -194,12 +194,12 @@ export default function ActionModal({
       Left: <BaseIcon name="printer-outline" />,
       disabled: isLoading,
     },
-    {
-      label: formatMessage({ id: "modals.home-actions.action.print-list" }),
-      onPress: handlePrintList,
-      Left: <BaseIcon name="printer-outline" />,
-      disabled: isLoading,
-    },
+    // {
+    //   label: formatMessage({ id: "modals.home-actions.action.print-list" }),
+    //   onPress: handlePrintList,
+    //   Left: <BaseIcon name="printer-outline" />,
+    //   disabled: isLoading,
+    // },
     {
       label: formatMessage({ id: "modals.home-actions.action.add-reminder" }),
       onPress: handleAddReminder,
