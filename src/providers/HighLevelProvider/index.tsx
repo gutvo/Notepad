@@ -9,7 +9,6 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { ReactNode } from "react";
 import Sidebar from "../../components/modals/Sidebar";
 import BlankView from "./BlankView";
-import Footer from "./Footer";
 import useClearOldReminders from "./hooks/useClearOldReminders";
 import useNotificationObserver from "./hooks/useNotificationObserver";
 import useNotificationPermission from "./hooks/useNotificationPermission";
@@ -49,8 +48,6 @@ export default function HighLevelProvider({
 
       {isOpen && <ConfigModal />}
       {sideBarIsOpen && <Sidebar />}
-
-      <Footer />
     </BlankView>
   );
 }
