@@ -1,3 +1,4 @@
+import getStatusBarStyle from "@Utils/theme/getStatusBarStyle";
 import merge from "lodash.merge";
 import { darkBackground, lightBackground } from "./backgroundTheme";
 import defaultColors from "./defaultColors";
@@ -20,12 +21,14 @@ export default function mergeTheme({
 
   const currentForegroundTheme = isDarkMode ? darkForeground : lightForeground;
 
+  const primaryMain = currentTheme.primary.main;
+
   const mergedTheme = merge(
     defaultColors,
     currentBackgroundTheme,
     currentForegroundTheme,
     currentTheme,
-    { isDarkMode },
+    { isDarkMode, statusBar: getStatusBarStyle(primaryMain) },
   );
 
   return { ...mergedTheme };
