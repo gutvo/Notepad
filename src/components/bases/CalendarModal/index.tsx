@@ -2,7 +2,9 @@ import BaseCalendar, { BaseCalendarProps } from "@Components/bases/Calendar";
 import BaseModal from "@Components/bases/Modal";
 import useLocale from "@Hooks/useLocale";
 import { useState } from "react";
+import { Dimensions } from "react-native";
 
+const { width } = Dimensions.get("screen");
 export interface BaseCalendarModalProps extends BaseCalendarProps {
   isOpenModal: boolean;
   onClose: () => void;
@@ -37,6 +39,7 @@ export default function BaseCalendarModal({
       title={formatMessage({ id: "modals.calendar.title" })}
       onClose={onClose}
       visible={isOpenModal}
+      style={{ width: width * 0.9 }}
     >
       <BaseModal.Container style={{ flex: 0 }}>
         <BaseCalendar

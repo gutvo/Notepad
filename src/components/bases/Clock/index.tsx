@@ -3,7 +3,7 @@ import { useState } from "react";
 import { View } from "react-native";
 import Number from "./Number";
 import Pointer from "./Pointer";
-import roundToFive from "./roundToFive";
+import ceilToFive from "./ceilToFive";
 
 interface BaseClockProps {
   size?: number;
@@ -31,13 +31,20 @@ export default function BaseClock({
 
   const [internal, setInternal] = useState<BaseClockTimeValueProps>({
     hour: now.getHours(),
-    minute: roundToFive(now.getMinutes()),
+    minute: ceilToFive(now.getMinutes()),
   });
 
-  const time = value ?? internal;
+  const time = value
+    ? { ...value, minute: ceilToFive(value.minute) }
+    : internal;
 
   function update(partial: Partial<BaseClockTimeValueProps>) {
     const updated = { ...time, ...partial };
+
+    if (updated.minute !== undefined) {
+      updated.minute = ceilToFive(updated.minute);
+    }
+
     if (onChange) {
       onChange(updated);
     } else {
@@ -49,10 +56,13 @@ export default function BaseClock({
   const outerRadius = size / 2 - size * 0.1;
   const innerRadius = size / 2 - size * 0.25;
 
-  const outerHours = Array.from({ length: 12 }, (_, i) => i + 1);
-  const innerHours = [0, ...Array.from({ length: 11 }, (_, i) => i + 13)];
+  const outerHours = Array.from({ length: 12 }, (_, index) => index + 1);
+  const innerHours = [
+    0,
+    ...Array.from({ length: 11 }, (_, index) => index + 13),
+  ];
 
-  const minuteNumbers = Array.from({ length: 12 }, (_, i) => i * 5);
+  const minuteNumbers = Array.from({ length: 12 }, (_, index) => index * 5);
 
   const selected = mode === "hour" ? time.hour : time.minute;
 
@@ -72,9 +82,8 @@ export default function BaseClock({
       return number < now.getHours();
     }
 
-    // minuto
     if (time.hour === now.getHours()) {
-      return number < roundToFive(now.getMinutes());
+      return number < ceilToFive(now.getMinutes());
     }
 
     if (time.hour < now.getHours()) {

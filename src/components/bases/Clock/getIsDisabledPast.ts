@@ -1,4 +1,4 @@
-import roundToFive from "./roundToFive";
+import ceilToFive from "./ceilToFive";
 
 interface GetIsDisabledPastProps {
   number: number;
@@ -25,7 +25,7 @@ export default function getIsDisabledPast({
 
   // minuto
   if (time.hour === now.getHours()) {
-    return number < roundToFive(now.getMinutes());
+    return number < ceilToFive(now.getMinutes());
   }
 
   if (time.hour < now.getHours()) {
