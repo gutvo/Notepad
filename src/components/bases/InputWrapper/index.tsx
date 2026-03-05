@@ -37,26 +37,34 @@ export default function BaseInputWrapper({
   return (
     <View style={{ marginTop: theme.spacing(3) }}>
       {label && (
-        <BaseTypography
-          variant="BODY2"
-          style={[
-            {
-              position: "absolute",
-              top: -10,
-              left: 12,
-              paddingHorizontal: theme.spacing(1),
-              backgroundColor: theme.palette.background.body,
-              color: focused
-                ? theme.palette.primary.main
-                : theme.palette.text.primary,
-              zIndex: 1,
-              opacity: disabled ? 0.5 : 1,
-            },
-            textStyle,
-          ]}
+        <View
+          style={{
+            position: "absolute",
+            top: -10,
+            left: 12,
+            paddingHorizontal: theme.spacing(1),
+            backgroundColor: theme.palette.background.body,
+            zIndex: 1,
+          }}
         >
-          {required ? label + "*" : label}
-        </BaseTypography>
+          <BaseTypography
+            variant="BODY2"
+            style={[
+              {
+                paddingHorizontal: theme.spacing(1),
+                backgroundColor: theme.palette.background.body,
+                color: focused
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary,
+                zIndex: 1,
+                opacity: disabled ? 0.5 : 1,
+              },
+              textStyle,
+            ]}
+          >
+            {required ? label + "*" : label}
+          </BaseTypography>
+        </View>
       )}
 
       <View
