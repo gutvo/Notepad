@@ -1,17 +1,21 @@
 import database from "@Database";
 import { reminderSchema } from "@Schemas";
-import { and, desc, eq, isNull, like, SQL } from "drizzle-orm";
+import { and, between, desc, eq, gt, isNull, like, lt, SQL } from "drizzle-orm";
 
 interface ListRemindersProps {
   search?: string;
   noteId?: number;
   parentId?: number | null;
+  lowerThan?: Date; // menor que
+  greaterThan?: Date; // maior que
 }
 
 export default async function listReminders({
   search,
   noteId,
   parentId,
+  greaterThan,
+  lowerThan,
 }: ListRemindersProps = {}) {
   const whereMatch: SQL[] = [];
 
@@ -31,6 +35,16 @@ export default async function listReminders({
         whereMatch.push(eq(reminderSchema.parent_id, parentId));
       }
     }
+  }
+
+  if (greaterThan && lowerThan) {
+    whereMatch.push(
+      between(reminderSchema.notificate_at, greaterThan, lowerThan),
+    );
+  } else if (greaterThan) {
+    whereMatch.push(gt(reminderSchema.notificate_at, greaterThan));
+  } else if (lowerThan) {
+    whereMatch.push(lt(reminderSchema.notificate_at, lowerThan));
   }
 
   return database

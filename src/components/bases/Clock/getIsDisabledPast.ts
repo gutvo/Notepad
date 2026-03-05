@@ -1,0 +1,36 @@
+import ceilToFive from "./ceilToFive";
+
+interface GetIsDisabledPastProps {
+  number: number;
+  disabledPast: boolean;
+  isToday: boolean;
+  mode: BaseClockModeProps;
+  now: Date;
+  time: BaseClockTimeValueProps;
+}
+
+export default function getIsDisabledPast({
+  disabledPast,
+  isToday,
+  mode,
+  number,
+  now,
+  time,
+}: GetIsDisabledPastProps) {
+  if (!disabledPast || !isToday) return false;
+
+  if (mode === "hour") {
+    return number < now.getHours();
+  }
+
+  // minuto
+  if (time.hour === now.getHours()) {
+    return number < ceilToFive(now.getMinutes());
+  }
+
+  if (time.hour < now.getHours()) {
+    return true;
+  }
+
+  return false;
+}

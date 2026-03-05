@@ -1,15 +1,14 @@
 import BluetoothConnectionService from "./BluetoothConnectionService";
 import PrinterCommandService from "./PrinterCommandService";
 
-type ConnectionTypeProps = "bluetooth";
+type ConnectionTypeProps = "BLUETOOTH";
 
 export const PAPER_SIZES = {
   "58mm": 32,
-  "58mm-compact": 30,
-  "58mm-small": 24,
+  "65mm": 36,
+  "70mm": 40,
+  "76mm": 44,
   "80mm": 48,
-  "80mm-compact": 42,
-  "80mm-wide": 64,
 } as const;
 
 type PaperSizeProps = keyof typeof PAPER_SIZES;
@@ -26,30 +25,26 @@ export default class PrinterService extends PrinterCommandService {
   private connection: BluetoothConnectionService;
 
   constructor(config: PrinterServiceConfig = {}) {
-    const type = config.type ?? "bluetooth";
+    const type = config.type ?? "BLUETOOTH";
     const paperSize = config.paperSize ?? "80mm";
 
     const columns =
       config.customColumns ?? PAPER_SIZES[paperSize] ?? PAPER_SIZES["80mm"];
 
-    super(columns); // 🔥 herança correta
+    super(columns);
 
     this.connection = this.createConnection(type);
   }
 
   private createConnection(type: ConnectionTypeProps) {
     switch (type) {
-      case "bluetooth":
+      case "BLUETOOTH":
         return new BluetoothConnectionService();
 
       default:
         throw new Error("Tipo de conexão não suportado");
     }
   }
-
-  // =========================
-  // 🔵 CONEXÃO
-  // =========================
 
   async getAvailablePrinters() {
     return this.connection.getBondedDevices();
@@ -67,10 +62,6 @@ export default class PrinterService extends PrinterCommandService {
     return this.connection.isConnected();
   }
 
-  // =========================
-  // 🚀 MÉTODO PRINT
-  // =========================
-
   async print(callback: (printer: PrintBuilderProps) => void | Promise<void>) {
     const isConnected = await this.connection.isConnected();
 
@@ -79,14 +70,14 @@ export default class PrinterService extends PrinterCommandService {
     }
 
     try {
-      this.init(); // vem do PrinterCommandService
+      this.init();
 
       await callback(this);
 
-      const content = this.build(); // vem do PrinterCommandService
+      const content = this.build();
       await this.connection.write(content);
     } finally {
-      this.clear(); // vem do PrinterCommandService
+      this.clear();
     }
   }
 }

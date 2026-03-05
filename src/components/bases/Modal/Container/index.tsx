@@ -1,12 +1,12 @@
-import { View, ViewProps } from "react-native";
+import { ScrollViewProps, View } from "react-native";
 
 export default function BaseModalContainer({
   children,
   style,
   ...rest
-}: ViewProps) {
+}: ScrollViewProps) {
   return (
-    <View style={[{ flex: 1 }, style]} {...rest}>
+    <View style={style} {...rest}>
       {children}
     </View>
   );

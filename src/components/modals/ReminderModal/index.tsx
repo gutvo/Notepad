@@ -4,9 +4,10 @@ import DatePicker from "@Components/inputs/DatePicker";
 import TextField from "@Components/inputs/TextField";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
+import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
+import { useState } from "react";
 import { Controller } from "react-hook-form";
 import createNotification from "../../../utils/createNotification";
 import deleteNotification from "../../../utils/deleteNotification";
@@ -22,11 +23,14 @@ interface ReminderFormDataProps {
 export default function ReminderModal() {
   const toast = useToast();
   const theme = useTheme();
+  const { formatMessage } = useLocale();
   const { isOpen, closeModal, data } = useCurrentModal("REMINDER");
   const isUpdate = !!data?.id;
 
   const [daysBeforeSetting] = useGetConfigs();
   const [reminder] = useGetReminder({ id: data?.id });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -56,11 +60,13 @@ export default function ReminderModal() {
   async function handleConfirm(formData: ReminderFormDataProps) {
     if (!isDirty || !data?.noteId) return;
 
+    setIsLoading(true);
+
     try {
       const note = await actions.note.find(data.noteId);
 
       if (!note) {
-        toast.error("Notificação não encontrada!");
+        toast.error(formatMessage({ id: "messages.failure.not-found-note" }));
         return;
       }
 
@@ -79,25 +85,36 @@ export default function ReminderModal() {
       });
 
       toast.success(
-        data.id
-          ? "Lembrete atualizado com sucesso!"
-          : "Lembrete adicionado com sucesso!",
+        formatMessage({
+          id: isUpdate
+            ? "messages.success.update-reminder"
+            : "messages.success.create-reminder",
+        }),
       );
 
       closeModal();
     } catch {
-      toast.success(
-        data.id ? "Erro ao atualizar lembrete!" : "Erro ao criar lembrete!",
+      toast.error(
+        formatMessage({
+          id: isUpdate
+            ? "messages.failure.update-reminder"
+            : "messages.failure.create-reminder",
+        }),
       );
+    } finally {
+      setIsLoading(false);
     }
   }
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: closeModal },
+    { name: "CANCEL", onPress: closeModal },
     {
       name: "CONFIRM",
-      label: isUpdate ? "Atualizar" : "Criar",
-      onClick: handleSubmit(handleConfirm),
+      label: formatMessage({
+        id: isUpdate ? "buttons.save" : "buttons.create",
+      }),
+      onPress: handleSubmit(handleConfirm),
+      disabled: isLoading,
     },
   ];
 
@@ -105,7 +122,11 @@ export default function ReminderModal() {
     <BaseModal.Modal
       visible={isOpen}
       onClose={closeModal}
-      title={isUpdate ? "Atualizar lembrete" : "Adicionar lembrete"}
+      title={formatMessage({
+        id: isUpdate
+          ? "modals.reminders.title.update"
+          : "modals.reminders.title.create",
+      })}
     >
       <BaseModal.Container
         style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
@@ -117,11 +138,13 @@ export default function ReminderModal() {
             <TextField
               value={value}
               onChangeText={onChange}
-              label="Título da notificação"
+              label={formatMessage({ id: "modals.reminders.fields-name" })}
               disabled={disabled}
               error={Boolean(errors.name?.message)}
               helpText={errors.name?.message}
-              placeholder="Título"
+              placeholder={formatMessage({
+                id: "modals.reminders.fields-name.placeholder",
+              })}
               onBlur={onBlur}
             />
           )}
@@ -130,19 +153,23 @@ export default function ReminderModal() {
         <Controller
           control={control}
           name="notify_at"
-          rules={{ required: locales.validations.required }}
+          rules={{ required: formatMessage({ id: "validations.required" }) }}
           render={({ field: { value, disabled, onChange } }) => (
             <DatePicker
               value={value}
               onChange={onChange}
               required
               disabled={disabled}
-              label="Data da notificação"
+              label={formatMessage({
+                id: "modals.reminders.fields-notify-at",
+              })}
               error={Boolean(errors.notify_at?.message)}
               helpText={errors.notify_at?.message}
-              placeholder="Notificar na data"
-              disabledToday
+              placeholder={formatMessage({
+                id: "modals.reminders.fields-notify-at.placeholder",
+              })}
               disabledPast
+              type="DATETIME"
             />
           )}
         />

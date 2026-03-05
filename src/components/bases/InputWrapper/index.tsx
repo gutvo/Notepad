@@ -15,6 +15,7 @@ export interface BaseInputWrapperProps {
   children?: ReactNode;
   focused?: boolean;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export default function BaseInputWrapper({
@@ -29,31 +30,41 @@ export default function BaseInputWrapper({
   children,
   focused,
   required,
+  disabled,
 }: BaseInputWrapperProps) {
   const theme = useTheme();
 
   return (
     <View style={{ marginTop: theme.spacing(3) }}>
       {label && (
-        <BaseTypography
-          variant="BODY2"
-          style={[
-            {
-              position: "absolute",
-              top: -10,
-              left: 12,
-              paddingHorizontal: theme.spacing(1),
-              backgroundColor: theme.palette.background.body,
-              color: focused
-                ? theme.palette.primary.main
-                : theme.palette.background.textPrimary,
-              zIndex: 1,
-            },
-            textStyle,
-          ]}
+        <View
+          style={{
+            position: "absolute",
+            top: -10,
+            left: 12,
+            paddingHorizontal: theme.spacing(1),
+            backgroundColor: theme.palette.background.body,
+            zIndex: 1,
+          }}
         >
-          {required ? label + "*" : label}
-        </BaseTypography>
+          <BaseTypography
+            variant="BODY2"
+            style={[
+              {
+                paddingHorizontal: theme.spacing(1),
+                backgroundColor: theme.palette.background.body,
+                color: focused
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary,
+                zIndex: 1,
+                opacity: disabled ? 0.5 : 1,
+              },
+              textStyle,
+            ]}
+          >
+            {required ? label + "*" : label}
+          </BaseTypography>
+        </View>
       )}
 
       <View
@@ -68,6 +79,7 @@ export default function BaseInputWrapper({
             alignItems: "center",
             paddingHorizontal: theme.spacing(2),
             height: 48,
+            opacity: disabled ? 0.5 : 1,
           },
           containerStyle,
         ]}
@@ -87,7 +99,7 @@ export default function BaseInputWrapper({
               paddingHorizontal: theme.spacing(1),
               color: error
                 ? theme.palette.error.main
-                : theme.palette.background.textPrimary,
+                : theme.palette.text.primary,
             },
             helpTextStyle,
           ]}

@@ -7,27 +7,29 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
+import getVariantStyles from "./getVariantStyles";
 
 interface ButtonProps extends BaseButtonProps {
   textStyle?: StyleProp<TextStyle>;
+  variant?: ButtonVariantProps;
 }
 
 export default function Button({
   textStyle,
   style,
+  variant = "CONTAINED",
   children,
   ...rest
 }: ButtonProps) {
   const theme = useTheme();
 
+  const buttonStyle = getVariantStyles(variant, theme);
+
   return (
     <BaseButton
       style={(state: PressableStateCallbackType): StyleProp<ViewStyle> => [
-        {
-          backgroundColor: theme.palette.primary.main,
-          borderRadius: 4,
-          padding: theme.spacing(2),
-        },
+        { borderRadius: 4, padding: theme.spacing(2), flex: 1 },
+        buttonStyle,
         typeof style === "function" ? style(state) : style,
       ]}
       {...rest}

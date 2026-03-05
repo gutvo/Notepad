@@ -1,6 +1,8 @@
+import getStatusBarStyle from "@Utils/theme/getStatusBarStyle";
 import merge from "lodash.merge";
 import { darkBackground, lightBackground } from "./backgroundTheme";
 import defaultColors from "./defaultColors";
+import { darkForeground, lightForeground } from "./foregroundTheme";
 import { themes } from "./themes";
 
 interface MergeThemeProps {
@@ -8,19 +10,6 @@ interface MergeThemeProps {
   themeIndex: number;
 }
 
-/**
- * Mescla os diferentes componentes do tema
- *
- * Estrutura final do tema:
- * - defaultColors: cores de status (info, success, warning, error)
- * - background: cores de fundo baseadas no modo (light/dark)
- * - primary: cor primária selecionada pelo usuário
- * - isDarkMode: flag indicando o modo atual
- *
- * @param {boolean} isDarkMode - Define se está em modo escuro
- * @param {number} themeIndex - Índice do tema primário (0-7)
- * @returns {ThemePaletteProps} Tema mesclado e pronto para uso
- */
 export default function mergeTheme({
   isDarkMode,
   themeIndex,
@@ -29,11 +18,17 @@ export default function mergeTheme({
   const currentBackgroundTheme = {
     background: isDarkMode ? darkBackground : lightBackground,
   };
+
+  const currentForegroundTheme = isDarkMode ? darkForeground : lightForeground;
+
+  const primaryMain = currentTheme.primary.main;
+
   const mergedTheme = merge(
     defaultColors,
     currentBackgroundTheme,
+    currentForegroundTheme,
     currentTheme,
-    { isDarkMode },
+    { isDarkMode, statusBar: getStatusBarStyle(primaryMain) },
   );
 
   return { ...mergedTheme };

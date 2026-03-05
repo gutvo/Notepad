@@ -4,9 +4,9 @@ import SelectInput from "@Components/inputs/SelectInput";
 import useChangeTheme from "@Hooks/useChangeTheme";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
+import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
 import { themes } from "@Theme/themes";
 import { useCallback, useMemo } from "react";
 import { Controller } from "react-hook-form";
@@ -18,6 +18,7 @@ export default function ThemeModal() {
   const theme = useTheme();
   const toast = useToast();
   const changeTheme = useChangeTheme();
+  const { formatMessage } = useLocale();
   const { isOpen, closeModal } = useCurrentModal("THEME");
 
   const [themeConfigs] = useGetThemeConfigs();
@@ -38,17 +39,17 @@ export default function ThemeModal() {
           darkMode: data.isDarkMode,
         });
         closeModal();
-        toast.success(locales.theme.modal.success);
+        toast.success(formatMessage({ id: "messages.success.update-theme" }));
       } catch {
-        toast.error("Erro ao atualizar tema!");
+        toast.error(formatMessage({ id: "messages.failure.update-theme" }));
       }
     },
-    [changeTheme, closeModal, toast],
+    [changeTheme, closeModal, formatMessage, toast],
   );
 
   const buttons: BaseModalFooterButtonProps[] = [
-    { name: "CANCEL", onClick: closeModal },
-    { name: "CONFIRM", onClick: handleSubmit(handleConfirm) },
+    { name: "CANCEL", onPress: closeModal },
+    { name: "CONFIRM", onPress: handleSubmit(handleConfirm) },
   ];
 
   const formattedThemes = useMemo(
@@ -69,7 +70,7 @@ export default function ThemeModal() {
 
   return (
     <BaseModal.Modal
-      title={locales.theme.modal.title}
+      title={formatMessage({ id: "modals.theme.title" })}
       visible={isOpen}
       onClose={closeModal}
     >
@@ -83,7 +84,7 @@ export default function ThemeModal() {
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue.index)}
-              label={locales.theme.modal.section.theme.label}
+              label={formatMessage({ id: "modals.theme.fields.theme" })}
               disabled={disabled}
               getOptionValue={(item) => item.index}
               options={Object.values(formattedThemes)}
@@ -93,9 +94,9 @@ export default function ThemeModal() {
                 return (
                   <ThemeOption
                     color={formattedThemes[renderValue.index].main}
-                    label={locales.theme.modal.section.theme.optionLabel.replace(
-                      "{index}",
-                      String(renderValue.index + 1),
+                    label={formatMessage(
+                      { id: "modals.theme.fields.theme-value" },
+                      { value: renderValue.index + 1 },
                     )}
                   />
                 );
@@ -103,9 +104,9 @@ export default function ThemeModal() {
               renderItem={({ item, selectedItem, index }) => (
                 <ThemeOption
                   color={item.main}
-                  label={locales.theme.modal.section.theme.optionLabel.replace(
-                    "{index}",
-                    String(index + 1),
+                  label={formatMessage(
+                    { id: "modals.theme.fields.theme-value" },
+                    { value: index + 1 },
                   )}
                   selected={item === selectedItem}
                 />
@@ -121,7 +122,7 @@ export default function ThemeModal() {
           name="isDarkMode"
           render={({ field: { onChange, value, disabled } }) => (
             <BaseSwitch
-              label={locales.theme.modal.section.darkMode.label}
+              label={formatMessage({ id: "modals.theme.fields.dark-mode" })}
               disableIconName="weather-sunny"
               enableIconName="moon-waning-crescent"
               value={value}

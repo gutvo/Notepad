@@ -3,8 +3,10 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
 import useDebounce from "@Hooks/useDebounce";
+import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
+import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
@@ -12,16 +14,24 @@ import { View } from "react-native";
 export default function useHeader() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const { formatMessage } = useLocale();
   const { openModal } = useModal();
 
   const [inputSearch, setInputSearch] = useState("");
   const debouncedSearch = useDebounce(inputSearch, 500);
   const [isSearching, setIsSearching] = useState(false);
 
-  function handleGoBack() {
-    setInputSearch("");
-    setIsSearching(false);
-  }
+  const handleGoBack = useCallback(() => {
+    if (isSearching) {
+      setInputSearch("");
+      setIsSearching(false);
+      return true;
+    }
+
+    return false;
+  }, [isSearching]);
+
+  useOnGoBack({ onBackPress: handleGoBack });
 
   const headerLeft = useCallback(
     () => (
@@ -49,7 +59,7 @@ export default function useHeader() {
         )}
       </>
     ),
-    [isSearching, openModal, theme],
+    [handleGoBack, isSearching, openModal, theme],
   );
 
   const headerCenter = useCallback(
@@ -62,12 +72,12 @@ export default function useHeader() {
           />
         ) : (
           <BaseTypography style={{ color: theme.palette.primary.contrast }}>
-            Página incial
+            {formatMessage({ id: "pages.home-list.title" })}
           </BaseTypography>
         )}
       </View>
     ),
-    [isSearching, inputSearch, theme.palette.primary.contrast],
+    [isSearching, inputSearch, theme.palette.primary.contrast, formatMessage],
   );
 
   const headerRight = useCallback(

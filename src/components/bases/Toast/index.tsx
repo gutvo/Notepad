@@ -1,7 +1,7 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
+import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import BaseTypography from "@Components/bases/Typography";
-import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
 import useTheme from "@Hooks/useTheme";
 import { Animated, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

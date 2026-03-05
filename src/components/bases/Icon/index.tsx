@@ -20,7 +20,7 @@ export default function BaseIcon({
   const theme = useTheme();
 
   const finalSize = typeof size === "string" ? defaultSizes[size] : size;
-  const finalColor = color ?? theme.palette.background.textPrimary;
+  const finalColor = color ?? theme.palette.text.primary;
 
   return (
     <MaterialCommunityIcons

@@ -23,6 +23,7 @@ export default function ThemeOption({
         flexDirection: "row",
         alignItems: "center",
         gap: theme.spacing(3),
+        padding: theme.spacing(4),
       }}
     >
       <View

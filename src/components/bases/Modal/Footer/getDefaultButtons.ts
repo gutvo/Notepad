@@ -1,25 +1,27 @@
-import locales from "@Locales";
+import { FormatMessageProps } from "@Hooks/useLocale";
 import { ThemeProps } from "@Providers/ThemeProvider/types";
 
 interface GetDefaultButtonsProps {
   buttons: BaseModalFooterButtonProps[];
   theme: ThemeProps;
+  formatMessage: FormatMessageProps;
 }
 
 export default function getDefaultButtons({
   buttons,
   theme,
+  formatMessage,
 }: GetDefaultButtonsProps) {
   const defaultButtons: Record<
     BaseModalFooterButtonNames,
     Omit<CustomBaseModalFooterButtonProps, "name">
   > = {
     CONFIRM: {
-      label: locales.buttons.confirm,
+      label: formatMessage({ id: "buttons.confirm" }),
       backgroundColor: theme.palette.primary.main,
     },
     CANCEL: {
-      label: locales.buttons.cancel,
+      label: formatMessage({ id: "buttons.cancel" }),
       backgroundColor: theme.palette.grey[700],
       color: theme.palette.grey[50],
     },

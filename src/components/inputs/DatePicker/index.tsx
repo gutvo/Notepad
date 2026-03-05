@@ -18,11 +18,12 @@ export default function DatePicker({
   startIcon,
   textStyle,
   required,
+  disabled,
   ...rest
 }: DatePickerProps) {
   const wrapperProps = {
     containerStyle,
-    endIcon: endIcon ?? (
+    endIcon: endIcon || (
       <BaseIcon
         name="calendar-outline"
         style={{ position: "absolute", right: 10, zIndex: 1 }}
@@ -35,11 +36,12 @@ export default function DatePicker({
     startIcon,
     textStyle,
     required,
+    disabled,
   };
 
   return (
     <BaseInputWrapper {...wrapperProps}>
-      <BaseDatePicker {...rest} />
+      <BaseDatePicker {...rest} disabled={disabled} />
     </BaseInputWrapper>
   );
 }

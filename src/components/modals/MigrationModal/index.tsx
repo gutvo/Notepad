@@ -1,7 +1,7 @@
 import BaseModal from "@Components/bases/Modal";
 import BaseTypography from "@Components/bases/Typography";
+import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
-import locales from "@Locales";
 import { DrizzleError } from "drizzle-orm";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
@@ -16,6 +16,7 @@ export default function MigrationModal({
   success,
 }: MigrationModalProps) {
   const theme = useTheme();
+  const { formatMessage } = useLocale();
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -36,7 +37,10 @@ export default function MigrationModal({
   }, [error, success]);
 
   return (
-    <BaseModal.Modal visible={isOpenModal}>
+    <BaseModal.Modal
+      visible={isOpenModal}
+      title={formatMessage({ id: "modals.migration.title" })}
+    >
       <View
         style={{
           flex: 1,
@@ -54,7 +58,7 @@ export default function MigrationModal({
               style={{ color: theme.palette.error.main }}
               variant="H4"
             >
-              {locales.migration.modal.error.title}
+              {formatMessage({ id: "modals.migration.message.error" })}
             </BaseTypography>
             <BaseTypography style={{ color: theme.palette.error.main }}>
               {error?.message}
@@ -64,7 +68,7 @@ export default function MigrationModal({
 
         {!error && !success && (
           <BaseTypography variant="H4">
-            {locales.migration.modal.progress}
+            {formatMessage({ id: "modals.migration.message.progress" })}
           </BaseTypography>
         )}
       </View>

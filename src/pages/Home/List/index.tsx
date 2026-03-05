@@ -47,7 +47,7 @@ export default function HomeList() {
         renderItem={({ item }) => (
           <ListItem
             item={item}
-            onClick={(item) =>
+            onPress={(item) =>
               navigation.navigate({
                 pathname: "/home/detail",
                 params: { id: item.id },

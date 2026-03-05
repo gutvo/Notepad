@@ -12,6 +12,40 @@ interface CreateNotificationProps {
 
 const DETAIL_PAGE_URL: Href = "/home/detail";
 
+function formatDate(date: Date) {
+  return date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+}
+
+function buildNotificationContent(
+  title: string,
+  date: Date,
+  diffDays: number | null,
+) {
+  const formattedDate = formatDate(date);
+
+  if (diffDays === null) {
+    return {
+      title: "Hora de revisar sua nota",
+      body: `"${title}" está agendada para hoje (${formattedDate}).`,
+    };
+  }
+
+  if (diffDays === 1) {
+    return {
+      title: "Sua nota é amanhã",
+      body: `"${title}" está programada para amanhã.`,
+    };
+  }
+
+  return {
+    title: "Lembrete programado",
+    body: `"${title}" em ${diffDays} dias (${formattedDate}).`,
+  };
+}
+
 export default async function createNotification({
   title,
   date,
@@ -22,22 +56,27 @@ export default async function createNotification({
   const scheduledNotificationIds: string[] = [];
 
   try {
+    if (date <= new Date()) {
+      throw new Error("Data da notificação está no passado");
+    }
+
     const allCreatedReminderIds = await database.transaction(
       async (transaction) => {
         const createdReminderIds: number[] = [];
 
-        // Corpo e título principal
-        const mainBody = `Faltam ${days} dias`;
-        const formattedTitle = `Lembrete: ${title}`;
+        // 🔔 Notificação principal
+        const mainContent = buildNotificationContent(title, date, null);
 
-        // Notificação principal
         const mainNotificationId =
           await Notifications.scheduleNotificationAsync({
             content: {
-              title: formattedTitle,
-              body: mainBody,
+              title: mainContent.title,
+              body: mainContent.body,
               sound: true,
-              data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
+              data: {
+                url: DETAIL_PAGE_URL,
+                params: { id: noteId },
+              },
             },
             trigger: {
               type: Notifications.SchedulableTriggerInputTypes.DATE,
@@ -51,8 +90,8 @@ export default async function createNotification({
           {
             notification_id: mainNotificationId,
             note_id: noteId,
-            title,
-            message: mainBody,
+            title: mainContent.title,
+            message: mainContent.body,
             notificate_at: date,
             parent_id: null,
           },
@@ -61,21 +100,24 @@ export default async function createNotification({
 
         createdReminderIds.push(mainReminder.id);
 
-        // Notificações antecipadas
+        // ⏳ Notificações antecipadas
         for (let index = 1; index <= days; index++) {
           const subDate = new Date(date);
           subDate.setDate(subDate.getDate() - index);
           if (subDate <= new Date()) continue;
 
-          const subBody = `Faltam ${days - index} dias`;
+          const subContent = buildNotificationContent(title, date, index);
 
           const subNotificationId =
             await Notifications.scheduleNotificationAsync({
               content: {
-                title: formattedTitle,
-                body: subBody,
+                title: subContent.title,
+                body: subContent.body,
                 sound: true,
-                data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
+                data: {
+                  url: DETAIL_PAGE_URL,
+                  params: { id: noteId },
+                },
               },
               trigger: {
                 type: Notifications.SchedulableTriggerInputTypes.DATE,
@@ -89,8 +131,8 @@ export default async function createNotification({
             {
               notification_id: subNotificationId,
               note_id: noteId,
-              title,
-              message: subBody,
+              title: subContent.title,
+              message: subContent.body,
               notificate_at: subDate,
               parent_id: mainReminder.id,
             },
@@ -106,7 +148,6 @@ export default async function createNotification({
 
     return allCreatedReminderIds;
   } catch (error) {
-    // Cancela todas notificações caso dê erro
     for (const id of scheduledNotificationIds) {
       await Notifications.cancelScheduledNotificationAsync(id);
     }

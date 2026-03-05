@@ -1,4 +1,4 @@
-import BaseModalWrapper from "@Components/modals/BaseModalWrapper";
+import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
 import React from "react";
@@ -59,7 +59,7 @@ export default function BaseModalModal({
                   shadowOpacity: 0.2,
                   shadowRadius: 10,
                   shadowOffset: { width: 0, height: 4 },
-                  minHeight: "34%",
+                  maxHeight: "80%",
                   minWidth: "90%",
                 },
                 style,

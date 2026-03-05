@@ -1,14 +1,14 @@
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
-import ReminderModal from "@Components/modals/ReminderModal";
-import { useCurrentModal } from "@Hooks/useCurrentModal";
+import BaseListItemButton, {
+  BaseListItemButtonProps,
+} from "@Components/bases/ListItemButton";
+import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import locales from "@Locales";
 import deleteNotification from "@Utils/deleteNotification";
-import { Dispatch, SetStateAction } from "react";
-import CustomListItem, { CustomItemProps } from "./CustomListItem";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface ActionModalProps {
   isOpenModal: boolean;
@@ -25,9 +25,11 @@ export default function ActionModal({
 }: ActionModalProps) {
   const theme = useTheme();
   const toast = useToast();
+  const { formatMessage } = useLocale();
 
-  const { isOpen } = useCurrentModal("REMINDER");
   const { openModal } = useModal();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleUpdateReminder() {
     if (!selectedReminder) return;
@@ -44,41 +46,48 @@ export default function ActionModal({
   async function handleDeleteNote() {
     if (!selectedReminder) return;
 
-    await deleteNotification({ reminderId: selectedReminder.id });
+    setIsLoading(true);
 
-    setSelectedReminder(null);
-    handleCloseModal();
+    try {
+      await deleteNotification({ reminderId: selectedReminder.id });
 
-    toast.success(locales.home.list.actionModal.success.delete);
+      setSelectedReminder(null);
+      handleCloseModal();
+
+      toast.success(formatMessage({ id: "messages.success.delete-reminder" }));
+    } catch {
+      toast.success(formatMessage({ id: "messages.failure.delete-reminder" }));
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  const options: CustomItemProps[] = [
+  const options: BaseListItemButtonProps[] = [
     {
-      name: "Atualizar",
-      onClick: handleUpdateReminder,
-      Icon: <BaseIcon name="pencil-outline" />,
+      label: formatMessage({ id: "modals.reminder-actions.action.update" }),
+      onPress: handleUpdateReminder,
+      Left: <BaseIcon name="pencil-outline" />,
+      disabled: isLoading,
     },
     {
-      name: locales.home.list.actionModal.actions.delete,
-      onClick: handleDeleteNote,
-      Icon: <BaseIcon name="trash-can-outline" />,
+      label: formatMessage({ id: "modals.reminder-actions.action.delete" }),
+      onPress: handleDeleteNote,
+      Left: <BaseIcon name="trash-can-outline" />,
     },
   ];
 
   return (
     <BaseBottomModal.Modal
       isOpen={isOpenModal}
-      title={locales.home.list.actionModal.title}
+      title={formatMessage({ id: "modals.reminder-actions.title" })}
       onClose={handleCloseModal}
     >
       <BaseBottomModal.FlatList
         data={options}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <CustomListItem item={item} />}
+        keyExtractor={(item) => item.label}
+        renderItem={({ item }) => <BaseListItemButton {...item} />}
         contentContainerStyle={{ paddingVertical: theme.spacing(3) }}
       />
-
-      {isOpen && <ReminderModal />}
     </BaseBottomModal.Modal>
   );
 }

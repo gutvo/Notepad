@@ -1,7 +1,8 @@
+import getFormattedDate from "@Utils/getFormattedDate";
 import { ReactNode, useCallback, useState } from "react";
 import BaseButton from "../Button";
+import BaseCalendarModal, { BaseCalendarModalProps } from "../CalendarModal";
 import BaseTypography from "../Typography";
-import BaseCalendarModal, { BaseCalendarModalProps } from "./BaseCalendarModal";
 
 export interface BaseDatePickerProps extends Omit<
   BaseCalendarModalProps,
@@ -20,6 +21,7 @@ export default function BaseDatePicker({
   defaultValue,
   renderInputValue,
   placeholder,
+  type = "DATE",
   ...modalRest
 }: BaseDatePickerProps) {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -81,7 +83,7 @@ export default function BaseDatePicker({
 
             {currentValue && (
               <BaseTypography>
-                {currentValue.toLocaleDateString("pt-BR")}
+                {getFormattedDate(currentValue, type)}
               </BaseTypography>
             )}
           </>
@@ -94,6 +96,7 @@ export default function BaseDatePicker({
           onClose={handleCloseModal}
           onChange={handleChange}
           value={currentValue}
+          type={type}
           {...modalRest}
         />
       )}

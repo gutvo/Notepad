@@ -1,3 +1,4 @@
+import BaseIcon from "@Components/bases/Icon";
 import BaseInputWrapper, {
   BaseInputWrapperProps,
 } from "@Components/bases/InputWrapper";
@@ -21,11 +22,17 @@ export default function SelectInput<
   error,
   helpTextStyle,
   required,
+  disabled,
   ...rest
 }: SelectInputProps<DataProps, ValueProps>) {
   const wrapperProps = {
     containerStyle,
-    endIcon,
+    endIcon: endIcon || (
+      <BaseIcon
+        name="chevron-down"
+        style={{ position: "absolute", right: 10, zIndex: 1 }}
+      />
+    ),
     error,
     helpText,
     helpTextStyle,
@@ -33,11 +40,12 @@ export default function SelectInput<
     startIcon,
     textStyle,
     required,
+    disabled,
   };
 
   return (
     <BaseInputWrapper {...wrapperProps}>
-      <BaseSelectInput {...rest} />
+      <BaseSelectInput disabled={disabled} {...rest} />
     </BaseInputWrapper>
   );
 }
