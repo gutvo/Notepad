@@ -14,6 +14,7 @@ export default function RemindersList() {
   const { data } = useActionList(actions.reminder.list, {
     search,
     parentId: null,
+    greaterThan: new Date(),
   });
 
   const [isOpenModal, setIsOpenModal] = useState(false);
