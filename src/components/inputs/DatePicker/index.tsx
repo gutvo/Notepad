@@ -23,7 +23,7 @@ export default function DatePicker({
 }: DatePickerProps) {
   const wrapperProps = {
     containerStyle,
-    endIcon: endIcon ?? (
+    endIcon: endIcon || (
       <BaseIcon
         name="calendar-outline"
         style={{ position: "absolute", right: 10, zIndex: 1 }}

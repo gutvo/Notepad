@@ -23,4 +23,5 @@ type BaseIconNameProps =
   | "arrow-right"
   | "calendar-outline"
   | "pencil-outline"
-  | "printer-outline";
+  | "printer-outline"
+  | "chevron-down";
