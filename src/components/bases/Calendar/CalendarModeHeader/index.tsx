@@ -1,5 +1,5 @@
-import BaseButton from "@Components/bases/Button";
 import BaseTypography from "@Components/bases/Typography";
+import Button from "@Components/buttons/Button";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import { Dispatch, SetStateAction } from "react";
@@ -38,21 +38,14 @@ export default function CalendarModeHeader({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: theme.spacing(4),
-        borderRadius: 4,
+        gap: theme.spacing(2),
       }}
     >
       {buttons.map((button) => (
-        <BaseButton
+        <Button
           key={button.name}
           onPress={button.onPress}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            padding: theme.spacing(2),
-            backgroundColor: button.isSelected
-              ? theme.palette.primary.main
-              : "transparent",
-          }}
+          variant={button.isSelected ? "CONTAINED" : "OUTLINED"}
         >
           <BaseTypography
             style={{
@@ -65,7 +58,7 @@ export default function CalendarModeHeader({
           >
             {button.label}
           </BaseTypography>
-        </BaseButton>
+        </Button>
       ))}
     </View>
   );

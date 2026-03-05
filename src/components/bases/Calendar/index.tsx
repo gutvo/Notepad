@@ -126,7 +126,7 @@ export default function BaseCalendar({
         <View
           style={{
             backgroundColor: theme.palette.background.card,
-            padding: theme.spacing(1),
+            padding: theme.spacing(2),
             borderRadius: 4,
           }}
         >
