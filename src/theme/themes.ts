@@ -5,7 +5,6 @@ const themeIndigo = createTheme(defaultColors.indigoGrey);
 const themePurple = createTheme(defaultColors.purpleGrey);
 const themeBlue = createTheme(defaultColors.blueGrey);
 const themeGreen = createTheme(defaultColors.greenGrey);
-const themeOrange = createTheme(defaultColors.orangeGrey);
 const themeTeal = createTheme(defaultColors.tealGrey);
 const themeRed = createTheme(defaultColors.redGrey);
 
@@ -14,7 +13,6 @@ const themes = [
   themePurple,
   themeBlue,
   themeGreen,
-  themeOrange,
   themeTeal,
   themeRed,
 ];

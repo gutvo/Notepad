@@ -145,7 +145,6 @@ export default function BaseCalendar({
         </View>
       )}
 
-      {/* CLOCK */}
       {viewMode === "clock" && isDateTime && (
         <BaseClock
           value={clockValue}
