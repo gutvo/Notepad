@@ -172,7 +172,7 @@ export default function ConfigModal() {
               value={value}
               onChange={(itemValue) => onChange(itemValue.id)}
               label={formatMessage({ id: "modals.config.fields.printer" })}
-              disabled={disabled}
+              disabled={disabled || printers.length === 0}
               options={printers}
               endIcon={
                 value && (
