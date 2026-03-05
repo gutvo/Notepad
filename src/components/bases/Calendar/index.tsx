@@ -1,5 +1,5 @@
 import useTheme from "@Hooks/useTheme";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import BaseClock from "../Clock";
 
@@ -53,8 +53,11 @@ export default function BaseCalendar({
 
   const [viewMode, setViewMode] = useState<ViewMode>("calendar");
 
-  // Fonte única de verdade
-  const currentDate = value ?? internalDate;
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalDate(value);
+    }
+  }, [value]);
 
   function updateDate(newDate: Date) {
     if (onChange) {
@@ -66,13 +69,13 @@ export default function BaseCalendar({
 
   const { selectedTimestamp, handleChangeDate, todayTimestamp } =
     useCalendarState({
-      value: currentDate,
+      value: internalDate,
       onChange: undefined,
       disabledToday,
     });
 
   const { viewDate, setViewDate, year, month } = useCalendarMonth({
-    value: currentDate,
+    value: internalDate,
   });
 
   const days = useGetDays({
@@ -87,9 +90,8 @@ export default function BaseCalendar({
   function handleSelectDay(timestamp: number) {
     const updated = new Date(timestamp);
 
-    // 🔥 Preserva hora/minuto atuais
-    updated.setHours(currentDate.getHours());
-    updated.setMinutes(currentDate.getMinutes());
+    updated.setHours(internalDate.getHours());
+    updated.setMinutes(internalDate.getMinutes());
     updated.setSeconds(0);
     updated.setMilliseconds(0);
 
@@ -98,7 +100,7 @@ export default function BaseCalendar({
   }
 
   function handleChangeTime(time: { hour: number; minute: number }) {
-    const updated = new Date(currentDate);
+    const updated = new Date(internalDate);
 
     updated.setHours(time.hour);
     updated.setMinutes(time.minute);
@@ -110,10 +112,10 @@ export default function BaseCalendar({
 
   const clockValue = useMemo(
     () => ({
-      hour: currentDate.getHours(),
-      minute: currentDate.getMinutes(),
+      hour: internalDate.getHours(),
+      minute: internalDate.getMinutes(),
     }),
-    [currentDate],
+    [internalDate],
   );
 
   return (
