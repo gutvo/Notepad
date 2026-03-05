@@ -91,12 +91,13 @@ export default function BaseDrawer({
         style={{
           position: "absolute",
           left: 0,
-          top: insets.top,
-          bottom: insets.bottom,
+          top: 0,
+          bottom: 0,
           width: DRAWER_WIDTH,
           backgroundColor: theme.palette.background.body,
-
           transform: [{ translateX }],
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
         }}
       >
         {children}
