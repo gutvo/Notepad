@@ -18,27 +18,43 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
-            const branch = pr.head.ref;
+            const branch = pr.head.ref.toLowerCase();
 
             const emojiMap = {
-              "feature/": "🚀",
+              "feat/": "✨",
+              "feature/": "✨",
               "fix/": "🐛",
-              "improvement/": "✨",
-              "refactor/": "🔧"
+              "bugfix/": "🐛",
+              "hotfix/": "🚑",
+              "refactor/": "♻️",
+              "perf/": "⚡",
+              "improvement/": "🚀",
+              "chore/": "🧹",
+              "docs/": "📚",
+              "style/": "🎨",
+              "test/": "✅",
+              "ci/": "👷",
+              "build/": "📦",
+              "revert/": "⏪"
             };
 
             let emoji = "";
+            let prefixMatched = "";
+
             for (const prefix in emojiMap) {
               if (branch.startsWith(prefix)) {
                 emoji = emojiMap[prefix];
+                prefixMatched = prefix;
                 break;
               }
             }
 
             // Remove prefix
-            let title = branch.replace(/^(feature\/|fix\/|improvement\/|refactor\/)/, "");
+            let title = branch.replace(prefixMatched, "");
+
             // Replace "-" by space
             title = title.replace(/-/g, " ");
+
             // Capitalize first letter
             title = title.charAt(0).toUpperCase() + title.slice(1);
 
