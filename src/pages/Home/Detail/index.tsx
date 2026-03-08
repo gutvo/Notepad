@@ -1,3 +1,5 @@
+import actions from "@Actions";
+import { useActionShow } from "@Hooks/useActionShow";
 import useForm from "@Hooks/useForm";
 import useLocale from "@Hooks/useLocale";
 import useNavigation from "@Hooks/useNavigation";
@@ -8,7 +10,6 @@ import { Controller } from "react-hook-form";
 import { TextInput, View } from "react-native";
 import defaultValues from "./defaultValues";
 import useGetDefaultSettings from "./useGetDefaultSettings";
-import useGetNote from "./useGetNote";
 import useHeader from "./useHeader";
 import createNote from "./utils/createNote";
 import deleteNote from "./utils/deleteNote";
@@ -24,7 +25,10 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
   const navigation = useNavigation();
   const { formatMessage } = useLocale();
 
-  const [note] = useGetNote({ noteId });
+  const { data: note } = useActionShow({
+    actions: actions.note,
+    id: noteId,
+  });
 
   const [defaultSettings] = useGetDefaultSettings();
 

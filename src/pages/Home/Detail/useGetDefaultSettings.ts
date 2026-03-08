@@ -24,7 +24,7 @@ export default function useGetDefaultSettings() {
     setSettingsGroupedByKey(groupedSettings);
   }, []);
 
-  const { data } = useActionList(actions.config.list);
+  const { data } = useActionList({ actions: actions.config });
 
   useEffect(() => {
     formatSettings(data);

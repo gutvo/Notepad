@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import { NoteDataProps } from "@Actions/note";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
 import FloatingButton from "@Components/buttons/FloatButton";
@@ -30,20 +31,17 @@ export default function HomeList() {
     setIsOpenModal(true);
   }
 
-  const { data } = useActionList(actions.note.list);
-
-  const notes = data.filter(
-    (note) =>
-      !search.length ||
-      note.description.toLowerCase().includes(search.toLowerCase()),
-  );
+  const { data } = useActionList({
+    actions: actions.note,
+    options: { description: search },
+  });
 
   return (
     <>
       {isOpen && <ThemeModal />}
 
       <BaseFlashList
-        data={notes}
+        data={data}
         renderItem={({ item }) => (
           <ListItem
             item={item}

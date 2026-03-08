@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import { NoteDataProps } from "@Actions/note";
 import { useCallback, useEffect, useState } from "react";
 
 interface useGetNoteProps {

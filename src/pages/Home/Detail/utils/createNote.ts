@@ -12,7 +12,7 @@ export default async function createNote({
   toast,
   formatMessage,
 }: CreateNoteProps) {
-  const data = { description };
+  const data = { description, created_at: new Date() };
 
   const createdNote = await actions.note.create(data);
 

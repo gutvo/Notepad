@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import { NoteDataProps } from "@Actions/note";
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton, {
@@ -70,7 +71,10 @@ export default function ActionModal({
 
     setIsLoading(true);
     try {
-      await actions.note.create({ description: selectedNote.description });
+      await actions.note.create({
+        description: selectedNote.description,
+        created_at: new Date(),
+      });
 
       setSelectedNote(null);
       handleCloseModal();
