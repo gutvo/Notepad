@@ -12,13 +12,13 @@
       "@Schema/*":["src/database/schemas/*"],
       "@Database":["src/database/index.ts"],
       "@Actions": ["src/database/actions/index.ts"],
-      "@Lib/*": ["src/lib/*"],
       "@Utils/*": ["src/utils/*"],
       "@Seeds": ["src/database/seeds/index.ts"],
       "@Providers/*": ["src/providers/*"],
       "@Theme/*": ["src/theme/*"],
       "@Locales": ["src/locales/index.ts"],
-      "@Services/*": ["src/services/*"]
+      "@Services/*": ["src/services/*"],
+      "@Actions/*": ["src/database/actions/*"]
     }
   },
   "include": ["src", ".expo/types/**/*.ts", "expo-env.d.ts","tsconfig.json" ,"app.config.ts"]
