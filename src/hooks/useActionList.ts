@@ -27,7 +27,47 @@ export function useActionList<
   const load = useCallback(async () => {
     setLoading(true);
 
-    const result = await actions.list(options);
+    const normalizedOptions =
+      options && typeof options === "object"
+        ? Object.entries(options as Record<string, any>).reduce(
+            (accumulator, [key, value]) => {
+              if (value === undefined || value === null) return accumulator;
+
+              if (typeof value === "string" && value.trim() === "") {
+                return accumulator;
+              }
+
+              if (Array.isArray(value) && value.length === 0) {
+                return accumulator;
+              }
+
+              if (
+                typeof value === "object" &&
+                !Array.isArray(value) &&
+                Object.values(value as Record<string, any>).every(
+                  (nestedValue) =>
+                    nestedValue === undefined ||
+                    nestedValue === null ||
+                    (typeof nestedValue === "string" &&
+                      nestedValue.trim() === "") ||
+                    (Array.isArray(nestedValue) && nestedValue.length === 0),
+                )
+              ) {
+                return accumulator;
+              }
+
+              accumulator[key] = value;
+              return accumulator;
+            },
+            {} as Record<string, any>,
+          )
+        : undefined;
+
+    const result = await actions.list(
+      normalizedOptions && Object.keys(normalizedOptions).length
+        ? (normalizedOptions as Options)
+        : undefined,
+    );
 
     const formatted = format
       ? await format(result)

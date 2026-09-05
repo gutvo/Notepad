@@ -63,6 +63,23 @@ export function createActions<
     Object.entries(filters ?? {}).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
 
+      if (typeof value === "string" && value.trim() === "") return;
+      if (Array.isArray(value) && value.length === 0) return;
+
+      if (
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        Object.values(value as Record<string, any>).every(
+          (nestedValue) =>
+            nestedValue === undefined ||
+            nestedValue === null ||
+            (typeof nestedValue === "string" && nestedValue.trim() === "") ||
+            (Array.isArray(nestedValue) && nestedValue.length === 0),
+        )
+      ) {
+        return;
+      }
+
       const column = (schema as any)[key];
       if (!column) return;
 

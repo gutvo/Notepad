@@ -89,6 +89,9 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
 
   useHeader({ onSubmit, isDirty });
 
+  const resolvedFontSize =
+    Number(defaultSettings.TEXT_FONT_SIZE) || theme.fontSize(4);
+
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -105,9 +108,7 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
               style={{
                 flex: 1,
                 padding: theme.spacing(4),
-                fontSize:
-                  (defaultSettings.TEXT_FONT_SIZE as number) ??
-                  theme.fontSize(4),
+                fontSize: resolvedFontSize,
                 backgroundColor: theme.palette.background.body,
                 color: theme.palette.text.primary,
               }}

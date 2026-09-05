@@ -33,7 +33,10 @@ export default function HomeList() {
 
   const { data } = useActionList({
     actions: actions.note,
-    options: { description: search },
+    options:
+      search && search.trim()
+        ? { description: { like: search.trim() } }
+        : undefined,
   });
 
   return (

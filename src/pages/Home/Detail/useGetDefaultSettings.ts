@@ -15,7 +15,7 @@ export default function useGetDefaultSettings() {
       Record<ConfigKeyProps, string | boolean | number>
     >(
       (accumulator, item) => {
-        accumulator[item.key] = item.value;
+        accumulator[item.key] = item.parsedValue;
 
         return accumulator;
       },
