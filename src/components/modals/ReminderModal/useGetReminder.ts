@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import { ReminderDataProps } from "@Actions/reminder";
 import { useCallback, useEffect, useState } from "react";
 
 interface UseGetReminderProps {

@@ -48,22 +48,26 @@ export default function ConfigModal() {
     try {
       if (data.textFontSize !== defaultValues?.textFontSize) {
         await actions.config.update("TEXT_FONT_SIZE", {
-          value: data.textFontSize,
+          value: String(data.textFontSize),
         });
       }
 
       if (defaultValues?.daysBeforeReminder !== data.daysBeforeReminder) {
         await actions.config.update("DAYS_BEFORE_REMINDER", {
-          value: data.daysBeforeReminder,
+          value: String(data.daysBeforeReminder),
         });
       }
 
       if (defaultValues?.printerId !== data.printerId) {
-        await actions.config.update("PRINTER_ID", { value: data.printerId });
+        await actions.config.update("PRINTER_ID", {
+          value: String(data.printerId ?? ""),
+        });
       }
 
       if (defaultValues?.paperSize !== data?.paperSize) {
-        await actions.config.update("PAPER_SIZE", { value: data?.paperSize });
+        await actions.config.update("PAPER_SIZE", {
+          value: String(data?.paperSize ?? ""),
+        });
       }
 
       closeModal();

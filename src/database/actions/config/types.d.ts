@@ -15,7 +15,8 @@ type ConfigDataProps = {
   [K in keyof ConfigValueMapProps]: {
     key: K;
     type: ConfigTypeProps;
-    value: ConfigValueMapProps[K];
+    value: string;
+    parsedValue: ConfigValueMapProps[K];
   };
 }[keyof ConfigValueMapProps];
 

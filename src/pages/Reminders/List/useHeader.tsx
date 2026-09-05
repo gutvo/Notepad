@@ -3,6 +3,7 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseTypography from "@Components/bases/Typography";
 import SearchInput from "@Components/inputs/SearchInput";
 import useDebounce from "@Hooks/useDebounce";
+import useLocale from "@Hooks/useLocale";
 import useNavigation from "@Hooks/useNavigation";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
@@ -10,6 +11,7 @@ import { useCallback, useLayoutEffect, useState } from "react";
 import { View } from "react-native";
 
 export default function useHeader() {
+  const { formatMessage } = useLocale();
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -54,12 +56,12 @@ export default function useHeader() {
           />
         ) : (
           <BaseTypography style={{ color: theme.palette.primary.contrast }}>
-            Lembretes
+            {formatMessage({ id: "pages.reminder-list.title" })}
           </BaseTypography>
         )}
       </View>
     ),
-    [isSearching, inputSearch, theme.palette.primary.contrast],
+    [isSearching, inputSearch, theme.palette.primary.contrast, formatMessage],
   );
 
   const headerRight = useCallback(

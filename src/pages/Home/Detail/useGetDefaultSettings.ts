@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import { FormattedConfigDataProps } from "@Actions/config/_formatData";
 import { useActionList } from "@Hooks/useActionList";
 import { useCallback, useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ export default function useGetDefaultSettings() {
     TEXT_FONT_SIZE: 12,
   });
 
-  const formatSettings = useCallback((configs: ConfigDataProps[]) => {
+  const formatSettings = useCallback((configs: FormattedConfigDataProps[]) => {
     const groupedSettings = configs.reduce<
       Record<ConfigKeyProps, string | boolean | number>
     >(

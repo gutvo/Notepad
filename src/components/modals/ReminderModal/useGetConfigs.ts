@@ -6,11 +6,11 @@ export default function useGetConfigs() {
 
   const getConfigs = useCallback(async () => {
     const settings = await actions.config.list({
-      findBy: { keys: ["DAYS_BEFORE_REMINDER"] },
+      key: { in: ["DAYS_BEFORE_REMINDER"] },
     });
 
     if (settings[0].key === "DAYS_BEFORE_REMINDER") {
-      setDaysBefore(settings[0].value);
+      setDaysBefore(Number(settings[0].value));
     }
   }, []);
 

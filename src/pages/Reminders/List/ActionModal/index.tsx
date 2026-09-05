@@ -1,3 +1,4 @@
+import { ReminderDataProps } from "@Actions/reminder";
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton, {
@@ -43,7 +44,7 @@ export default function ActionModal({
     handleCloseModal();
   }
 
-  async function handleDeleteNote() {
+  async function handleDeleteReminder() {
     if (!selectedReminder) return;
 
     setIsLoading(true);
@@ -71,7 +72,7 @@ export default function ActionModal({
     },
     {
       label: formatMessage({ id: "modals.reminder-actions.action.delete" }),
-      onPress: handleDeleteNote,
+      onPress: handleDeleteReminder,
       Left: <BaseIcon name="trash-can-outline" />,
     },
   ];
