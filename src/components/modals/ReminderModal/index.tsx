@@ -1,7 +1,7 @@
 import actions from "@Actions";
 import BaseModal from "@Components/bases/Modal";
 import DatePicker from "@Components/inputs/DatePicker";
-import TextField from "@Components/inputs/TextField";
+import TextInput from "@Components/inputs/TextInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
 import useLocale from "@Hooks/useLocale";
@@ -132,7 +132,7 @@ export default function ReminderModal() {
           control={control}
           name="name"
           render={({ field: { value, disabled, onBlur, onChange } }) => (
-            <TextField
+            <TextInput
               value={value}
               onChangeText={onChange}
               label={formatMessage({ id: "modals.reminders.fields-name" })}

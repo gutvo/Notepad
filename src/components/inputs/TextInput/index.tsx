@@ -3,14 +3,17 @@ import BaseInputWrapper, {
 } from "@Components/bases/InputWrapper";
 import useTheme from "@Hooks/useTheme";
 import { useState } from "react";
-import { TextInput, TextInputProps } from "react-native";
+import {
+  TextInputProps as ReactTextInputProps,
+  TextInput as ReactTextIput,
+} from "react-native";
 
-interface TextFieldProps
-  extends Omit<TextInputProps, "onChange">, BaseInputWrapperProps {
+interface TextInputProps
+  extends Omit<ReactTextInputProps, "onChange">, BaseInputWrapperProps {
   disabled?: boolean;
 }
 
-export default function TextField({
+export default function TextInput({
   endIcon,
   startIcon,
   label,
@@ -26,7 +29,7 @@ export default function TextField({
   disabled,
   required,
   ...rest
-}: TextFieldProps) {
+}: TextInputProps) {
   const theme = useTheme();
   const [focused, setFocused] = useState(false);
 
@@ -46,7 +49,7 @@ export default function TextField({
 
   return (
     <BaseInputWrapper {...wrapperProps}>
-      <TextInput
+      <ReactTextIput
         style={[{ flex: 1, color: theme.palette.text.primary }, style]}
         onFocus={(event) => {
           setFocused(true);
