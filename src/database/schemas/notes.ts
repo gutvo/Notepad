@@ -1,11 +1,9 @@
 import { text } from "drizzle-orm/sqlite-core";
-import { addCreatedAt, createTable } from "./tableFactory";
+import { addDateColumn, createTable } from "./tableFactory";
 
 const noteSchema = createTable("notes", {
-  columns: {
-    description: text("description").notNull(),
-  },
-  modifiers: [addCreatedAt()],
+  description: text("description").notNull(),
+  created_at: addDateColumn("created_at"),
 });
 
 export default noteSchema;
