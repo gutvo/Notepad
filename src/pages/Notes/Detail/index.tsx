@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import BaseKeyboardAvoidingView from "@Components/bases/KeyboardAvoidingView";
 import BaseTextInput from "@Components/bases/TextInput";
 import { useActionShow } from "@Hooks/useActionShow";
 import useForm from "@Hooks/useForm";
@@ -6,6 +7,7 @@ import useLocale from "@Hooks/useLocale";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import { useHeaderHeight } from "expo-router/react-navigation";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 import defaultValues from "./defaultValues";
@@ -24,6 +26,7 @@ export default function NotesDetail({ noteId }: NotesDetailProps) {
   const toast = useToast();
   const navigation = useNavigation();
   const { formatMessage } = useLocale();
+  const headerHeight = useHeaderHeight();
 
   const { data: note } = useActionShow({
     actions: actions.note,
@@ -97,20 +100,26 @@ export default function NotesDetail({ noteId }: NotesDetailProps) {
       control={control}
       name="description"
       render={({ field: { onChange, value, onBlur } }) => (
-        <BaseTextInput
-          multiline
-          onBlur={onBlur}
-          value={value}
-          onChangeText={onChange}
-          textAlignVertical="top"
-          style={{
-            flex: 1,
-            padding: theme.spacing(4),
-            fontSize: resolvedFontSize,
-            backgroundColor: theme.palette.background.body,
-            color: theme.palette.text.primary,
-          }}
-        />
+        <BaseKeyboardAvoidingView
+          keyboardVerticalOffset={headerHeight}
+          style={{ flex: 1 }}
+        >
+          <BaseTextInput
+            multiline
+            scrollEnabled
+            onBlur={onBlur}
+            value={value}
+            onChangeText={onChange}
+            textAlignVertical="top"
+            style={{
+              flex: 1,
+              padding: theme.spacing(4),
+              fontSize: resolvedFontSize,
+              backgroundColor: theme.palette.background.body,
+              color: theme.palette.text.primary,
+            }}
+          />
+        </BaseKeyboardAvoidingView>
       )}
     />
   );
