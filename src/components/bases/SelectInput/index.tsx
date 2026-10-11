@@ -1,7 +1,7 @@
 import BaseButton from "@Components/bases/Button";
 import BaseTypography from "@Components/bases/Typography";
 import { ReactNode, useCallback, useMemo, useState } from "react";
-import BaseSelectModal from "../SelectModal";
+import BaseSelectModal from "./SelectModal";
 
 export interface BaseSelectInputProps<DataProps, ValueProps> {
   placeholder?: string;
