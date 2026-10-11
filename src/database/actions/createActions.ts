@@ -9,7 +9,10 @@ export interface ActionOptions<
   TCreate,
   TUpdate,
   TRow,
-  TCustom = {},
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
   TFormatted = TRow,
 > {
   schema: any;
@@ -36,7 +39,10 @@ type SortDirection = "asc" | "desc";
 
 export interface QueryBuilder<
   TRow,
-  TCustom extends Record<string, (...args: any[]) => any> = {},
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
   TFormatted = TRow,
 > {
   where: (
@@ -65,7 +71,10 @@ export function createActions<
   TCreate,
   TUpdate,
   TRow extends Record<string, any>,
-  TCustom extends Record<string, (...args: any[]) => any> = {},
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
   TFormatted = TRow,
   TPrimaryKey extends keyof TRow = keyof TRow & string,
 >({

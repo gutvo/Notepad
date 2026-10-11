@@ -21,7 +21,19 @@ export default function useNotificationPermission() {
   }, []);
 
   useEffect(() => {
-    requestPermission();
+    let isMounted = true;
+
+    void (async () => {
+      const result = await requestPermission();
+
+      if (isMounted) {
+        setGranted(result);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [requestPermission]);
 
   return {

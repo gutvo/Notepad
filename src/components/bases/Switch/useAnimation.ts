@@ -1,5 +1,5 @@
 import useTheme from "@Hooks/useTheme";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Animated, Easing } from "react-native";
 
 interface UseAnimationProps {
@@ -15,8 +15,7 @@ export default function useAnimation({
 }: UseAnimationProps) {
   const theme = useTheme();
 
-  // Animated value vai de 0 a 1
-  const animation = useRef(new Animated.Value(0)).current;
+  const [animation] = useState(() => new Animated.Value(0));
 
   const maxTranslate = trackWidth - thumbWidth;
 

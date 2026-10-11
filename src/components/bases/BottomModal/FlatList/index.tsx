@@ -12,7 +12,7 @@ interface RenderItemProps<DataProps> {
 interface BottomModalFlatListProps<DataProps> {
   data: DataProps[];
   renderItem: (item: RenderItemProps<DataProps>) => React.JSX.Element;
-  keyExtractor?: (item: DataProps) => string | number;
+  keyExtractor?: (item: DataProps, index: number) => string;
   contentContainerStyle?: StyleProp<ViewStyle>;
 }
 

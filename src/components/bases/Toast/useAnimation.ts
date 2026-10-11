@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Animated, PanResponder } from "react-native";
 
 interface UseAnimationProps {
@@ -7,9 +7,9 @@ interface UseAnimationProps {
 }
 
 export default function useAnimation({ duration, onHide }: UseAnimationProps) {
-  const translateY = useRef(new Animated.Value(-150)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [translateY] = useState(() => new Animated.Value(-150));
+  const [opacity] = useState(() => new Animated.Value(0));
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const close = useCallback(() => {
     if (timeoutRef.current) {
@@ -53,7 +53,7 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
     open();
   }, [open]);
 
-  const pan = useRef(new Animated.ValueXY()).current;
+  const [pan] = useState(() => new Animated.ValueXY());
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (_, gestureState) =>

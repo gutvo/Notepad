@@ -24,9 +24,7 @@ export function useActionList<
   const [data, setData] = useState<ResultType>([] as ResultType);
   const [loading, setLoading] = useState(true);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-
+  const load = useCallback(async (): Promise<ResultType> => {
     const normalizedOptions =
       options && typeof options === "object"
         ? Object.entries(options as Record<string, any>).reduce(
@@ -69,27 +67,43 @@ export function useActionList<
         : undefined,
     );
 
-    const formatted = format
-      ? await format(result)
-      : (result as unknown as ResultType);
-
-    setData(formatted);
-    setLoading(false);
+    return format ? await format(result) : (result as unknown as ResultType);
   }, [actions, options, format]);
 
   useEffect(() => {
-    load();
+    let isMounted = true;
+
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const result = await load();
+
+        if (isMounted) {
+          setData(result);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchData();
 
     let subscription: Subscription | undefined;
 
     if (actions.observer) {
       subscription = actions.observer.subscribe(() => {
-        load();
+        void fetchData();
       });
     }
 
-    return () => subscription?.unsubscribe();
-  }, [load, actions]);
+    return () => {
+      isMounted = false;
+      subscription?.unsubscribe();
+    };
+  }, [actions, load]);
 
   return { data, loading, reload: load };
 }

@@ -1,17 +1,20 @@
 import actions from "@Actions";
 import { FormattedConfigDataProps } from "@Actions/config/_formatData";
 import { useActionList } from "@Hooks/useActionList";
-import { useCallback, useEffect, useState } from "react";
+import { useMemo } from "react";
 
 export default function useGetDefaultSettings() {
-  const [settingsGroupedByKey, setSettingsGroupedByKey] = useState<
-    Record<ConfigKeyProps<"TEXT_FONT_SIZE">, string | boolean | number>
-  >({
-    TEXT_FONT_SIZE: 12,
-  });
+  const { data } = useActionList({ actions: actions.config });
 
-  const formatSettings = useCallback((configs: FormattedConfigDataProps[]) => {
-    const groupedSettings = configs.reduce<
+  const settingsGroupedByKey = useMemo(() => {
+    const baseDefaults: Record<ConfigKeyProps, string | boolean | number> = {
+      TEXT_FONT_SIZE: 12,
+      DAYS_BEFORE_REMINDER: 1,
+      PRINTER_ID: "",
+      PAPER_SIZE: "58mm",
+    };
+
+    const groupedSettings = (data as FormattedConfigDataProps[]).reduce<
       Record<ConfigKeyProps, string | boolean | number>
     >(
       (accumulator, item) => {
@@ -19,17 +22,11 @@ export default function useGetDefaultSettings() {
 
         return accumulator;
       },
-      {} as Record<ConfigKeyProps, string | boolean | number>,
+      { ...baseDefaults },
     );
 
-    setSettingsGroupedByKey(groupedSettings);
-  }, []);
+    return groupedSettings;
+  }, [data]);
 
-  const { data } = useActionList({ actions: actions.config });
-
-  useEffect(() => {
-    formatSettings(data);
-  }, [data, formatSettings]);
-
-  return [settingsGroupedByKey, setSettingsGroupedByKey] as const;
+  return [settingsGroupedByKey] as const;
 }

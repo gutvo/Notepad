@@ -10,15 +10,34 @@ export default function useGetNote({ noteId }: useGetNoteProps) {
   const [note, setNote] = useState<NoteDataProps | null>(null);
 
   const getNote = useCallback(async () => {
-    if (!noteId) return;
+    if (!noteId) {
+      setNote(null);
+      return null;
+    }
 
     const currentNote = await actions.note.find(noteId);
-
     setNote(currentNote);
+    return currentNote;
   }, [noteId]);
 
   useEffect(() => {
-    getNote();
+    let isMounted = true;
+
+    const fetchNote = async () => {
+      const currentNote = await getNote();
+
+      if (!isMounted) {
+        return;
+      }
+
+      setNote(currentNote);
+    };
+
+    void fetchNote();
+
+    return () => {
+      isMounted = false;
+    };
   }, [getNote]);
 
   return [note, setNote] as const;

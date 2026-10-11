@@ -1,7 +1,7 @@
 import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Animated, Dimensions, Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -29,45 +29,38 @@ export default function BaseDrawer({
 
   useOnGoBack({ onBackPress });
 
-  const [isMounted, setIsMounted] = useState(visible);
-  const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
-  const overlayOpacity = useRef(new Animated.Value(0)).current;
+  const [translateX] = useState(() => new Animated.Value(-DRAWER_WIDTH));
+  const [overlayOpacity] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
-    if (visible) {
-      setIsMounted(true);
+    const isOpenAnimation = visible
+      ? [
+          Animated.timing(translateX, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+          Animated.timing(overlayOpacity, {
+            toValue: 0.4,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+        ]
+      : [
+          Animated.timing(translateX, {
+            toValue: -DRAWER_WIDTH,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+          Animated.timing(overlayOpacity, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+        ];
 
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0.4,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: -DRAWER_WIDTH,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        setIsMounted(false);
-      });
-    }
+    Animated.parallel(isOpenAnimation).start();
   }, [overlayOpacity, translateX, visible]);
-
-  if (!isMounted) return null;
 
   return (
     <BaseModalWrapper

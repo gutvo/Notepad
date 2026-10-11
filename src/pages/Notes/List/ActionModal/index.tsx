@@ -110,12 +110,7 @@ export default function ActionModal({
 
     const printerService = new PrinterService({
       paperSize: paperSizeConfig?.value as
-        | "58mm"
-        | "65mm"
-        | "70mm"
-        | "76mm"
-        | "80mm"
-        | undefined,
+        "58mm" | "65mm" | "70mm" | "76mm" | "80mm" | undefined,
     });
     const devices = await printerService.getAvailablePrinters();
     const printerId = await handleGetPrinterId(devices);

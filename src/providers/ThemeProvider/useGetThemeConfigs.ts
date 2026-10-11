@@ -38,7 +38,21 @@ export default function useGetThemeConfigs() {
   }, []);
 
   useEffect(() => {
-    loadThemeConfigs();
+    let isMounted = true;
+
+    void (async () => {
+      try {
+        await loadThemeConfigs();
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [loadThemeConfigs]);
 
   const updateThemeIndex = useCallback(async (index: number) => {

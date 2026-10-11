@@ -3,7 +3,6 @@ import BaseTypography from "@Components/bases/Typography";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import { DrizzleError } from "drizzle-orm";
-import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 interface MigrationModalProps {
@@ -17,24 +16,7 @@ export default function MigrationModal({
 }: MigrationModalProps) {
   const theme = useTheme();
   const { formatMessage } = useLocale();
-
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
-  function handleOpenModal() {
-    setIsOpenModal(true);
-  }
-
-  function handleCloseModal() {
-    setIsOpenModal(false);
-  }
-
-  useEffect(() => {
-    if (error || !success) {
-      handleOpenModal();
-    } else {
-      handleCloseModal();
-    }
-  }, [error, success]);
+  const isOpenModal = Boolean(error) || !success;
 
   return (
     <BaseModal.Modal

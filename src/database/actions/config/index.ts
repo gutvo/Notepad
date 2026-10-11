@@ -19,13 +19,13 @@ type ConfigCreateProps = Omit<ConfigRowProps, "id">;
 type ConfigUpdateProps = Partial<Omit<ConfigRowProps, "id">>;
 export type ConfigDataProps = ConfigRowProps;
 
-const configObserver$ = new Subject<{ type: string; payload: any }>();
+const configObserver$ = new Subject<{ type: string; payload: unknown }>();
 
 const configActions = createActions<
   ConfigCreateProps,
   ConfigUpdateProps,
   ConfigRowProps,
-  {},
+  Record<string, never>,
   FormattedConfigDataProps,
   "key"
 >({

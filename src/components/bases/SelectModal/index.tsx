@@ -14,7 +14,6 @@ interface BaseSelectModalProps<DataProps, ValueProps> {
   getOptionValue?: (option: DataProps) => ValueProps;
   setInternalValue: Dispatch<SetStateAction<ValueProps | undefined>>;
   selectedItem: DataProps | undefined;
-  setSelectedItem: Dispatch<SetStateAction<DataProps | undefined>>;
   itemHeight?: number; // altura de cada item (padding + conteúdo)
 }
 
@@ -27,14 +26,12 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   setInternalValue,
   getOptionValue,
   selectedItem,
-  setSelectedItem,
   itemHeight = 60.5, // ajuste esse valor baseado no seu item
 }: BaseSelectModalProps<DataProps, ValueProps>) {
   const { formatMessage } = useLocale();
   const { height: screenHeight } = useWindowDimensions();
 
   function handleSelectOption(item: DataProps) {
-    setSelectedItem(item);
     onChange?.(item);
 
     const newValue = getOptionValue
