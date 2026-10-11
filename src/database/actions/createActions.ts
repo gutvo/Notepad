@@ -32,6 +32,35 @@ type RowFilters<Row> = {
   [K in keyof Row]?: FilterOperators<Row[K]> | Row[K];
 };
 
+type SortDirection = "asc" | "desc";
+
+export interface QueryBuilder<
+  TRow,
+  TCustom extends Record<string, (...args: any[]) => any> = {},
+  TFormatted = TRow,
+> {
+  where: (
+    field: keyof TFormatted,
+    value: any,
+  ) => QueryBuilder<TRow, TCustom, TFormatted>;
+  whereLike: (
+    field: keyof TFormatted,
+    value: string,
+  ) => QueryBuilder<TRow, TCustom, TFormatted>;
+  whereIn: (
+    field: keyof TFormatted,
+    values: any[],
+  ) => QueryBuilder<TRow, TCustom, TFormatted>;
+  orderBy: (
+    field: keyof TFormatted,
+    direction?: SortDirection,
+  ) => QueryBuilder<TRow, TCustom, TFormatted>;
+  limit: (count: number) => QueryBuilder<TRow, TCustom, TFormatted>;
+  offset: (count: number) => QueryBuilder<TRow, TCustom, TFormatted>;
+  execute: () => Promise<(TFormatted & NonNullable<TCustom>)[]>;
+  first: () => Promise<(TFormatted & NonNullable<TCustom>) | null>;
+}
+
 export function createActions<
   TCreate,
   TUpdate,
@@ -144,6 +173,20 @@ export function createActions<
     return formatted as RowWithCustom;
   }
 
+  function formatRows(rows: any[]): RowWithCustom[] {
+    const formattedRows = formatData
+      ? rows.map((row) => formatData(row as TRow))
+      : (rows as Row[]);
+
+    if (customActions) {
+      return formattedRows.map(
+        (row) => ({ ...row, ...customActions(row) }) as RowWithCustom,
+      );
+    }
+
+    return formattedRows as RowWithCustom[];
+  }
+
   async function listAction(
     filters: RowFilters<Row> = {},
   ): Promise<RowWithCustom[]> {
@@ -159,17 +202,86 @@ export function createActions<
             .orderBy(primaryKeyField.desc())
         : await database.select().from(schema).where(whereClause);
 
-    const formattedRows = formatData
-      ? rows.map((row) => formatData(row as TRow))
-      : (rows as Row[]);
+    return formatRows(rows);
+  }
 
-    if (customActions) {
-      return formattedRows.map(
-        (row) => ({ ...row, ...customActions(row) }) as RowWithCustom,
-      );
-    }
+  function createQueryBuilder(
+    initialFilters: RowFilters<Row> = {},
+  ): QueryBuilder<Row, TCustom, TFormatted> {
+    const filters: RowFilters<Row> = { ...initialFilters };
+    let orderField: keyof TFormatted | undefined;
+    let orderDirection: SortDirection = "desc";
+    let limitValue: number | undefined;
+    let offsetValue: number | undefined;
 
-    return formattedRows as RowWithCustom[];
+    const builder: QueryBuilder<Row, TCustom, TFormatted> = {
+      where(field, value) {
+        if (value === undefined || value === null) return builder;
+        if (typeof value === "string" && value.trim() === "") return builder;
+        (filters as Record<string, any>)[String(field)] = value;
+        return builder;
+      },
+      whereLike(field, value) {
+        if (!value || !value.trim()) return builder;
+        (filters as Record<string, any>)[String(field)] = {
+          like: value.trim(),
+        };
+        return builder;
+      },
+      whereIn(field, values) {
+        if (!values || values.length === 0) return builder;
+        (filters as Record<string, any>)[String(field)] = { in: values };
+        return builder;
+      },
+      orderBy(field, direction = "desc") {
+        orderField = field;
+        orderDirection = direction;
+        return builder;
+      },
+      limit(count) {
+        limitValue = Math.max(0, count);
+        return builder;
+      },
+      offset(count) {
+        offsetValue = Math.max(0, count);
+        return builder;
+      },
+      async execute() {
+        const primaryKeyField = getPrimaryKeyField();
+        const whereClause = buildWhereClause(filters);
+
+        let query: any = database.select().from(schema).where(whereClause);
+
+        if (orderField) {
+          const column = (schema as any)[String(orderField)];
+          if (column && typeof column[orderDirection] === "function") {
+            query = query.orderBy(column[orderDirection]());
+          }
+        } else if (
+          primaryKeyField &&
+          typeof primaryKeyField.desc === "function"
+        ) {
+          query = query.orderBy(primaryKeyField.desc());
+        }
+
+        if (limitValue !== undefined) {
+          query = query.limit(limitValue);
+        }
+
+        if (offsetValue !== undefined) {
+          query = query.offset(offsetValue);
+        }
+
+        const rows = await query;
+        return formatRows(rows);
+      },
+      async first() {
+        const rows = await builder.limit(1).execute();
+        return rows[0] ?? null;
+      },
+    };
+
+    return builder;
   }
 
   async function createAction(
@@ -276,7 +388,7 @@ export function createActions<
   return {
     find: findAction,
     list: listAction,
-    query: listAction,
+    query: (filters?: RowFilters<Row>) => createQueryBuilder(filters),
     create: createAction,
     update: updateAction,
     delete: deleteAction,
