@@ -16,12 +16,12 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
       Animated.timing(translateY, {
         toValue: -150,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(opacity, {
         toValue: 0,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(({ finished }) => {
       if (finished) onHide();
@@ -33,12 +33,12 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
       Animated.timing(translateY, {
         toValue: 0,
         duration: 350,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(opacity, {
         toValue: 1,
         duration: 350,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start();
     return () => {
