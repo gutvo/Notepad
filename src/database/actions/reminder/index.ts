@@ -15,7 +15,7 @@ const reminderObserver$ = new Subject<{ type: string; payload: any }>();
 const reminderActions = createEntityActions({
   schema: reminderSchema,
   observer: reminderObserver$,
-  customActions: (reminder) => ({
+  rowActions: (reminder) => ({
     getChildren: async () => getChildren(reminder),
   }),
 });

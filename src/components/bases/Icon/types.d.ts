@@ -9,6 +9,7 @@ type BaseIconNameProps =
   | "magnify"
   | "eye-outline"
   | "content-copy"
+  | "backup-restore"
   | "trash-can-outline"
   | "cog-outline"
   | "weather-sunny"

@@ -8,7 +8,7 @@ import { useActionList } from "@Hooks/useActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
@@ -17,6 +17,13 @@ export default function NotesList() {
   const navigation = useNavigation();
   const theme = useTheme();
   const { search } = useHeader();
+  const options = useMemo(
+    () => ({
+      description: { like: search.trim() },
+      deleted_at: { isNull: true },
+    }),
+    [search],
+  );
 
   const { isOpen } = useCurrentModal("THEME");
 
@@ -33,10 +40,7 @@ export default function NotesList() {
 
   const { data } = useActionList({
     actions: actions.note,
-    options:
-      search && search.trim()
-        ? { description: { like: search.trim() } }
-        : undefined,
+    options,
   });
 
   return (

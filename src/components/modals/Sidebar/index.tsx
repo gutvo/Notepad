@@ -28,6 +28,14 @@ export default function Sidebar() {
       },
     },
     {
+      label: formatMessage({ id: "modals.sidebar.option.trash" }),
+      Left: <BaseIcon name="trash-can-outline" />,
+      onPress: () => {
+        navigation.navigate("/notes/trash");
+        closeModal();
+      },
+    },
+    {
       label: formatMessage({ id: "modals.sidebar.option.config" }),
       Left: <BaseIcon name="cog-outline" />,
       onPress: () => openModal("CONFIG"),

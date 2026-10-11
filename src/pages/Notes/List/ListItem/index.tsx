@@ -1,22 +1,19 @@
+import { NoteDataProps } from "@Actions/note";
 import BaseListItemButton from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import getFormattedDate from "@Utils/getFormattedDate";
 
-interface ListItemDataProps {
-  id: number;
-  description: string;
-  created_at: Date;
-}
-
 interface ListItemProps {
-  item: ListItemDataProps;
-  onPress?: (item: ListItemDataProps) => void;
-  onLongPress?: (item: ListItemDataProps) => void;
+  item: NoteDataProps;
+  date?: Date;
+  onPress?: (item: NoteDataProps) => void;
+  onLongPress?: (item: NoteDataProps) => void;
 }
 
 export default function ListItem({
   item,
+  date = item.created_at,
   onPress,
   onLongPress,
 }: ListItemProps) {
@@ -50,7 +47,7 @@ export default function ListItem({
       onLongPress={() => onLongPress?.(item)}
       Right={
         <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
-          {getFormattedDate(item.created_at, "DATETIME")}
+          {getFormattedDate(date, "DATETIME")}
         </BaseTypography>
       }
     />

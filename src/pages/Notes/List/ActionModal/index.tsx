@@ -50,7 +50,7 @@ export default function ActionModal({
     setIsLoading(true);
 
     try {
-      await actions.note.delete(selectedNote.id);
+      await actions.note.moveToTrash(selectedNote.id);
 
       setSelectedNote(null);
       handleCloseModal();
@@ -110,7 +110,7 @@ export default function ActionModal({
       disabled: isLoading,
     },
     {
-      label: formatMessage({ id: "modals.home-actions.action.delete" }),
+      label: formatMessage({ id: "modals.home-actions.action.trash" }),
       onPress: handleDeleteNote,
       Left: <BaseIcon name="trash-can-outline" />,
       disabled: isLoading,

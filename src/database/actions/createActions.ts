@@ -32,7 +32,7 @@ export interface ActionOptions<
   primaryKey?: keyof TRow;
   formatData?: (data: TRow) => TFormatted;
   observer?: Subject<{ type: string; payload: any }>;
-  customActions?: (row: TFormatted) => TCustom;
+  rowActions?: (row: TFormatted) => TCustom;
 }
 
 type FilterOperators<T> = {
@@ -108,7 +108,7 @@ export function createActions<
   primaryKey,
   formatData,
   observer,
-  customActions,
+  rowActions,
 }: ActionOptions<TCreate, TUpdate, TRow, TCustom, TFormatted> & {
   primaryKey?: TPrimaryKey;
 }) {
@@ -206,10 +206,10 @@ export function createActions<
 
     let formatted: Row = formatData ? formatData(row as TRow) : (row as Row);
 
-    if (customActions) {
+    if (rowActions) {
       formatted = {
         ...formatted,
-        ...customActions(formatted),
+        ...rowActions(formatted),
       } as RowWithCustom;
     }
 
@@ -221,9 +221,9 @@ export function createActions<
       ? rows.map((row) => formatData(row as TRow))
       : (rows as Row[]);
 
-    if (customActions) {
+    if (rowActions) {
       return formattedRows.map(
-        (row) => ({ ...row, ...customActions(row) }) as RowWithCustom,
+        (row) => ({ ...row, ...rowActions(row) }) as RowWithCustom,
       );
     }
 
@@ -461,6 +461,28 @@ type EntityPrimaryKey<TSchema extends AnySQLiteTable> =
     ? "id"
     : keyof InferSelectModel<TSchema> & string;
 
+type EntityActionSet<
+  TSchema extends AnySQLiteTable,
+  TPrimaryKey extends keyof InferSelectModel<TSchema>,
+  TRowActions extends Record<string, (...args: any[]) => any>,
+  TFormatted,
+> = ReturnType<
+  typeof createActions<
+    InferInsertModel<TSchema>,
+    Partial<Omit<InferInsertModel<TSchema>, TPrimaryKey>>,
+    InferSelectModel<TSchema>,
+    TRowActions,
+    TFormatted,
+    TPrimaryKey
+  >
+>;
+
+type EntityCustomActionResult<TOptions> = TOptions extends {
+  customActions: (...args: any[]) => infer TActions;
+}
+  ? TActions
+  : object;
+
 /**
  * Cria ações CRUD para uma tabela SQLite e deriva os tipos de leitura e
  * inserção diretamente do schema do Drizzle.
@@ -476,33 +498,56 @@ export function createEntityActions<
   TSchema extends AnySQLiteTable,
   TPrimaryKey extends keyof InferSelectModel<TSchema> =
     EntityPrimaryKey<TSchema>,
-  TCustom extends Record<string, (...args: any[]) => any> = Record<
+  TRowActions extends Record<string, (...args: any[]) => any> = Record<
     string,
     never
   >,
   TFormatted = InferSelectModel<TSchema>,
->({
-  schema,
-  primaryKey,
-  formatData,
-  observer,
-  customActions,
-}: {
-  schema: TSchema;
-  primaryKey?: TPrimaryKey;
-  formatData?: (data: InferSelectModel<TSchema>) => TFormatted;
-  observer?: Subject<{ type: string; payload: any }>;
-  customActions?: (row: TFormatted) => TCustom;
-}) {
-  type Row = InferSelectModel<TSchema>;
-  type Create = InferInsertModel<TSchema>;
-  type Update = Partial<Omit<Create, TPrimaryKey>>;
-
-  return createActions<Create, Update, Row, TCustom, TFormatted, TPrimaryKey>({
+  TOptions extends object = object,
+>(
+  options: {
+    schema: TSchema;
+    primaryKey?: TPrimaryKey;
+    formatData?: (data: InferSelectModel<TSchema>) => TFormatted;
+    observer?: Subject<{ type: string; payload: any }>;
+    rowActions?: (row: TFormatted) => TRowActions;
+    customActions?: (
+      actions: EntityActionSet<TSchema, TPrimaryKey, TRowActions, TFormatted>,
+    ) => object;
+  } & TOptions,
+): EntityActionSet<TSchema, TPrimaryKey, TRowActions, TFormatted> &
+  EntityCustomActionResult<TOptions> {
+  const {
     schema,
     primaryKey,
     formatData,
     observer,
+    rowActions,
     customActions,
+  } = options;
+
+  type Row = InferSelectModel<TSchema>;
+  type Create = InferInsertModel<TSchema>;
+  type Update = Partial<Omit<Create, TPrimaryKey>>;
+
+  const actions = createActions<
+    Create,
+    Update,
+    Row,
+    TRowActions,
+    TFormatted,
+    TPrimaryKey
+  >({
+    schema,
+    primaryKey,
+    formatData,
+    observer,
+    rowActions,
   });
+
+  return {
+    ...actions,
+    ...customActions?.(actions),
+  } as EntityActionSet<TSchema, TPrimaryKey, TRowActions, TFormatted> &
+    EntityCustomActionResult<TOptions>;
 }

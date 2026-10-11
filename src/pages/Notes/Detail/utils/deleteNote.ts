@@ -12,7 +12,7 @@ export default async function deleteNote({
   toast,
   formatMessage,
 }: DeleteNoteProps) {
-  await actions.note.delete(id);
+  await actions.note.moveToTrash(id);
 
   toast.success(formatMessage({ id: "messages.success.delete-note" }));
 }
