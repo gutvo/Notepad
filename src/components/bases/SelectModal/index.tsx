@@ -2,8 +2,9 @@ import BaseButton from "@Components/bases/Button";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseModal from "@Components/bases/Modal";
 import useLocale from "@Hooks/useLocale";
+import useTheme from "@Hooks/useTheme";
 import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 
 interface BaseSelectModalProps<DataProps, ValueProps> {
   isOpenModal: boolean;
@@ -29,6 +30,7 @@ export default function BaseSelectModal<DataProps, ValueProps>({
   itemHeight = 60.5, // ajuste esse valor baseado no seu item
 }: BaseSelectModalProps<DataProps, ValueProps>) {
   const { formatMessage } = useLocale();
+  const theme = useTheme();
   const { height: screenHeight } = useWindowDimensions();
 
   function handleSelectOption(item: DataProps) {
@@ -42,14 +44,12 @@ export default function BaseSelectModal<DataProps, ValueProps>({
     onClose();
   }
 
-  // Calcula a altura ideal
   const listHeight = useMemo(() => {
-    const maxHeight = screenHeight * 0.8;
+    const availableModalHeight = (screenHeight - theme.spacing(8)) * 0.8 - 40;
     const contentHeight = options.length * itemHeight;
 
-    // Retorna o menor valor entre o conteúdo e o máximo permitido
-    return Math.min(contentHeight, maxHeight);
-  }, [options.length, itemHeight, screenHeight]);
+    return Math.min(contentHeight, Math.max(availableModalHeight, 0));
+  }, [options.length, itemHeight, screenHeight, theme]);
 
   return (
     <BaseModal.Modal
@@ -58,17 +58,15 @@ export default function BaseSelectModal<DataProps, ValueProps>({
       onClose={onClose}
       style={{ minHeight: 0 }}
     >
-      <BaseModal.Container>
-        <View style={{ height: listHeight }}>
-          <BaseFlashList
-            data={options}
-            renderItem={({ item, index }) => (
-              <BaseButton onPress={() => handleSelectOption(item)}>
-                {renderItem({ item, selectedItem, index })}
-              </BaseButton>
-            )}
-          />
-        </View>
+      <BaseModal.Container style={{ height: listHeight }}>
+        <BaseFlashList
+          data={options}
+          renderItem={({ item, index }) => (
+            <BaseButton onPress={() => handleSelectOption(item)}>
+              {renderItem({ item, selectedItem, index })}
+            </BaseButton>
+          )}
+        />
       </BaseModal.Container>
     </BaseModal.Modal>
   );
