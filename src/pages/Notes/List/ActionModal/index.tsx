@@ -5,14 +5,11 @@ import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton, {
   BaseListItemButtonProps,
 } from "@Components/bases/ListItemButton";
-import { PrinterProps } from "@Hooks/useGetPrinters";
 import useLocale from "@Hooks/useLocale";
 import useModal from "@Hooks/useModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import PrinterService from "@Services/PrinterService";
-import CustomError from "@Utils/CustomError";
 import { Dispatch, SetStateAction, useState } from "react";
 
 interface ActionModalProps {
@@ -93,99 +90,6 @@ export default function ActionModal({
     openModal("REMINDER", { noteId: selectedNote.id });
   }
 
-  async function handleGetPrinterId(devices: PrinterProps[]) {
-    const defaultPrinterConfig = await actions.config.find("PRINTER_ID");
-    const findPrinter = devices.find(
-      (device) => device.id === defaultPrinterConfig?.value,
-    );
-
-    return findPrinter?.id;
-  }
-
-  async function handlePreparePrinter() {
-    const allLines = selectedNote?.description?.split(/\r?\n/) ?? [];
-    const lines = allLines.filter((text) => text.trim() !== "");
-
-    const paperSizeConfig = await actions.config.find("PAPER_SIZE");
-
-    const printerService = new PrinterService({
-      paperSize: paperSizeConfig?.value as
-        "58mm" | "65mm" | "70mm" | "76mm" | "80mm" | undefined,
-    });
-    const devices = await printerService.getAvailablePrinters();
-    const printerId = await handleGetPrinterId(devices);
-
-    if (!printerId) {
-      throw new CustomError(
-        formatMessage({ id: "messages.failure.not-found-thermal" }),
-      );
-    }
-
-    await printerService.connect(printerId);
-
-    return { printerService, lines };
-  }
-
-  async function handlePrintNote() {
-    setIsLoading(true);
-
-    try {
-      const { lines, printerService } = await handlePreparePrinter();
-
-      await printerService.print(async (printer) => {
-        lines.forEach((line) => {
-          printer.addText(line);
-          // printer.addDivider();
-        });
-
-        printer.cut();
-      });
-    } catch (error) {
-      if (error instanceof CustomError) {
-        toast.error(error.message);
-      } else {
-        toast.error(formatMessage({ id: "messages.failure.print" }));
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  // async function handlePrintList() {
-  //   setIsLoading(true);
-
-  //   try {
-  //     const { lines, printerService } = await handlePreparePrinter();
-
-  //     const formattedLines = lines.map((line) => {
-  //       const match = line.match(/^(.*?)(\d+[.,]?\d*)$/);
-
-  //       if (!match) {
-  //         return { text: line.trim(), value: "" };
-  //       }
-
-  //       return { text: match[1].trim(), value: match[2].trim() };
-  //     });
-
-  //     await printerService.print(async (printer) => {
-  //       formattedLines.forEach(({ text, value }) => {
-  //         printer.addRow(text, value);
-  //         // printer.addDivider();
-  //       });
-
-  //       printer.cut();
-  //     });
-  //   } catch (error) {
-  //     if (error instanceof CustomError) {
-  //       toast.error(error.message);
-  //     } else {
-  //       toast.error(formatMessage({ id: "messages.failure.print" }));
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }
-
   const options: BaseListItemButtonProps[] = [
     {
       label: formatMessage({ id: "modals.home-actions.action.view" }),
@@ -193,18 +97,6 @@ export default function ActionModal({
       Left: <BaseIcon name="eye-outline" />,
       disabled: isLoading,
     },
-    {
-      label: formatMessage({ id: "modals.home-actions.action.print" }),
-      onPress: handlePrintNote,
-      Left: <BaseIcon name="printer-outline" />,
-      disabled: isLoading,
-    },
-    // {
-    //   label: formatMessage({ id: "modals.home-actions.action.print-list" }),
-    //   onPress: handlePrintList,
-    //   Left: <BaseIcon name="printer-outline" />,
-    //   disabled: isLoading,
-    // },
     {
       label: formatMessage({ id: "modals.home-actions.action.add-reminder" }),
       onPress: handleAddReminder,

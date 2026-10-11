@@ -1,5 +1,4 @@
 import actions from "@Actions";
-import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
 import BaseListItem from "@Components/bases/ListItem";
 import BaseModal from "@Components/bases/Modal";
@@ -7,11 +6,9 @@ import BaseTypography from "@Components/bases/Typography";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
-import useGetPrinters from "@Hooks/useGetPrinters";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import { PAPER_SIZES } from "@Services/PrinterService";
 import { useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
@@ -24,14 +21,12 @@ export default function ConfigModal() {
   const { isOpen, closeModal } = useCurrentModal("CONFIG");
 
   const [configs] = useGetConfigs();
-  const { printers } = useGetPrinters();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
     control,
-    setValue,
     formState: { errors, isDirty, defaultValues },
   } = useForm<ConfigDefaultValueProps>({
     defaultValues: getDefaultValues(configs),
@@ -164,70 +159,6 @@ export default function ConfigModal() {
               )}
               error={Boolean(errors.textFontSize?.message)}
               helpText={errors.textFontSize?.message}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="printerId"
-          render={({ field: { onChange, value, disabled } }) => (
-            <SelectInput
-              value={value}
-              onChange={(itemValue) => onChange(itemValue.id)}
-              label={formatMessage({ id: "modals.config.fields.printer" })}
-              disabled={disabled || printers.length === 0}
-              options={printers}
-              endIcon={
-                value && (
-                  <BaseButton
-                    onPress={() =>
-                      setValue("printerId", "", { shouldDirty: true })
-                    }
-                  >
-                    <BaseIcon name="close" />
-                  </BaseButton>
-                )
-              }
-              renderInputValue={(inputValue) => (
-                <BaseTypography>{inputValue?.name}</BaseTypography>
-              )}
-              getOptionValue={(option) => option.id}
-              renderItem={({ item, selectedItem }) => (
-                <BaseListItem
-                  name={item.name}
-                  Right={item === selectedItem && <BaseIcon name="check" />}
-                  showDivider={false}
-                />
-              )}
-              error={Boolean(errors.printerId?.message)}
-              helpText={errors.printerId?.message}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="paperSize"
-          render={({ field: { onChange, value, disabled } }) => (
-            <SelectInput
-              value={value}
-              onChange={(itemValue) => onChange(itemValue)}
-              label={formatMessage({ id: "modals.config.fields.paper-size" })}
-              disabled={disabled}
-              options={Object.keys(PAPER_SIZES)}
-              renderInputValue={(inputValue) => (
-                <BaseTypography>{inputValue}</BaseTypography>
-              )}
-              renderItem={({ item, selectedItem }) => (
-                <BaseListItem
-                  name={item}
-                  Right={item === selectedItem && <BaseIcon name="check" />}
-                  showDivider={false}
-                />
-              )}
-              error={Boolean(errors.printerId?.message)}
-              helpText={errors.printerId?.message}
             />
           )}
         />
