@@ -64,16 +64,32 @@ export function createTable(
 }
 
 /**
- * Cria uma coluna de data obrigatória armazenada como timestamp Unix em
- * segundos.
+ * Cria uma coluna de data armazenada como timestamp Unix em segundos.
  *
  * O Drizzle converte o valor inteiro armazenado para um `Date` do JavaScript.
  *
  * @param columnName - Nome da coluna no banco.
- * @returns Um builder de coluna de data não nula.
+ * @param options - Use `nullable: true` para permitir valores nulos.
+ * @returns Um builder de coluna de data com nulabilidade conforme a opção.
  */
-export function addDateColumn(columnName: string) {
-  return integer(columnName, { mode: "timestamp" }).notNull();
+function createDateColumnBuilder(columnName: string) {
+  return integer(columnName, { mode: "timestamp" });
+}
+
+type DateColumnBuilder = ReturnType<typeof createDateColumnBuilder>;
+type RequiredDateColumnBuilder = ReturnType<DateColumnBuilder["notNull"]>;
+
+export function addDateColumn(columnName: string): RequiredDateColumnBuilder;
+export function addDateColumn(
+  columnName: string,
+  options: { nullable: true },
+): DateColumnBuilder;
+export function addDateColumn(
+  columnName: string,
+  options?: { nullable: true },
+) {
+  const column = createDateColumnBuilder(columnName);
+  return options?.nullable ? column : column.notNull();
 }
 
 /**
