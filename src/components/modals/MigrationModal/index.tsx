@@ -1,9 +1,9 @@
 import BaseModal from "@Components/bases/Modal";
+import BaseSpinner from "@Components/bases/Spinner";
 import BaseTypography from "@Components/bases/Typography";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import { DrizzleError } from "drizzle-orm";
-import { ActivityIndicator, View } from "react-native";
 
 interface MigrationModalProps {
   success: boolean;
@@ -23,16 +23,13 @@ export default function MigrationModal({
       visible={isOpenModal}
       title={formatMessage({ id: "modals.migration.title" })}
     >
-      <View
+      <BaseModal.Container
         style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
           gap: theme.spacing(10),
           padding: theme.spacing(5),
         }}
       >
-        <ActivityIndicator size={80} color={theme.palette.primary.main} />
+        <BaseSpinner size={80} color={theme.palette.primary.main} />
 
         {error && (
           <>
@@ -53,7 +50,7 @@ export default function MigrationModal({
             {formatMessage({ id: "modals.migration.message.progress" })}
           </BaseTypography>
         )}
-      </View>
+      </BaseModal.Container>
     </BaseModal.Modal>
   );
 }
