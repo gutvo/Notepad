@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import database from "@Database";
-import { and, eq, gt, gte, inArray, lt, lte, sql } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNull, lt, lte, sql } from "drizzle-orm";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
@@ -27,6 +27,7 @@ export interface ActionOptions<
 type FilterOperators<T> = {
   equals?: T;
   in?: T[];
+  isNull?: boolean;
   lowerThan?: T;
   greaterThan?: T;
   between?: [T, T];
@@ -139,6 +140,10 @@ export function createActions<
 
         if (operator.equals !== undefined) {
           clauses.push(eq(column, operator.equals));
+        }
+
+        if (operator.isNull === true) {
+          clauses.push(isNull(column));
         }
 
         if (operator.in && operator.in.length) {

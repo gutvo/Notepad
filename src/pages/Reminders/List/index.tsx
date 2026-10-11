@@ -3,7 +3,7 @@ import { ReminderDataProps } from "@Actions/reminder";
 import BaseFlashList from "@Components/bases/FlashList";
 import { useActionList } from "@Hooks/useActionList";
 import useNavigation from "@Hooks/useNavigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
@@ -11,15 +11,19 @@ import useHeader from "./useHeader";
 export default function RemindersList() {
   const navigation = useNavigation();
   const { search } = useHeader();
+  const options = useMemo(
+    () => ({
+      title: { like: search },
+      message: { like: search },
+      parent_id: { isNull: true },
+      notificate_at: { greaterThan: new Date() },
+    }),
+    [search],
+  );
 
   const { data } = useActionList({
     actions: actions.reminder,
-    options: {
-      title: search,
-      message: search,
-      parentId: null,
-      greaterThan: new Date(),
-    },
+    options,
   });
 
   const [isOpenModal, setIsOpenModal] = useState(false);
