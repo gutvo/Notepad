@@ -26,11 +26,11 @@ const config: ExpoConfig = {
       backgroundColor: "#f9fafb",
       foregroundImage: "./assets/images/android-icon-foreground.png",
     },
-    edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     allowBackup: false,
   },
   plugins: [
+    "expo-font",
     ["expo-router", { root: "./src/routes" }],
     ["expo-sqlite", { useSQLCipher: true }],
     [
