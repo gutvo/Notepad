@@ -32,7 +32,7 @@ export default defineConfig([
 
   {
     rules: {
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
+      "prettier/prettier": "error",
       "no-console": "error",
     },
   },
