@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import BaseTextInput from "@Components/bases/TextInput";
 import { useActionShow } from "@Hooks/useActionShow";
 import useForm from "@Hooks/useForm";
 import useLocale from "@Hooks/useLocale";
@@ -7,7 +8,6 @@ import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
-import { TextInput, View } from "react-native";
 import defaultValues from "./defaultValues";
 import useGetDefaultSettings from "./useGetDefaultSettings";
 import useHeader from "./useHeader";
@@ -93,29 +93,25 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
     Number(defaultSettings.TEXT_FONT_SIZE) || theme.fontSize(4);
 
   return (
-    <>
-      <View style={{ flex: 1 }}>
-        <Controller
-          control={control}
-          name="description"
-          render={({ field: { onChange, value, onBlur } }) => (
-            <TextInput
-              multiline
-              onBlur={onBlur}
-              value={value}
-              onChangeText={onChange}
-              textAlignVertical="top"
-              style={{
-                flex: 1,
-                padding: theme.spacing(4),
-                fontSize: resolvedFontSize,
-                backgroundColor: theme.palette.background.body,
-                color: theme.palette.text.primary,
-              }}
-            />
-          )}
+    <Controller
+      control={control}
+      name="description"
+      render={({ field: { onChange, value, onBlur } }) => (
+        <BaseTextInput
+          multiline
+          onBlur={onBlur}
+          value={value}
+          onChangeText={onChange}
+          textAlignVertical="top"
+          style={{
+            flex: 1,
+            padding: theme.spacing(4),
+            fontSize: resolvedFontSize,
+            backgroundColor: theme.palette.background.body,
+            color: theme.palette.text.primary,
+          }}
         />
-      </View>
-    </>
+      )}
+    />
   );
 }
