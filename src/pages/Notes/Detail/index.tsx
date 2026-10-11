@@ -90,7 +90,7 @@ export default function NotesDetail({ noteId }: NotesDetailProps) {
     }
   }, [note, reset]);
 
-  useHeader({ onSubmit, isDirty });
+  useHeader({ onSubmit, isDirty, noteId });
 
   const resolvedFontSize =
     Number(defaultSettings.TEXT_FONT_SIZE) || theme.fontSize(4);
