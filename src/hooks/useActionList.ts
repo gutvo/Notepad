@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Observable, Subscription } from "rxjs";
 
 interface ActionListStructure<DataType, Options> {
@@ -23,6 +23,7 @@ export function useActionList<
 }: UseActionListProps<DataType, Options, ResultType>) {
   const [data, setData] = useState<ResultType>([] as ResultType);
   const [loading, setLoading] = useState(true);
+  const isMounted = useRef(false);
 
   const load = useCallback(async (): Promise<ResultType> => {
     const normalizedOptions =
@@ -70,40 +71,53 @@ export function useActionList<
     return format ? await format(result) : (result as unknown as ResultType);
   }, [actions, options, format]);
 
+  const reload = useCallback(async (): Promise<ResultType> => {
+    setLoading(true);
+
+    try {
+      const result = await load();
+      if (isMounted.current) {
+        setData(result);
+      }
+      return result;
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
+    }
+  }, [load]);
+
   useEffect(() => {
-    let isMounted = true;
+    isMounted.current = true;
 
-    const fetchData = async () => {
-      setLoading(true);
-
+    const fetchInitialData = async () => {
       try {
         const result = await load();
-
-        if (isMounted) {
+        if (isMounted.current) {
           setData(result);
         }
       } finally {
-        if (isMounted) {
+        if (isMounted.current) {
           setLoading(false);
         }
       }
     };
 
-    void fetchData();
+    void fetchInitialData();
 
     let subscription: Subscription | undefined;
 
     if (actions.observer) {
       subscription = actions.observer.subscribe(() => {
-        void fetchData();
+        void reload();
       });
     }
 
     return () => {
-      isMounted = false;
+      isMounted.current = false;
       subscription?.unsubscribe();
     };
-  }, [actions, load]);
+  }, [actions, load, reload]);
 
-  return { data, loading, reload: load };
+  return { data, loading, reload };
 }
