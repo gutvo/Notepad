@@ -2,7 +2,18 @@
 
 import database from "@Database";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { and, eq, gt, gte, inArray, isNull, lt, lte, sql } from "drizzle-orm";
+import {
+  and,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNotNull,
+  isNull,
+  lt,
+  lte,
+  sql,
+} from "drizzle-orm";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
 import { Subject } from "rxjs";
@@ -28,6 +39,7 @@ type FilterOperators<T> = {
   equals?: T;
   in?: T[];
   isNull?: boolean;
+  isNotNull?: boolean;
   lowerThan?: T;
   greaterThan?: T;
   between?: [T, T];
@@ -144,6 +156,10 @@ export function createActions<
 
         if (operator.isNull === true) {
           clauses.push(isNull(column));
+        }
+
+        if (operator.isNotNull === true) {
+          clauses.push(isNotNull(column));
         }
 
         if (operator.in && operator.in.length) {
