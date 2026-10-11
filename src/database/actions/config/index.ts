@@ -6,8 +6,7 @@ import _formatData from "./_formatData";
 export type ConfigValueMapProps = {
   TEXT_FONT_SIZE: number;
   DAYS_BEFORE_REMINDER: number;
-  PRINTER_ID: string;
-  PAPER_SIZE: "58mm" | "65mm" | "70mm" | "76mm" | "80mm";
+  TRASH_RETENTION_DAYS: number;
 };
 
 export type ConfigRowProps = {

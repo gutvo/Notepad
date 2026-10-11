@@ -14,8 +14,7 @@ export default function useGetConfigs() {
           in: [
             "TEXT_FONT_SIZE",
             "DAYS_BEFORE_REMINDER",
-            "PRINTER_ID",
-            "PAPER_SIZE",
+            "TRASH_RETENTION_DAYS",
           ],
         },
       });

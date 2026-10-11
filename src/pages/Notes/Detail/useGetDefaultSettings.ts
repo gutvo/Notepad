@@ -10,8 +10,7 @@ export default function useGetDefaultSettings() {
     const baseDefaults: Record<ConfigKeyProps, string | boolean | number> = {
       TEXT_FONT_SIZE: 12,
       DAYS_BEFORE_REMINDER: 1,
-      PRINTER_ID: "",
-      PAPER_SIZE: "58mm",
+      TRASH_RETENTION_DAYS: 30,
     };
 
     const groupedSettings = (data as FormattedConfigDataProps[]).reduce<

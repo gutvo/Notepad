@@ -74,6 +74,9 @@ const locales = {
   "modals.config.fields.days-before-reminder":
     "Notificar dias antes do lembrete",
   "modals.config.fields.days-before-reminder-value": "{value} dias",
+  "modals.config.fields.trash-retention": "Manter notas na lixeira por",
+  "modals.config.fields.trash-retention-value": "{value} dias",
+  "modals.config.fields.trash-retention-never": "Nunca excluir automaticamente",
   "modals.config.fields.printer": "Impressora térmica",
   "modals.config.fields.paper-size": "Tamanho do papel",
 

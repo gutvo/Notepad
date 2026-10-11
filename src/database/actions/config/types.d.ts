@@ -1,8 +1,7 @@
 type ConfigValueMapProps = {
   TEXT_FONT_SIZE: number;
   DAYS_BEFORE_REMINDER: number;
-  PRINTER_ID: string;
-  PAPER_SIZE: "58mm" | "65mm" | "70mm" | "76mm" | "80mm";
+  TRASH_RETENTION_DAYS: number;
 };
 
 type ConfigTypeProps = "STRING" | "NUMBER" | "BOOLEAN";

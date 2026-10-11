@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import Sidebar from "../../components/modals/Sidebar";
 import BlankView from "./BlankView";
 import CustomStatusBar from "./CustomStatusBar";
+import useClearExpiredNotes from "./hooks/useClearExpiredNotes";
 import useClearOldReminders from "./hooks/useClearOldReminders";
 import useNotificationObserver from "./hooks/useNotificationObserver";
 import useNotificationPermission from "./hooks/useNotificationPermission";
@@ -34,6 +35,7 @@ export default function HighLevelProvider({
 
   useSaveSeeds(success);
   useClearOldReminders(success);
+  useClearExpiredNotes(success);
 
   if (isThemeLoading) return <BlankView />;
 
