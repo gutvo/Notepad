@@ -93,6 +93,7 @@ export default async function createNotification({
       return createdReminderIds;
     });
 
+    actions.reminder.notifyChange("CREATED", createdReminderIds);
     return createdReminderIds;
   } catch (error) {
     await cancelScheduledNotifications(scheduledNotificationIds);

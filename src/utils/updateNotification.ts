@@ -22,7 +22,7 @@ export default async function updateNotification({
 }: UpdateNotificationProps) {
   const days = Math.max(0, daysBefore);
 
-  await database.transaction(async (transaction) => {
+  const changedReminderIds = await database.transaction(async (transaction) => {
     const parentReminder = await actions.reminder.find(reminderId);
     if (!parentReminder) throw new Error("Reminder não encontrado");
 
@@ -121,5 +121,13 @@ export default async function updateNotification({
         },
       );
     }
+
+    return [
+      parentReminder.id,
+      ...childrenReminders.map((child) => child.id),
+      ...usedChildrenIds,
+    ];
   });
+
+  actions.reminder.notifyChange("UPDATED", [...new Set(changedReminderIds)]);
 }

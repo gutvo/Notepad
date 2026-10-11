@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import database from "@Database";
-import { and, eq, gt, gte, inArray, isNull, lt, lte, sql } from "drizzle-orm";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNull, lt, lte, sql } from "drizzle-orm";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
 import { Subject } from "rxjs";
@@ -332,7 +332,9 @@ export function createActions<
       (_, i) => Number(result.lastInsertRowId ?? 0) + i,
     );
 
-    observer?.next({ type: "CREATED", payload: { ids: lastInsertIds } });
+    if (!options?.transaction) {
+      observer?.next({ type: "CREATED", payload: { ids: lastInsertIds } });
+    }
 
     const created = await Promise.all(
       lastInsertIds.map((id) => findAction(id as PrimaryKeyValue)),
@@ -360,7 +362,9 @@ export function createActions<
       .set(data as any)
       .where(inArray(primaryKeyField, idsArray as any));
 
-    observer?.next({ type: "UPDATED", payload: { ids: idsArray } });
+    if (!options?.transaction) {
+      observer?.next({ type: "UPDATED", payload: { ids: idsArray } });
+    }
 
     const updated = await Promise.all(
       idsArray.map((id) => findAction(id as PrimaryKeyValue)),
@@ -383,7 +387,9 @@ export function createActions<
       .delete(schema)
       .where(inArray(primaryKeyField, idsArray as any));
 
-    observer?.next({ type: "DELETED", payload: { ids: idsArray } });
+    if (!options?.transaction) {
+      observer?.next({ type: "DELETED", payload: { ids: idsArray } });
+    }
     return idsArray;
   }
 
@@ -405,11 +411,20 @@ export function createActions<
     );
 
     const ids = updates.map((u) => u.id);
-    observer?.next({ type: "UPDATED", payload: { ids } });
+    if (!options?.transaction) {
+      observer?.next({ type: "UPDATED", payload: { ids } });
+    }
 
     return Promise.all(
       updates.map((update) => findAction(update.id as PrimaryKeyValue)),
     );
+  }
+
+  /**
+   * Notifica os observadores após a confirmação de uma transação externa.
+   */
+  function notifyChange(type: string, ids: PrimaryKeyValue[]) {
+    observer?.next({ type, payload: { ids } });
   }
 
   return {
@@ -420,6 +435,7 @@ export function createActions<
     update: updateAction,
     delete: deleteAction,
     updateBatch: updateBatchAction,
+    notifyChange,
     observer,
   };
 }
