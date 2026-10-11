@@ -50,7 +50,7 @@ export default function NotesList() {
             item={item}
             onPress={(item) =>
               navigation.navigate({
-                pathname: "/home/detail",
+                pathname: "/notes/detail",
                 params: { id: item.id },
               })
             }
@@ -63,7 +63,7 @@ export default function NotesList() {
       />
 
       <FloatingButton
-        onPress={() => navigation.navigate("/home/detail")}
+        onPress={() => navigation.navigate("/notes/detail")}
         icon={<BaseIcon name="plus" color={theme.palette.primary.contrast} />}
       />
 

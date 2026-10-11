@@ -40,7 +40,7 @@ export default function ActionModal({
     if (!selectedNote) return;
 
     navigation.navigate({
-      pathname: "/home/detail",
+      pathname: "/notes/detail",
       params: { id: selectedNote.id },
     });
     setSelectedNote(null);

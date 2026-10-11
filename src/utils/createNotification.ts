@@ -1,14 +1,13 @@
 import actions from "@Actions";
 import database from "@Database";
 import * as Notifications from "expo-notifications";
-import { Href } from "expo-router";
 interface CreateNotificationProps {
   title?: string; // agora opcional
   date: Date;
   daysBefore: number;
   noteId: number;
 }
-const DETAIL_PAGE_URL: Href = "/home/detail";
+const DETAIL_PAGE_URL = "/notes/detail";
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
@@ -74,8 +73,7 @@ export default async function createNotification({
               body: mainContent.body,
               sound: true,
               data: {
-                url: DETAIL_PAGE_URL,
-                params: { id: noteId },
+                url: { pathname: DETAIL_PAGE_URL, params: { id: noteId } },
               },
             },
             trigger: {
@@ -110,7 +108,9 @@ export default async function createNotification({
                 title: subContent.title,
                 body: subContent.body,
                 sound: true,
-                data: { url: DETAIL_PAGE_URL, params: { id: noteId } },
+                data: {
+                  url: { pathname: DETAIL_PAGE_URL, params: { id: noteId } },
+                },
               },
               trigger: {
                 type: Notifications.SchedulableTriggerInputTypes.DATE,
