@@ -126,6 +126,7 @@ export default function ReminderModal() {
       })}
     >
       <BaseModal.Container
+        scrollable
         style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
       >
         <Controller
