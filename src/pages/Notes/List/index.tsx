@@ -8,7 +8,7 @@ import { useActionList } from "@Hooks/useActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
@@ -38,10 +38,36 @@ export default function NotesList() {
     setIsOpenModal(true);
   }
 
-  const { data } = useActionList({
+  const formatNotes = useCallback(async (notes: NoteDataProps[]) => {
+    if (!notes.length) return [];
+
+    const reminders = await actions.reminder.list({
+      note_id: { in: notes.map((note) => note.id) },
+      deleted_at: { isNull: true },
+    });
+    const notesWithReminders = new Set(
+      reminders.map((reminder) => reminder.note_id),
+    );
+
+    return notes.map((note) => ({
+      ...note,
+      hasReminder: notesWithReminders.has(note.id),
+    }));
+  }, []);
+
+  const { data, reload } = useActionList({
     actions: actions.note,
     options,
+    format: formatNotes,
   });
+
+  useEffect(() => {
+    const subscription = actions.reminder.observer?.subscribe(() => {
+      void reload();
+    });
+
+    return () => subscription?.unsubscribe();
+  }, [reload]);
 
   return (
     <>
@@ -52,6 +78,7 @@ export default function NotesList() {
         renderItem={({ item }) => (
           <ListItem
             item={item}
+            hasReminder={"hasReminder" in item && item.hasReminder}
             onPress={(item) =>
               navigation.navigate({
                 pathname: "/notes/detail",

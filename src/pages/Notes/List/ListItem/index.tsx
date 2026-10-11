@@ -1,11 +1,14 @@
 import { NoteDataProps } from "@Actions/note";
+import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import getFormattedDate from "@Utils/getFormattedDate";
+import { View } from "react-native";
 
 interface ListItemProps {
   item: NoteDataProps;
+  hasReminder?: boolean;
   date?: Date;
   onPress?: (item: NoteDataProps) => void;
   onLongPress?: (item: NoteDataProps) => void;
@@ -13,6 +16,7 @@ interface ListItemProps {
 
 export default function ListItem({
   item,
+  hasReminder = false,
   date = item.created_at,
   onPress,
   onLongPress,
@@ -46,9 +50,18 @@ export default function ListItem({
       onPress={() => onPress?.(item)}
       onLongPress={() => onLongPress?.(item)}
       Right={
-        <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
-          {getFormattedDate(date, "DATETIME")}
-        </BaseTypography>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: theme.spacing(2),
+          }}
+        >
+          {hasReminder && <BaseIcon name="bell-outline" size="small" />}
+          <BaseTypography variant="BODY2" style={{ flexShrink: 0 }}>
+            {getFormattedDate(date, "DATETIME")}
+          </BaseTypography>
+        </View>
       }
     />
   );
