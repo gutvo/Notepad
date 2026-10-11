@@ -1,9 +1,12 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { text } from "drizzle-orm/sqlite-core";
+import { createTable } from "./tableFactory";
 
-const configSchema = sqliteTable("configs", {
-  key: text("key").$type<ConfigKeyProps>().primaryKey(),
-  type: text("type").$type<ConfigTypeProps>().notNull(),
-  value: text("value").notNull(),
+const configSchema = createTable("configs", {
+  columns: {
+    key: text("key").$type<ConfigKeyProps>().notNull().unique(),
+    type: text("type").$type<ConfigTypeProps>().notNull(),
+    value: text("value").notNull(),
+  },
 });
 
 export default configSchema;

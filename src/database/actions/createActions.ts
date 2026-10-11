@@ -2,7 +2,9 @@
 
 import database from "@Database";
 import { and, eq, gt, gte, inArray, lt, lte, sql } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
+import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
 import { Subject } from "rxjs";
 
 export interface ActionOptions<
@@ -67,6 +69,17 @@ export interface QueryBuilder<
   first: () => Promise<(TFormatted & NonNullable<TCustom>) | null>;
 }
 
+/**
+ * Cria ações CRUD tipadas e auxiliares de consulta para uma tabela do Drizzle.
+ *
+ * Aceita chaves primárias personalizadas, formatação de linhas, ações
+ * adicionais, gravações dentro de transações e um observador opcional de
+ * alterações.
+ *
+ * @param options - Schema da tabela e configurações opcionais de comportamento.
+ * @returns Ações para buscar, listar, consultar, criar, atualizar e excluir
+ * linhas, incluindo atualização em lote.
+ */
 export function createActions<
   TCreate,
   TUpdate,
@@ -404,4 +417,55 @@ export function createActions<
     updateBatch: updateBatchAction,
     observer,
   };
+}
+
+type EntityPrimaryKey<TSchema extends AnySQLiteTable> =
+  "id" extends keyof InferSelectModel<TSchema>
+    ? "id"
+    : keyof InferSelectModel<TSchema> & string;
+
+/**
+ * Cria ações CRUD para uma tabela SQLite e deriva os tipos de leitura e
+ * inserção diretamente do schema do Drizzle.
+ *
+ * Por padrão, usa `id` como chave primária quando essa coluna existe. Para
+ * schemas sem a coluna `id`, informe a chave em `primaryKey`.
+ *
+ * @param options - Schema e configurações opcionais de chave primária,
+ * formatação, observador e ações adicionais.
+ * @returns Ações CRUD tipadas a partir dos modelos de linha inferidos do schema.
+ */
+export function createEntityActions<
+  TSchema extends AnySQLiteTable,
+  TPrimaryKey extends keyof InferSelectModel<TSchema> =
+    EntityPrimaryKey<TSchema>,
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
+  TFormatted = InferSelectModel<TSchema>,
+>({
+  schema,
+  primaryKey,
+  formatData,
+  observer,
+  customActions,
+}: {
+  schema: TSchema;
+  primaryKey?: TPrimaryKey;
+  formatData?: (data: InferSelectModel<TSchema>) => TFormatted;
+  observer?: Subject<{ type: string; payload: any }>;
+  customActions?: (row: TFormatted) => TCustom;
+}) {
+  type Row = InferSelectModel<TSchema>;
+  type Create = InferInsertModel<TSchema>;
+  type Update = Partial<Omit<Create, TPrimaryKey>>;
+
+  return createActions<Create, Update, Row, TCustom, TFormatted, TPrimaryKey>({
+    schema,
+    primaryKey,
+    formatData,
+    observer,
+    customActions,
+  });
 }
