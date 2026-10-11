@@ -11,7 +11,7 @@ const noteObserver$ = new Subject<{ type: string; payload: any }>();
 const noteActions = createEntityActions({
   schema: noteSchema,
   observer: noteObserver$,
-  customActions: ({ update }) => customActions(update),
+  customActions,
 });
 
 export default noteActions;

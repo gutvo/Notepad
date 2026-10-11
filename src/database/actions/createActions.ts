@@ -461,11 +461,15 @@ type EntityPrimaryKey<TSchema extends AnySQLiteTable> =
     ? "id"
     : keyof InferSelectModel<TSchema> & string;
 
-type EntityActionSet<
+export type EntityActionsProps<
   TSchema extends AnySQLiteTable,
-  TPrimaryKey extends keyof InferSelectModel<TSchema>,
-  TRowActions extends Record<string, (...args: any[]) => any>,
-  TFormatted,
+  TPrimaryKey extends keyof InferSelectModel<TSchema> =
+    EntityPrimaryKey<TSchema>,
+  TRowActions extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
+  TFormatted = InferSelectModel<TSchema>,
 > = ReturnType<
   typeof createActions<
     InferInsertModel<TSchema>,
@@ -512,10 +516,15 @@ export function createEntityActions<
     observer?: Subject<{ type: string; payload: any }>;
     rowActions?: (row: TFormatted) => TRowActions;
     customActions?: (
-      actions: EntityActionSet<TSchema, TPrimaryKey, TRowActions, TFormatted>,
+      actions: EntityActionsProps<
+        TSchema,
+        TPrimaryKey,
+        TRowActions,
+        TFormatted
+      >,
     ) => object;
   } & TOptions,
-): EntityActionSet<TSchema, TPrimaryKey, TRowActions, TFormatted> &
+): EntityActionsProps<TSchema, TPrimaryKey, TRowActions, TFormatted> &
   EntityCustomActionResult<TOptions> {
   const {
     schema,
@@ -548,6 +557,6 @@ export function createEntityActions<
   return {
     ...actions,
     ...customActions?.(actions),
-  } as EntityActionSet<TSchema, TPrimaryKey, TRowActions, TFormatted> &
+  } as EntityActionsProps<TSchema, TPrimaryKey, TRowActions, TFormatted> &
     EntityCustomActionResult<TOptions>;
 }

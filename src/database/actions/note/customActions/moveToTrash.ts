@@ -1,5 +1,9 @@
-import { UpdateNoteProps } from "./types";
+import { noteSchema } from "@Schemas";
+import { EntityActionsProps } from "../../createActions";
 
-export default function moveToTrash(update: UpdateNoteProps, id: number) {
-  return update(id, { deleted_at: new Date() });
+export default function moveToTrash(
+  actions: EntityActionsProps<typeof noteSchema>,
+  id: number,
+) {
+  return actions.update(id, { deleted_at: new Date() });
 }

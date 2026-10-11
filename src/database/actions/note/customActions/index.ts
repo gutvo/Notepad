@@ -1,10 +1,13 @@
+import { noteSchema } from "@Schemas";
+import { EntityActionsProps } from "../../createActions";
 import moveToTrash from "./moveToTrash";
 import restore from "./restore";
-import { UpdateNoteProps } from "./types";
 
-export default function customActions(update: UpdateNoteProps) {
+type NoteActions = EntityActionsProps<typeof noteSchema>;
+
+export default function customActions(actions: NoteActions) {
   return {
-    moveToTrash: (id: number) => moveToTrash(update, id),
-    restore: (id: number) => restore(update, id),
+    moveToTrash: (id: number) => moveToTrash(actions, id),
+    restore: (id: number) => restore(actions, id),
   };
 }

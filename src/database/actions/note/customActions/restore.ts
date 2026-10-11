@@ -1,5 +1,11 @@
-import { UpdateNoteProps } from "./types";
+import { noteSchema } from "@Schemas";
+import { EntityActionsProps } from "../../createActions";
 
-export default function restore(update: UpdateNoteProps, id: number) {
-  return update(id, { deleted_at: null });
+type NoteActions = EntityActionsProps<typeof noteSchema>;
+
+export default function restore(
+  actions: NoteActions,
+  id: Parameters<NoteActions["find"]>[0],
+) {
+  return actions.update(id, { deleted_at: null });
 }
