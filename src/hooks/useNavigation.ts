@@ -1,5 +1,5 @@
-import { useNavigation as useReactNavigation } from "@react-navigation/native";
-import { useRouter, type Router } from "expo-router";
+import { useRouter } from "expo-router";
+import { useNavigation as useReactNavigation } from "expo-router/react-navigation";
 import { useCallback, useMemo } from "react";
 import useModal from "./useModal";
 
@@ -21,15 +21,13 @@ export default function useNavigation() {
   );
 
   return useMemo(() => {
-    const typedRouter: Router = router;
-
     return {
-      push: wrapNavigationMethod(typedRouter.push),
-      navigate: wrapNavigationMethod(typedRouter.navigate),
-      replace: wrapNavigationMethod(typedRouter.replace),
-      back: wrapNavigationMethod(typedRouter.back),
+      push: wrapNavigationMethod(router.push),
+      navigate: wrapNavigationMethod(router.navigate),
+      replace: wrapNavigationMethod(router.replace),
+      back: wrapNavigationMethod(router.back),
 
-      canGoBack: typedRouter.canGoBack,
+      canGoBack: router.canGoBack,
 
       setOptions: navigation.setOptions,
       addListener: navigation.addListener,
