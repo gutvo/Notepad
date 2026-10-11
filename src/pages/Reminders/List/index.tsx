@@ -17,6 +17,7 @@ export default function RemindersList() {
       message: { like: search },
       parent_id: { isNull: true },
       notificate_at: { greaterThan: new Date() },
+      deleted_at: { isNull: true },
     }),
     [search],
   );

@@ -13,6 +13,7 @@ const reminderSchema = createTable(
     title: text("title").notNull(),
     message: text("message").notNull(),
     notificate_at: addDateColumn("notificate_at"),
+    deleted_at: addDateColumn("deleted_at", { nullable: true }),
   },
   (table) => [
     foreignKey({
