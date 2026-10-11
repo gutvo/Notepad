@@ -15,11 +15,11 @@ import createNote from "./utils/createNote";
 import deleteNote from "./utils/deleteNote";
 import updateNote from "./utils/updateNote";
 
-interface HomeDetailProps {
+interface NotesDetailProps {
   noteId?: number;
 }
 
-export default function HomeDetail({ noteId }: HomeDetailProps) {
+export default function NotesDetail({ noteId }: NotesDetailProps) {
   const theme = useTheme();
   const toast = useToast();
   const navigation = useNavigation();

@@ -13,7 +13,7 @@ import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
 
-export default function HomeList() {
+export default function NotesList() {
   const navigation = useNavigation();
   const theme = useTheme();
   const { search } = useHeader();
