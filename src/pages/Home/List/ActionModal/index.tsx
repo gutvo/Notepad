@@ -1,4 +1,5 @@
 import actions from "@Actions";
+import { NoteDataProps } from "@Actions/note";
 import BaseBottomModal from "@Components/bases/BottomModal";
 import BaseIcon from "@Components/bases/Icon";
 import BaseListItemButton, {
@@ -70,7 +71,10 @@ export default function ActionModal({
 
     setIsLoading(true);
     try {
-      await actions.note.create({ description: selectedNote.description });
+      await actions.note.create({
+        description: selectedNote.description,
+        created_at: new Date(),
+      });
 
       setSelectedNote(null);
       handleCloseModal();
@@ -105,7 +109,13 @@ export default function ActionModal({
     const paperSizeConfig = await actions.config.find("PAPER_SIZE");
 
     const printerService = new PrinterService({
-      paperSize: paperSizeConfig?.value,
+      paperSize: paperSizeConfig?.value as
+        | "58mm"
+        | "65mm"
+        | "70mm"
+        | "76mm"
+        | "80mm"
+        | undefined,
     });
     const devices = await printerService.getAvailablePrinters();
     const printerId = await handleGetPrinterId(devices);

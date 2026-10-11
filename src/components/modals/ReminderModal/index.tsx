@@ -1,16 +1,16 @@
 import actions from "@Actions";
 import BaseModal from "@Components/bases/Modal";
 import DatePicker from "@Components/inputs/DatePicker";
-import TextField from "@Components/inputs/TextField";
+import TextInput from "@Components/inputs/TextInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
+import updateNotification from "@Utils/updateNoficiation";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 import createNotification from "../../../utils/createNotification";
-import deleteNotification from "../../../utils/deleteNotification";
 import getDefaultValues from "./getDefaultValues";
 import useGetConfigs from "./useGetConfigs";
 import useGetReminder from "./useGetReminder";
@@ -40,26 +40,19 @@ export default function ReminderModal() {
     defaultValues: getDefaultValues(reminder),
   });
 
-  function formatDescriptionAsName(
-    description: string,
-    maxLength: number = 50,
+  function getReminderTitle(
+    userTitle: string | undefined,
+    noteDescription: string,
+    maxLength = 50,
   ) {
-    if (!description) return "";
-
-    // Pega a primeira linha
-    const firstLine = description.split("\n")[0].trim();
-
-    // Limita ao tamanho máximo
-    if (firstLine.length > maxLength) {
-      return firstLine.substring(0, maxLength).trim() + "...";
-    }
-
-    return firstLine;
+    if (userTitle && userTitle.trim()) return userTitle.trim();
+    const firstLine = noteDescription.split("\n")[0].trim();
+    if (firstLine.length <= maxLength) return firstLine;
+    return firstLine.substring(0, maxLength).trim() + "...";
   }
 
   async function handleConfirm(formData: ReminderFormDataProps) {
     if (!isDirty || !data?.noteId) return;
-
     setIsLoading(true);
 
     try {
@@ -70,19 +63,23 @@ export default function ReminderModal() {
         return;
       }
 
-      const formattedTitle =
-        formData.name || formatDescriptionAsName(note.description);
+      const formattedTitle = getReminderTitle(formData.name, note.description);
 
       if (data.id) {
-        await deleteNotification({ reminderId: data.id });
+        await updateNotification({
+          reminderId: data.id,
+          title: formattedTitle,
+          date: formData.notify_at,
+          daysBefore: daysBeforeSetting,
+        });
+      } else {
+        await createNotification({
+          title: formattedTitle,
+          date: formData.notify_at,
+          daysBefore: daysBeforeSetting,
+          noteId: data.noteId,
+        });
       }
-
-      await createNotification({
-        title: formattedTitle,
-        date: formData.notify_at,
-        daysBefore: daysBeforeSetting,
-        noteId: data.noteId,
-      });
 
       toast.success(
         formatMessage({
@@ -135,7 +132,7 @@ export default function ReminderModal() {
           control={control}
           name="name"
           render={({ field: { value, disabled, onBlur, onChange } }) => (
-            <TextField
+            <TextInput
               value={value}
               onChangeText={onChange}
               label={formatMessage({ id: "modals.reminders.fields-name" })}
@@ -160,9 +157,7 @@ export default function ReminderModal() {
               onChange={onChange}
               required
               disabled={disabled}
-              label={formatMessage({
-                id: "modals.reminders.fields-notify-at",
-              })}
+              label={formatMessage({ id: "modals.reminders.fields-notify-at" })}
               error={Boolean(errors.notify_at?.message)}
               helpText={errors.notify_at?.message}
               placeholder={formatMessage({

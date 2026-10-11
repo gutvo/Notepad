@@ -1,3 +1,6 @@
+import actions from "@Actions";
+import BaseTextInput from "@Components/bases/TextInput";
+import { useActionShow } from "@Hooks/useActionShow";
 import useForm from "@Hooks/useForm";
 import useLocale from "@Hooks/useLocale";
 import useNavigation from "@Hooks/useNavigation";
@@ -5,10 +8,8 @@ import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
-import { TextInput, View } from "react-native";
 import defaultValues from "./defaultValues";
 import useGetDefaultSettings from "./useGetDefaultSettings";
-import useGetNote from "./useGetNote";
 import useHeader from "./useHeader";
 import createNote from "./utils/createNote";
 import deleteNote from "./utils/deleteNote";
@@ -24,7 +25,10 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
   const navigation = useNavigation();
   const { formatMessage } = useLocale();
 
-  const [note] = useGetNote({ noteId });
+  const { data: note } = useActionShow({
+    actions: actions.note,
+    id: noteId,
+  });
 
   const [defaultSettings] = useGetDefaultSettings();
 
@@ -85,32 +89,29 @@ export default function HomeDetail({ noteId }: HomeDetailProps) {
 
   useHeader({ onSubmit, isDirty });
 
+  const resolvedFontSize =
+    Number(defaultSettings.TEXT_FONT_SIZE) || theme.fontSize(4);
+
   return (
-    <>
-      <View style={{ flex: 1 }}>
-        <Controller
-          control={control}
-          name="description"
-          render={({ field: { onChange, value, onBlur } }) => (
-            <TextInput
-              multiline
-              onBlur={onBlur}
-              value={value}
-              onChangeText={onChange}
-              textAlignVertical="top"
-              style={{
-                flex: 1,
-                padding: theme.spacing(4),
-                fontSize:
-                  (defaultSettings.TEXT_FONT_SIZE as number) ??
-                  theme.fontSize(4),
-                backgroundColor: theme.palette.background.body,
-                color: theme.palette.text.primary,
-              }}
-            />
-          )}
+    <Controller
+      control={control}
+      name="description"
+      render={({ field: { onChange, value, onBlur } }) => (
+        <BaseTextInput
+          multiline
+          onBlur={onBlur}
+          value={value}
+          onChangeText={onChange}
+          textAlignVertical="top"
+          style={{
+            flex: 1,
+            padding: theme.spacing(4),
+            fontSize: resolvedFontSize,
+            backgroundColor: theme.palette.background.body,
+            color: theme.palette.text.primary,
+          }}
         />
-      </View>
-    </>
+      )}
+    />
   );
 }

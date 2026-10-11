@@ -1,3 +1,5 @@
+import { ReminderDataProps } from "@Actions/reminder";
+
 export default function getDefaultValues(reminder?: ReminderDataProps) {
   return {
     name: reminder?.title || "",

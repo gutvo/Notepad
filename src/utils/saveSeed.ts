@@ -1,6 +1,9 @@
 type ActionProps<DataProps> = {
   list: () => Promise<DataProps[]>;
-  create: (data: DataProps) => Promise<DataProps>;
+  create: {
+    (data: DataProps): Promise<DataProps>;
+    (data: DataProps[]): Promise<DataProps[]>;
+  };
 };
 
 interface SaveSeedProps<DataProps> {

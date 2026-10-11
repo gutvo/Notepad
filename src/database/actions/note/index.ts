@@ -1,15 +1,21 @@
-import createNote from "./create";
-import deleteNote from "./delete";
-import findNote from "./find";
-import listNotes from "./list";
-import updateNote from "./update";
+import { noteSchema } from "@Schemas";
+import { Subject } from "rxjs";
+import { createActions } from "../createActions";
 
-const noteActions = {
-  list: listNotes,
-  create: createNote,
-  update: updateNote,
-  delete: deleteNote,
-  find: findNote,
-};
+type NoteRowProps = typeof noteSchema.$inferSelect;
+type NoteCreateProps = Omit<NoteRowProps, "id">;
+type NoteUpdateProps = Partial<Omit<NoteRowProps, "id">>;
+export type NoteDataProps = NoteRowProps;
+
+const noteObserver$ = new Subject<{ type: string; payload: any }>();
+
+const noteActions = createActions<
+  NoteCreateProps,
+  NoteUpdateProps,
+  NoteRowProps
+>({
+  schema: noteSchema,
+  observer: noteObserver$,
+});
 
 export default noteActions;

@@ -14,10 +14,10 @@ const defaultColors = {
   },
 
   warning: {
-    light: "#fbbf24",
-    main: "#b45309",
-    dark: "#451a03",
-    contrast: "#ffffff",
+    light: "#fcd34d",
+    main: "#d97706",
+    dark: "#92400e",
+    contrast: "#111827",
   },
 
   error: {

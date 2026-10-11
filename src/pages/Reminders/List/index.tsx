@@ -1,20 +1,25 @@
 import actions from "@Actions";
+import { ReminderDataProps } from "@Actions/reminder";
 import BaseFlashList from "@Components/bases/FlashList";
 import { useActionList } from "@Hooks/useActionList";
-import useModal from "@Hooks/useModal";
+import useNavigation from "@Hooks/useNavigation";
 import { useState } from "react";
 import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
 
 export default function RemindersList() {
+  const navigation = useNavigation();
   const { search } = useHeader();
-  const { openModal } = useModal();
 
-  const { data } = useActionList(actions.reminder.list, {
-    search,
-    parentId: null,
-    greaterThan: new Date(),
+  const { data } = useActionList({
+    actions: actions.reminder,
+    options: {
+      title: search,
+      message: search,
+      parentId: null,
+      greaterThan: new Date(),
+    },
   });
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -41,7 +46,10 @@ export default function RemindersList() {
               handleOpenModal();
             }}
             onPress={() =>
-              openModal("REMINDER", { id: item.id, noteId: item.note_id })
+              navigation.navigate({
+                pathname: "/reminders/detail",
+                params: { id: item.id },
+              })
             }
           />
         )}

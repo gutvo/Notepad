@@ -95,6 +95,11 @@ const locales = {
   "pages.home-list.title": "Página Inicial",
 
   "pages.home-detail.title": "Detalhes",
+
+  "pages.reminder-list.title": "Lembretes",
+
+  "pages.reminder-detail.title": "Lembrete",
+  "pages.reminder-detail.children": "Notificações antecipadas",
 } as const;
 
 export type LocaleKeysProps = keyof typeof locales;

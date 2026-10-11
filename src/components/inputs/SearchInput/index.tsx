@@ -1,4 +1,4 @@
-import BaseTextField from "@Components/bases/TextField";
+import BaseTextInput from "@Components/bases/TextInput";
 import useTheme from "@Hooks/useTheme";
 import { Dispatch, SetStateAction } from "react";
 
@@ -14,7 +14,7 @@ export default function SearchInput({
   const theme = useTheme();
 
   return (
-    <BaseTextField
+    <BaseTextInput
       onChangeText={(value) => setInputSearch(value)}
       value={inputSearch}
       style={{

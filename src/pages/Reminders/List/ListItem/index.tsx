@@ -1,3 +1,4 @@
+import { ReminderDataProps } from "@Actions/reminder";
 import BaseListItemButton from "@Components/bases/ListItemButton";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
