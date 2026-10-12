@@ -1,15 +1,18 @@
 import actions from "@Actions";
 import { ReminderDataProps } from "@Actions/reminder";
 import BaseFlashList from "@Components/bases/FlashList";
-import { useActionList } from "@Hooks/useActionList";
+import { usePaginatedActionList } from "@Hooks/usePaginatedActionList";
 import useNavigation from "@Hooks/useNavigation";
+import useTheme from "@Hooks/useTheme";
 import { useMemo, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
 
 export default function RemindersList() {
   const navigation = useNavigation();
+  const theme = useTheme();
   const { search } = useHeader();
   const options = useMemo(
     () => ({
@@ -22,7 +25,7 @@ export default function RemindersList() {
     [search],
   );
 
-  const { data } = useActionList({
+  const { data, loadingMore, loadMore } = usePaginatedActionList({
     actions: actions.reminder,
     options,
   });
@@ -43,6 +46,16 @@ export default function RemindersList() {
     <>
       <BaseFlashList
         data={data}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          loadingMore ? (
+            <ActivityIndicator
+              color={theme.palette.primary.main}
+              style={{ padding: theme.spacing(4) }}
+            />
+          ) : null
+        }
         renderItem={({ item }) => (
           <ListItem
             item={item}

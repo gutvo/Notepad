@@ -2,12 +2,12 @@ import actions from "@Actions";
 import { NoteDataProps } from "@Actions/note";
 import BaseFlashList from "@Components/bases/FlashList";
 import BaseTypography from "@Components/bases/Typography";
-import { useActionList } from "@Hooks/useActionList";
+import { usePaginatedActionList } from "@Hooks/usePaginatedActionList";
 import useLocale from "@Hooks/useLocale";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import { useLayoutEffect, useMemo, useState } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import ActionModal from "./ActionModal";
 import ListItem from "../List/ListItem";
 
@@ -18,7 +18,7 @@ export default function NotesTrash() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState<NoteDataProps | null>(null);
   const options = useMemo(() => ({ deleted_at: { isNotNull: true } }), []);
-  const { data } = useActionList({
+  const { data, loading, loadingMore, loadMore } = usePaginatedActionList({
     actions: actions.note,
     options,
   });
@@ -34,6 +34,16 @@ export default function NotesTrash() {
       {data.length ? (
         <BaseFlashList
           data={data}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            loadingMore ? (
+              <ActivityIndicator
+                color={theme.palette.primary.main}
+                style={{ padding: theme.spacing(4) }}
+              />
+            ) : null
+          }
           renderItem={({ item }) => (
             <ListItem
               item={item}
@@ -49,6 +59,16 @@ export default function NotesTrash() {
             />
           )}
         />
+      ) : loading ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator color={theme.palette.primary.main} />
+        </View>
       ) : (
         <View
           style={{

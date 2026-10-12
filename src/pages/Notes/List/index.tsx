@@ -4,11 +4,12 @@ import BaseFlashList from "@Components/bases/FlashList";
 import BaseIcon from "@Components/bases/Icon";
 import FloatingButton from "@Components/buttons/FloatButton";
 import ThemeModal from "@Components/modals/ThemeModal";
-import { useActionList } from "@Hooks/useActionList";
+import { usePaginatedActionList } from "@Hooks/usePaginatedActionList";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import ActionModal from "./ActionModal";
 import ListItem from "./ListItem";
 import useHeader from "./useHeader";
@@ -55,7 +56,7 @@ export default function NotesList() {
     }));
   }, []);
 
-  const { data, reload } = useActionList({
+  const { data, loadingMore, loadMore, reload } = usePaginatedActionList({
     actions: actions.note,
     options,
     format: formatNotes,
@@ -75,6 +76,16 @@ export default function NotesList() {
 
       <BaseFlashList
         data={data}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          loadingMore ? (
+            <ActivityIndicator
+              color={theme.palette.primary.main}
+              style={{ padding: theme.spacing(4) }}
+            />
+          ) : null
+        }
         renderItem={({ item }) => (
           <ListItem
             item={item}
