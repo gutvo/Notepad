@@ -46,13 +46,14 @@ export default function ActionModal({
   async function handleDuplicateNote() {
     if (!noteId) return;
 
-    setIsLoading(true);
+    const description = getDescription();
+    onClose();
+
     try {
       const duplicatedNote = await actions.note.create({
-        description: getDescription(),
+        description,
         created_at: new Date(),
       });
-      onClose();
       toast.success(formatMessage({ id: "messages.success.duplicate-note" }));
       navigation.replace({
         pathname: "/notes/detail",
@@ -60,8 +61,6 @@ export default function ActionModal({
       });
     } catch {
       toast.error(formatMessage({ id: "messages.failure.duplicate-note" }));
-    } finally {
-      setIsLoading(false);
     }
   }
 
