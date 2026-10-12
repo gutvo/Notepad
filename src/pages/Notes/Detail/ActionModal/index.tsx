@@ -46,10 +46,11 @@ export default function ActionModal({
   async function handleDuplicateNote() {
     if (!noteId) return;
 
-    const description = getDescription();
     onClose();
 
     try {
+      const description = getDescription();
+
       const duplicatedNote = await actions.note.create({
         description,
         created_at: new Date(),
@@ -67,10 +68,12 @@ export default function ActionModal({
   async function handleMoveToTrash() {
     if (!noteId) return;
 
-    setIsLoading(true);
+    onClose();
+
     try {
+      setIsLoading(true);
+
       await actions.note.moveToTrash(noteId);
-      onClose();
       toast.success(formatMessage({ id: "messages.success.delete-note" }));
       navigation.back();
     } catch {
