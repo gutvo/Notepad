@@ -8,8 +8,10 @@ import useNavigation from "@Hooks/useNavigation";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
 import { useHeaderHeight } from "expo-router/react-navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller } from "react-hook-form";
+import { EmitterSubscription, Keyboard } from "react-native";
+import ActionModal from "./ActionModal";
 import defaultValues from "./defaultValues";
 import useGetDefaultSettings from "./useGetDefaultSettings";
 import useHeader from "./useHeader";
@@ -32,12 +34,15 @@ export default function NotesDetail({ noteId }: NotesDetailProps) {
     actions: actions.note,
     id: noteId,
   });
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const keyboardListener = useRef<EmitterSubscription | null>(null);
 
   const [defaultSettings] = useGetDefaultSettings();
 
   const {
     control,
     reset,
+    getValues,
     handleSubmit,
     formState: { isDirty },
   } = useForm<{ description: string }>({
@@ -90,37 +95,69 @@ export default function NotesDetail({ noteId }: NotesDetailProps) {
     }
   }, [note, reset]);
 
-  useHeader({ onSubmit, isDirty, noteId });
+  const openActions = useCallback(() => {
+    if (!Keyboard.isVisible()) {
+      setIsActionModalOpen(true);
+      return;
+    }
+
+    keyboardListener.current?.remove();
+    const listener = Keyboard.addListener("keyboardDidHide", () => {
+      listener.remove();
+      keyboardListener.current = null;
+      setIsActionModalOpen(true);
+    });
+    keyboardListener.current = listener;
+    Keyboard.dismiss();
+  }, []);
+
+  useEffect(
+    () => () => {
+      keyboardListener.current?.remove();
+    },
+    [],
+  );
+
+  useHeader({ onSubmit, isDirty, onOpenActions: openActions });
 
   const resolvedFontSize =
     Number(defaultSettings.TEXT_FONT_SIZE) || theme.fontSize(4);
 
   return (
-    <Controller
-      control={control}
-      name="description"
-      render={({ field: { onChange, value, onBlur } }) => (
-        <BaseKeyboardAvoidingView
-          keyboardVerticalOffset={headerHeight}
-          style={{ flex: 1 }}
-        >
-          <BaseTextInput
-            multiline
-            scrollEnabled
-            onBlur={onBlur}
-            value={value}
-            onChangeText={onChange}
-            textAlignVertical="top"
-            style={{
-              flex: 1,
-              padding: theme.spacing(4),
-              fontSize: resolvedFontSize,
-              backgroundColor: theme.palette.background.body,
-              color: theme.palette.text.primary,
-            }}
-          />
-        </BaseKeyboardAvoidingView>
-      )}
-    />
+    <>
+      <Controller
+        control={control}
+        name="description"
+        render={({ field: { onChange, value, onBlur } }) => (
+          <BaseKeyboardAvoidingView
+            keyboardVerticalOffset={headerHeight}
+            style={{ flex: 1 }}
+          >
+            <BaseTextInput
+              multiline
+              scrollEnabled
+              onBlur={onBlur}
+              value={value}
+              onChangeText={onChange}
+              textAlignVertical="top"
+              style={{
+                flex: 1,
+                padding: theme.spacing(4),
+                fontSize: resolvedFontSize,
+                backgroundColor: theme.palette.background.body,
+                color: theme.palette.text.primary,
+              }}
+            />
+          </BaseKeyboardAvoidingView>
+        )}
+      />
+
+      <ActionModal
+        isOpen={isActionModalOpen}
+        onClose={() => setIsActionModalOpen(false)}
+        noteId={noteId}
+        getDescription={() => getValues("description")}
+      />
+    </>
   );
 }

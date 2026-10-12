@@ -26,4 +26,5 @@ type BaseIconNameProps =
   | "pencil-outline"
   | "printer-outline"
   | "chevron-down"
+  | "dots-vertical"
   | "clock-time-eight-outline";

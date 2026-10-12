@@ -39,6 +39,7 @@ export default function BaseCalendarModal({
       title={formatMessage({ id: "modals.calendar.title" })}
       onClose={onClose}
       visible={isOpenModal}
+      avoidKeyboard={false}
       style={{ width: width * 0.9 }}
     >
       <BaseModal.Container style={{ flex: 0 }}>

@@ -1,5 +1,6 @@
 import getFormattedDate from "@Utils/getFormattedDate";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { EmitterSubscription, Keyboard } from "react-native";
 import BaseButton from "../Button";
 import BaseCalendarModal, { BaseCalendarModalProps } from "../CalendarModal";
 import BaseTypography from "../Typography";
@@ -28,6 +29,14 @@ export default function BaseDatePicker({
   const [internalValue, setInternalValue] = useState<Date | undefined>(
     defaultValue,
   );
+  const keyboardListener = useRef<EmitterSubscription | null>(null);
+
+  useEffect(
+    () => () => {
+      keyboardListener.current?.remove();
+    },
+    [],
+  );
 
   // Determina se o componente é controlado
   const isControlled = value !== undefined;
@@ -35,9 +44,20 @@ export default function BaseDatePicker({
 
   // Memoiza os handlers para evitar re-renders desnecessários
   const handleOpenModal = useCallback(() => {
-    if (!disabled) {
+    if (disabled) return;
+
+    if (!Keyboard.isVisible()) {
       setIsOpenModal(true);
+      return;
     }
+
+    keyboardListener.current?.remove();
+    keyboardListener.current = Keyboard.addListener("keyboardDidHide", () => {
+      keyboardListener.current?.remove();
+      keyboardListener.current = null;
+      setIsOpenModal(true);
+    });
+    Keyboard.dismiss();
   }, [disabled]);
 
   const handleCloseModal = useCallback(() => {

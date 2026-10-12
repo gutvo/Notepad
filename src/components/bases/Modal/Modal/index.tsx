@@ -17,6 +17,7 @@ export interface BaseModalProps {
   title?: string;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  avoidKeyboard?: boolean;
 }
 
 export default function BaseModalModal({
@@ -25,6 +26,7 @@ export default function BaseModalModal({
   title,
   children,
   style,
+  avoidKeyboard = true,
 }: BaseModalProps) {
   const theme = useTheme();
 
@@ -39,7 +41,7 @@ export default function BaseModalModal({
 
   return (
     <BaseModalWrapper visible={visible} onRequestClose={onClose}>
-      <BaseKeyboardAvoidingView style={{ flex: 1 }}>
+      <ModalContent avoidKeyboard={avoidKeyboard}>
         <TouchableWithoutFeedback onPress={onClose}>
           <View
             style={{
@@ -76,7 +78,25 @@ export default function BaseModalModal({
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
-      </BaseKeyboardAvoidingView>
+      </ModalContent>
     </BaseModalWrapper>
+  );
+}
+
+function ModalContent({
+  avoidKeyboard,
+  children,
+}: {
+  avoidKeyboard: boolean;
+  children: React.ReactNode;
+}) {
+  if (!avoidKeyboard) {
+    return <View style={{ flex: 1 }}>{children}</View>;
+  }
+
+  return (
+    <BaseKeyboardAvoidingView style={{ flex: 1 }}>
+      {children}
+    </BaseKeyboardAvoidingView>
   );
 }

@@ -32,6 +32,10 @@ export default function BottomModalModal({
       ref={bottomSheetRef}
       enableDynamicSizing
       enablePanDownToClose
+      enableBlurKeyboardOnGesture={false}
+      keyboardBehavior="extend"
+      keyboardBlurBehavior="none"
+      android_keyboardInputMode="adjustResize"
       onClose={onClose}
       index={-1}
       onChange={(index) => {
