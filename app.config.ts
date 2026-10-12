@@ -15,13 +15,6 @@ const config: ExpoConfig = {
   },
   android: {
     package: "com.anonymous.notepad",
-    permissions: [
-      "BLUETOOTH",
-      "BLUETOOTH_ADMIN",
-      "BLUETOOTH_SCAN",
-      "BLUETOOTH_CONNECT",
-      "ACCESS_FINE_LOCATION",
-    ],
     adaptiveIcon: {
       backgroundColor: "#f9fafb",
       foregroundImage: "./assets/images/android-icon-foreground.png",
