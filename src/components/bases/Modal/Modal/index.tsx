@@ -2,6 +2,7 @@ import BaseKeyboardAvoidingView from "@Components/bases/KeyboardAvoidingView";
 import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
+import ToastProvider from "@Providers/ToastProvider";
 import React from "react";
 import {
   StyleProp,
@@ -41,44 +42,46 @@ export default function BaseModalModal({
 
   return (
     <BaseModalWrapper visible={visible} onRequestClose={onClose}>
-      <ModalContent avoidKeyboard={avoidKeyboard}>
-        <TouchableWithoutFeedback onPress={onClose}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "rgba(0,0,0,0.5)",
-              padding: theme.spacing(4),
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <TouchableWithoutFeedback>
-              <View
-                style={[
-                  {
-                    backgroundColor: theme.palette.background.body,
-                    borderRadius: 4,
-                    elevation: 5, // Android shadow
-                    shadowColor: theme.palette.common.black, // iOS shadow
-                    shadowOpacity: 0.2,
-                    shadowRadius: 10,
-                    shadowOffset: { width: 0, height: 4 },
-                    maxHeight: "80%",
-                    minWidth: "90%",
-                    flexShrink: 1,
-                  },
-                  style,
-                ]}
-              >
-                {(title || onClose) && (
-                  <BasemodalHeader title={title} onClose={onClose} />
-                )}
-                {children}
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </ModalContent>
+      <ToastProvider>
+        <ModalContent avoidKeyboard={avoidKeyboard}>
+          <TouchableWithoutFeedback onPress={onClose}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "rgba(0,0,0,0.5)",
+                padding: theme.spacing(4),
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableWithoutFeedback>
+                <View
+                  style={[
+                    {
+                      backgroundColor: theme.palette.background.body,
+                      borderRadius: 4,
+                      elevation: 5, // Android shadow
+                      shadowColor: theme.palette.common.black, // iOS shadow
+                      shadowOpacity: 0.2,
+                      shadowRadius: 10,
+                      shadowOffset: { width: 0, height: 4 },
+                      maxHeight: "80%",
+                      minWidth: "90%",
+                      flexShrink: 1,
+                    },
+                    style,
+                  ]}
+                >
+                  {(title || onClose) && (
+                    <BasemodalHeader title={title} onClose={onClose} />
+                  )}
+                  {children}
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </ModalContent>
+      </ToastProvider>
     </BaseModalWrapper>
   );
 }

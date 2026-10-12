@@ -1,6 +1,7 @@
 import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
+import ToastProvider from "@Providers/ToastProvider";
 import { ReactNode, useEffect, useState } from "react";
 import { Animated, Dimensions, Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -68,33 +69,35 @@ export default function BaseDrawer({
       animationType="none"
       onRequestClose={onClose}
     >
-      <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: theme.palette.common.black,
-              opacity: overlayOpacity,
-            },
-          ]}
-        />
-      </Pressable>
+      <ToastProvider active={visible}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: theme.palette.common.black,
+                opacity: overlayOpacity,
+              },
+            ]}
+          />
+        </Pressable>
 
-      <Animated.View
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: DRAWER_WIDTH,
-          backgroundColor: theme.palette.background.body,
-          transform: [{ translateX }],
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-        }}
-      >
-        {children}
-      </Animated.View>
+        <Animated.View
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: DRAWER_WIDTH,
+            backgroundColor: theme.palette.background.body,
+            transform: [{ translateX }],
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }}
+        >
+          {children}
+        </Animated.View>
+      </ToastProvider>
     </BaseModalWrapper>
   );
 }

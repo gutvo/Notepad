@@ -1,5 +1,6 @@
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import useTheme from "@Hooks/useTheme";
+import ToastProvider from "@Providers/ToastProvider";
 import { ReactNode, useEffect, useRef } from "react";
 import BottomModalContext from "../context";
 
@@ -53,9 +54,11 @@ export default function BottomModalModal({
         backgroundColor: theme.palette.text.secondary,
       }}
     >
-      <BottomModalContext.Provider value={{ title }}>
-        {children}
-      </BottomModalContext.Provider>
+      <ToastProvider active={isOpen}>
+        <BottomModalContext.Provider value={{ title }}>
+          {children}
+        </BottomModalContext.Provider>
+      </ToastProvider>
     </BottomSheet>
   );
 }
