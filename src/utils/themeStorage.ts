@@ -1,44 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const THEME_INDEX_KEY = "@notepad:theme_index";
-const THEME_DARK_MODE_KEY = "@notepad:theme_dark_mode";
-
-const DEFAULT_THEME_INDEX = 0;
-const DEFAULT_DARK_MODE = true;
-
-export async function getThemeIndex(): Promise<number> {
-  try {
-    const value = await AsyncStorage.getItem(THEME_INDEX_KEY);
-    return value ? parseInt(value, 10) : DEFAULT_THEME_INDEX;
-  } catch {
-    return DEFAULT_THEME_INDEX;
-  }
-}
-
-export async function setThemeIndex(index: number): Promise<void> {
-  try {
-    await AsyncStorage.setItem(THEME_INDEX_KEY, String(index));
-  } catch {
-    // Silently fail
-  }
-}
-
-export async function getDarkMode(): Promise<boolean> {
-  try {
-    const value = await AsyncStorage.getItem(THEME_DARK_MODE_KEY);
-    return value ? JSON.parse(value) : DEFAULT_DARK_MODE;
-  } catch {
-    return DEFAULT_DARK_MODE;
-  }
-}
-
-export async function setDarkMode(isDarkMode: boolean): Promise<void> {
-  try {
-    await AsyncStorage.setItem(THEME_DARK_MODE_KEY, JSON.stringify(isDarkMode));
-  } catch {
-    // Silently fail
-  }
-}
+import actions from "@Actions";
+import { themes } from "@Theme/themes";
+import { Appearance } from "react-native";
 
 export type ThemeStorageConfigProps = {
   themeIndex: number;
@@ -47,12 +9,37 @@ export type ThemeStorageConfigProps = {
 
 export async function getThemeConfig(): Promise<ThemeStorageConfigProps> {
   const [themeIndex, isDarkMode] = await Promise.all([
-    getThemeIndex(),
-    getDarkMode(),
+    actions.config.find("THEME_INDEX"),
+    actions.config.find("THEME_IS_DARK_MODE"),
   ]);
 
+  const storedThemeIndex = themeIndex?.parsedValue;
+
   return {
-    themeIndex,
-    isDarkMode,
+    themeIndex:
+      typeof storedThemeIndex === "number" &&
+      Number.isInteger(storedThemeIndex) &&
+      storedThemeIndex >= 0 &&
+      storedThemeIndex < themes.length
+        ? storedThemeIndex
+        : 0,
+    isDarkMode:
+      typeof isDarkMode?.parsedValue === "boolean"
+        ? isDarkMode.parsedValue
+        : Appearance.getColorScheme() === "dark",
   };
+}
+
+export async function setThemeIndex(index: number): Promise<void> {
+  await actions.config.update("THEME_INDEX", {
+    value: String(index),
+    type: "NUMBER",
+  });
+}
+
+export async function setDarkMode(isDarkMode: boolean): Promise<void> {
+  await actions.config.update("THEME_IS_DARK_MODE", {
+    value: String(isDarkMode),
+    type: "BOOLEAN",
+  });
 }

@@ -7,7 +7,11 @@ export default function _formatData(data: ConfigRowProps) {
     case "TEXT_FONT_SIZE":
     case "DAYS_BEFORE_REMINDER":
     case "TRASH_RETENTION_DAYS":
+    case "THEME_INDEX":
       parsedValue = Number(data.value);
+      break;
+    case "THEME_IS_DARK_MODE":
+      parsedValue = data.value === "true";
       break;
     default:
       parsedValue = data.value;

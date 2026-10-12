@@ -7,6 +7,8 @@ export type ConfigValueMapProps = {
   TEXT_FONT_SIZE: number;
   DAYS_BEFORE_REMINDER: number;
   TRASH_RETENTION_DAYS: number;
+  THEME_INDEX: number;
+  THEME_IS_DARK_MODE: boolean;
 };
 
 export type ConfigRowProps = {

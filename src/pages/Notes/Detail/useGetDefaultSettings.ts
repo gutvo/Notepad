@@ -11,6 +11,8 @@ export default function useGetDefaultSettings() {
       TEXT_FONT_SIZE: 12,
       DAYS_BEFORE_REMINDER: 1,
       TRASH_RETENTION_DAYS: 30,
+      THEME_INDEX: 0,
+      THEME_IS_DARK_MODE: false,
     };
 
     const groupedSettings = (data as FormattedConfigDataProps[]).reduce<

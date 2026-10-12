@@ -3,11 +3,10 @@ import BaseSpinner from "@Components/bases/Spinner";
 import BaseTypography from "@Components/bases/Typography";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
-import { DrizzleError } from "drizzle-orm";
 
 interface MigrationModalProps {
   success: boolean;
-  error: DrizzleError | undefined;
+  error: Error | undefined;
 }
 
 export default function MigrationModal({

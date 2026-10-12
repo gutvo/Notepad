@@ -8,22 +8,26 @@ import useGetThemeConfigs from "./useGetThemeConfigs";
 
 interface ThemeProviderProps {
   children: ReactNode;
+  databaseReady: boolean;
 }
 
-export default function ThemeProvider({ children }: ThemeProviderProps) {
+export default function ThemeProvider({
+  children,
+  databaseReady,
+}: ThemeProviderProps) {
   const { themeConfigs, updateThemeIndex, updateDarkMode, isLoading } =
-    useGetThemeConfigs();
+    useGetThemeConfigs(databaseReady);
 
   const theme: ThemeProps = useMemo(
     () => ({
       palette: mergeTheme({
-        isDarkMode: themeConfigs.THEME_IS_DARK_MODE,
-        themeIndex: themeConfigs.THEME_INDEX,
+        isDarkMode: themeConfigs.isDarkMode,
+        themeIndex: themeConfigs.themeIndex,
       }),
       spacing,
       fontSize,
     }),
-    [themeConfigs.THEME_INDEX, themeConfigs.THEME_IS_DARK_MODE],
+    [themeConfigs.themeIndex, themeConfigs.isDarkMode],
   );
 
   const changeTheme = useCallback(

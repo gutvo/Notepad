@@ -8,11 +8,10 @@ export default function useGetThemeConfigs() {
     let isMounted = true;
 
     void (async () => {
-      const settings = await getThemeConfig();
-
-      if (isMounted) {
-        setThemeConfigs(settings);
-      }
+      try {
+        const settings = await getThemeConfig();
+        if (isMounted) setThemeConfigs(settings);
+      } catch {}
     })();
 
     return () => {

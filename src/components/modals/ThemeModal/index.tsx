@@ -32,9 +32,9 @@ export default function ThemeModal() {
   });
 
   const handleConfirm = useCallback(
-    (data: ThemeDefaultValueProps) => {
+    async (data: ThemeDefaultValueProps) => {
       try {
-        changeTheme({
+        await changeTheme({
           themeCode: data.themeIndex,
           darkMode: data.isDarkMode,
         });
