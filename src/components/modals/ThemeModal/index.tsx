@@ -39,7 +39,6 @@ export default function ThemeModal() {
           darkMode: data.isDarkMode,
         });
         closeModal();
-        toast.success(formatMessage({ id: "messages.success.update-theme" }));
       } catch {
         toast.error(formatMessage({ id: "messages.failure.update-theme" }));
       }

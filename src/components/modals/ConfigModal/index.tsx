@@ -60,8 +60,6 @@ export default function ConfigModal() {
       }
 
       closeModal();
-
-      toast.success(formatMessage({ id: "messages.success.update-config" }));
     } catch {
       toast.error(formatMessage({ id: "messages.failure.update-config" }));
     } finally {
