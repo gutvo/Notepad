@@ -1,14 +1,12 @@
 import BaseModal from "@Components/bases/Modal";
+import BaseSpinner from "@Components/bases/Spinner";
 import BaseTypography from "@Components/bases/Typography";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
-import { DrizzleError } from "drizzle-orm";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
 
 interface MigrationModalProps {
   success: boolean;
-  error: DrizzleError | undefined;
+  error: Error | undefined;
 }
 
 export default function MigrationModal({
@@ -17,40 +15,20 @@ export default function MigrationModal({
 }: MigrationModalProps) {
   const theme = useTheme();
   const { formatMessage } = useLocale();
-
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
-  function handleOpenModal() {
-    setIsOpenModal(true);
-  }
-
-  function handleCloseModal() {
-    setIsOpenModal(false);
-  }
-
-  useEffect(() => {
-    if (error || !success) {
-      handleOpenModal();
-    } else {
-      handleCloseModal();
-    }
-  }, [error, success]);
+  const isOpenModal = Boolean(error) || !success;
 
   return (
     <BaseModal.Modal
       visible={isOpenModal}
       title={formatMessage({ id: "modals.migration.title" })}
     >
-      <View
+      <BaseModal.Container
         style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
           gap: theme.spacing(10),
           padding: theme.spacing(5),
         }}
       >
-        <ActivityIndicator size={80} color={theme.palette.primary.main} />
+        <BaseSpinner size={80} color={theme.palette.primary.main} />
 
         {error && (
           <>
@@ -71,7 +49,7 @@ export default function MigrationModal({
             {formatMessage({ id: "modals.migration.message.progress" })}
           </BaseTypography>
         )}
-      </View>
+      </BaseModal.Container>
     </BaseModal.Modal>
   );
 }

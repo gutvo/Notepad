@@ -14,7 +14,9 @@ export default function mergeTheme({
   isDarkMode,
   themeIndex,
 }: MergeThemeProps) {
-  const currentTheme = { primary: themes[themeIndex] };
+  const currentTheme = {
+    primary: themes[themeIndex]?.palette ?? themes[0].palette,
+  };
   const currentBackgroundTheme = {
     background: isDarkMode ? darkBackground : lightBackground,
   };

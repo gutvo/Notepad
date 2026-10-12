@@ -1,5 +1,5 @@
 import useTheme from "@Hooks/useTheme";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import BaseClock from "../Clock";
 
@@ -52,30 +52,27 @@ export default function BaseCalendar({
   );
 
   const [viewMode, setViewMode] = useState<ViewMode>("calendar");
-
-  useEffect(() => {
-    if (value !== undefined) {
-      setInternalDate(value);
-    }
-  }, [value]);
+  const isControlled = value !== undefined;
+  const currentDate = isControlled ? value : internalDate;
 
   function updateDate(newDate: Date) {
     if (onChange) {
       onChange(newDate);
-    } else {
-      setInternalDate(newDate);
+      return;
     }
+
+    setInternalDate(newDate);
   }
 
   const { selectedTimestamp, handleChangeDate, todayTimestamp } =
     useCalendarState({
-      value: internalDate,
+      value: currentDate,
       onChange: undefined,
       disabledToday,
     });
 
   const { viewDate, setViewDate, year, month } = useCalendarMonth({
-    value: internalDate,
+    value: currentDate,
   });
 
   const days = useGetDays({
@@ -90,8 +87,8 @@ export default function BaseCalendar({
   function handleSelectDay(timestamp: number) {
     const updated = new Date(timestamp);
 
-    updated.setHours(internalDate.getHours());
-    updated.setMinutes(internalDate.getMinutes());
+    updated.setHours(currentDate.getHours());
+    updated.setMinutes(currentDate.getMinutes());
     updated.setSeconds(0);
     updated.setMilliseconds(0);
 
@@ -100,7 +97,7 @@ export default function BaseCalendar({
   }
 
   function handleChangeTime(time: { hour: number; minute: number }) {
-    const updated = new Date(internalDate);
+    const updated = new Date(currentDate);
 
     updated.setHours(time.hour);
     updated.setMinutes(time.minute);
@@ -112,10 +109,10 @@ export default function BaseCalendar({
 
   const clockValue = useMemo(
     () => ({
-      hour: internalDate.getHours(),
-      minute: internalDate.getMinutes(),
+      hour: currentDate.getHours(),
+      minute: currentDate.getMinutes(),
     }),
-    [internalDate],
+    [currentDate],
   );
 
   return (
@@ -149,7 +146,7 @@ export default function BaseCalendar({
         <BaseClock
           value={clockValue}
           onChange={handleChangeTime}
-          referenceDate={internalDate}
+          referenceDate={currentDate}
           disabledPast={disabledPast}
         />
       )}

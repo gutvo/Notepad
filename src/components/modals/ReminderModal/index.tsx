@@ -7,10 +7,10 @@ import useForm from "@Hooks/useForm";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import updateNotification from "@Utils/updateNoficiation";
+import createNotification from "@Utils/createNotification";
+import updateNotification from "@Utils/updateNotification";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
-import createNotification from "../../../utils/createNotification";
 import getDefaultValues from "./getDefaultValues";
 import useGetConfigs from "./useGetConfigs";
 import useGetReminder from "./useGetReminder";
@@ -126,6 +126,7 @@ export default function ReminderModal() {
       })}
     >
       <BaseModal.Container
+        scrollable
         style={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
       >
         <Controller

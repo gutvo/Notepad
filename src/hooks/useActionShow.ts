@@ -20,39 +20,63 @@ export function useActionShow<DataType, ResultType = DataType>({
   const [data, setData] = useState<ResultType | undefined>();
   const [loading, setLoading] = useState(true);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-
-    if (id) {
-      const result = await actions.find(id);
-
-      const formatted = format
-        ? result
-          ? await format(result)
-          : undefined
-        : (result as unknown as ResultType | undefined);
-
-      setData(formatted);
+  const load = useCallback(async (): Promise<ResultType | undefined> => {
+    if (!id) {
+      setData(undefined);
+      setLoading(false);
+      return undefined;
     }
 
+    const result = await actions.find(id);
+    const formatted = format
+      ? result
+        ? await format(result)
+        : undefined
+      : (result as unknown as ResultType | undefined);
+
+    setData(formatted);
     setLoading(false);
+    return formatted;
   }, [actions, id, format]);
 
   useEffect(() => {
-    load();
+    let isMounted = true;
+
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const result = await load();
+
+        if (!isMounted) {
+          return;
+        }
+
+        setData(result);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchData();
 
     let subscription: Subscription | undefined;
 
     if (actions.observer) {
       subscription = actions.observer.subscribe((event: any) => {
         if (event?.payload?.ids?.includes(id)) {
-          load();
+          void fetchData();
         }
       });
     }
 
-    return () => subscription?.unsubscribe();
-  }, [load, actions, id]);
+    return () => {
+      isMounted = false;
+      subscription?.unsubscribe();
+    };
+  }, [actions, id, load]);
 
   return { data, loading, reload: load };
 }

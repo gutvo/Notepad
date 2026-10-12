@@ -1,27 +1,45 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 import database from "@Database";
-import { and, eq, gt, gte, inArray, lt, lte, sql } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import {
+  and,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNotNull,
+  isNull,
+  lt,
+  lte,
+  sql,
+} from "drizzle-orm";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
+import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
 import { Subject } from "rxjs";
 
 export interface ActionOptions<
   TCreate,
   TUpdate,
   TRow,
-  TCustom = {},
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
   TFormatted = TRow,
 > {
   schema: any;
   primaryKey?: keyof TRow;
   formatData?: (data: TRow) => TFormatted;
   observer?: Subject<{ type: string; payload: any }>;
-  customActions?: (row: TFormatted) => TCustom;
+  rowActions?: (row: TFormatted) => TCustom;
 }
 
 type FilterOperators<T> = {
   equals?: T;
   in?: T[];
+  isNull?: boolean;
+  isNotNull?: boolean;
   lowerThan?: T;
   greaterThan?: T;
   between?: [T, T];
@@ -36,7 +54,10 @@ type SortDirection = "asc" | "desc";
 
 export interface QueryBuilder<
   TRow,
-  TCustom extends Record<string, (...args: any[]) => any> = {},
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
   TFormatted = TRow,
 > {
   where: (
@@ -61,11 +82,25 @@ export interface QueryBuilder<
   first: () => Promise<(TFormatted & NonNullable<TCustom>) | null>;
 }
 
+/**
+ * Cria ações CRUD tipadas e auxiliares de consulta para uma tabela do Drizzle.
+ *
+ * Aceita chaves primárias personalizadas, formatação de linhas, ações
+ * adicionais, gravações dentro de transações e um observador opcional de
+ * alterações.
+ *
+ * @param options - Schema da tabela e configurações opcionais de comportamento.
+ * @returns Ações para buscar, listar, consultar, criar, atualizar e excluir
+ * linhas, incluindo atualização em lote.
+ */
 export function createActions<
   TCreate,
   TUpdate,
   TRow extends Record<string, any>,
-  TCustom extends Record<string, (...args: any[]) => any> = {},
+  TCustom extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
   TFormatted = TRow,
   TPrimaryKey extends keyof TRow = keyof TRow & string,
 >({
@@ -73,7 +108,7 @@ export function createActions<
   primaryKey,
   formatData,
   observer,
-  customActions,
+  rowActions,
 }: ActionOptions<TCreate, TUpdate, TRow, TCustom, TFormatted> & {
   primaryKey?: TPrimaryKey;
 }) {
@@ -117,6 +152,14 @@ export function createActions<
 
         if (operator.equals !== undefined) {
           clauses.push(eq(column, operator.equals));
+        }
+
+        if (operator.isNull === true) {
+          clauses.push(isNull(column));
+        }
+
+        if (operator.isNotNull === true) {
+          clauses.push(isNotNull(column));
         }
 
         if (operator.in && operator.in.length) {
@@ -163,10 +206,10 @@ export function createActions<
 
     let formatted: Row = formatData ? formatData(row as TRow) : (row as Row);
 
-    if (customActions) {
+    if (rowActions) {
       formatted = {
         ...formatted,
-        ...customActions(formatted),
+        ...rowActions(formatted),
       } as RowWithCustom;
     }
 
@@ -178,9 +221,9 @@ export function createActions<
       ? rows.map((row) => formatData(row as TRow))
       : (rows as Row[]);
 
-    if (customActions) {
+    if (rowActions) {
       return formattedRows.map(
-        (row) => ({ ...row, ...customActions(row) }) as RowWithCustom,
+        (row) => ({ ...row, ...rowActions(row) }) as RowWithCustom,
       );
     }
 
@@ -305,7 +348,9 @@ export function createActions<
       (_, i) => Number(result.lastInsertRowId ?? 0) + i,
     );
 
-    observer?.next({ type: "CREATED", payload: { ids: lastInsertIds } });
+    if (!options?.transaction) {
+      observer?.next({ type: "CREATED", payload: { ids: lastInsertIds } });
+    }
 
     const created = await Promise.all(
       lastInsertIds.map((id) => findAction(id as PrimaryKeyValue)),
@@ -333,7 +378,9 @@ export function createActions<
       .set(data as any)
       .where(inArray(primaryKeyField, idsArray as any));
 
-    observer?.next({ type: "UPDATED", payload: { ids: idsArray } });
+    if (!options?.transaction) {
+      observer?.next({ type: "UPDATED", payload: { ids: idsArray } });
+    }
 
     const updated = await Promise.all(
       idsArray.map((id) => findAction(id as PrimaryKeyValue)),
@@ -356,7 +403,9 @@ export function createActions<
       .delete(schema)
       .where(inArray(primaryKeyField, idsArray as any));
 
-    observer?.next({ type: "DELETED", payload: { ids: idsArray } });
+    if (!options?.transaction) {
+      observer?.next({ type: "DELETED", payload: { ids: idsArray } });
+    }
     return idsArray;
   }
 
@@ -378,11 +427,20 @@ export function createActions<
     );
 
     const ids = updates.map((u) => u.id);
-    observer?.next({ type: "UPDATED", payload: { ids } });
+    if (!options?.transaction) {
+      observer?.next({ type: "UPDATED", payload: { ids } });
+    }
 
     return Promise.all(
       updates.map((update) => findAction(update.id as PrimaryKeyValue)),
     );
+  }
+
+  /**
+   * Notifica os observadores após a confirmação de uma transação externa.
+   */
+  function notifyChange(type: string, ids: PrimaryKeyValue[]) {
+    observer?.next({ type, payload: { ids } });
   }
 
   return {
@@ -393,6 +451,112 @@ export function createActions<
     update: updateAction,
     delete: deleteAction,
     updateBatch: updateBatchAction,
+    notifyChange,
     observer,
   };
+}
+
+type EntityPrimaryKey<TSchema extends AnySQLiteTable> =
+  "id" extends keyof InferSelectModel<TSchema>
+    ? "id"
+    : keyof InferSelectModel<TSchema> & string;
+
+export type EntityActionsProps<
+  TSchema extends AnySQLiteTable,
+  TPrimaryKey extends keyof InferSelectModel<TSchema> =
+    EntityPrimaryKey<TSchema>,
+  TRowActions extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
+  TFormatted = InferSelectModel<TSchema>,
+> = ReturnType<
+  typeof createActions<
+    InferInsertModel<TSchema>,
+    Partial<Omit<InferInsertModel<TSchema>, TPrimaryKey>>,
+    InferSelectModel<TSchema>,
+    TRowActions,
+    TFormatted,
+    TPrimaryKey
+  >
+>;
+
+type EntityCustomActionResult<TOptions> = TOptions extends {
+  customActions: (...args: any[]) => infer TActions;
+}
+  ? TActions
+  : object;
+
+/**
+ * Cria ações CRUD para uma tabela SQLite e deriva os tipos de leitura e
+ * inserção diretamente do schema do Drizzle.
+ *
+ * Por padrão, usa `id` como chave primária quando essa coluna existe. Para
+ * schemas sem a coluna `id`, informe a chave em `primaryKey`.
+ *
+ * @param options - Schema e configurações opcionais de chave primária,
+ * formatação, observador e ações adicionais.
+ * @returns Ações CRUD tipadas a partir dos modelos de linha inferidos do schema.
+ */
+export function createEntityActions<
+  TSchema extends AnySQLiteTable,
+  TPrimaryKey extends keyof InferSelectModel<TSchema> =
+    EntityPrimaryKey<TSchema>,
+  TRowActions extends Record<string, (...args: any[]) => any> = Record<
+    string,
+    never
+  >,
+  TFormatted = InferSelectModel<TSchema>,
+  TOptions extends object = object,
+>(
+  options: {
+    schema: TSchema;
+    primaryKey?: TPrimaryKey;
+    formatData?: (data: InferSelectModel<TSchema>) => TFormatted;
+    observer?: Subject<{ type: string; payload: any }>;
+    rowActions?: (row: TFormatted) => TRowActions;
+    customActions?: (
+      actions: EntityActionsProps<
+        TSchema,
+        TPrimaryKey,
+        TRowActions,
+        TFormatted
+      >,
+    ) => object;
+  } & TOptions,
+): EntityActionsProps<TSchema, TPrimaryKey, TRowActions, TFormatted> &
+  EntityCustomActionResult<TOptions> {
+  const {
+    schema,
+    primaryKey,
+    formatData,
+    observer,
+    rowActions,
+    customActions,
+  } = options;
+
+  type Row = InferSelectModel<TSchema>;
+  type Create = InferInsertModel<TSchema>;
+  type Update = Partial<Omit<Create, TPrimaryKey>>;
+
+  const actions = createActions<
+    Create,
+    Update,
+    Row,
+    TRowActions,
+    TFormatted,
+    TPrimaryKey
+  >({
+    schema,
+    primaryKey,
+    formatData,
+    observer,
+    rowActions,
+  });
+
+  return {
+    ...actions,
+    ...customActions?.(actions),
+  } as EntityActionsProps<TSchema, TPrimaryKey, TRowActions, TFormatted> &
+    EntityCustomActionResult<TOptions>;
 }

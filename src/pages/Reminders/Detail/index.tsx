@@ -4,7 +4,7 @@ import { useActionShow } from "@Hooks/useActionShow";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import getFormattedDate from "@Utils/getFormattedDate";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import Card from "./Card";
 import formatData from "./formatData";
@@ -26,7 +26,17 @@ export default function RemindersDetail({ id }: RemindersDetailProps) {
 
   useHeader({ reminder });
 
-  const today = useMemo(() => new Date(), []);
+  const [today, setToday] = useState(new Date());
+
+  useEffect(() => {
+    let interval = null;
+
+    interval = setInterval(() => {
+      setToday(new Date());
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (!reminder) return;
 

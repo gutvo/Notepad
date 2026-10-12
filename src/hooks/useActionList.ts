@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Observable, Subscription } from "rxjs";
 
 interface ActionListStructure<DataType, Options> {
@@ -23,10 +23,9 @@ export function useActionList<
 }: UseActionListProps<DataType, Options, ResultType>) {
   const [data, setData] = useState<ResultType>([] as ResultType);
   const [loading, setLoading] = useState(true);
+  const isMounted = useRef(false);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-
+  const load = useCallback(async (): Promise<ResultType> => {
     const normalizedOptions =
       options && typeof options === "object"
         ? Object.entries(options as Record<string, any>).reduce(
@@ -69,27 +68,56 @@ export function useActionList<
         : undefined,
     );
 
-    const formatted = format
-      ? await format(result)
-      : (result as unknown as ResultType);
-
-    setData(formatted);
-    setLoading(false);
+    return format ? await format(result) : (result as unknown as ResultType);
   }, [actions, options, format]);
 
+  const reload = useCallback(async (): Promise<ResultType> => {
+    setLoading(true);
+
+    try {
+      const result = await load();
+      if (isMounted.current) {
+        setData(result);
+      }
+      return result;
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
+    }
+  }, [load]);
+
   useEffect(() => {
-    load();
+    isMounted.current = true;
+
+    const fetchInitialData = async () => {
+      try {
+        const result = await load();
+        if (isMounted.current) {
+          setData(result);
+        }
+      } finally {
+        if (isMounted.current) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchInitialData();
 
     let subscription: Subscription | undefined;
 
     if (actions.observer) {
       subscription = actions.observer.subscribe(() => {
-        load();
+        void reload();
       });
     }
 
-    return () => subscription?.unsubscribe();
-  }, [load, actions]);
+    return () => {
+      isMounted.current = false;
+      subscription?.unsubscribe();
+    };
+  }, [actions, load, reload]);
 
-  return { data, loading, reload: load };
+  return { data, loading, reload };
 }

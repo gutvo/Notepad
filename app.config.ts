@@ -15,22 +15,15 @@ const config: ExpoConfig = {
   },
   android: {
     package: "com.anonymous.notepad",
-    permissions: [
-      "BLUETOOTH",
-      "BLUETOOTH_ADMIN",
-      "BLUETOOTH_SCAN",
-      "BLUETOOTH_CONNECT",
-      "ACCESS_FINE_LOCATION",
-    ],
     adaptiveIcon: {
       backgroundColor: "#f9fafb",
       foregroundImage: "./assets/images/android-icon-foreground.png",
     },
-    edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     allowBackup: false,
   },
   plugins: [
+    "expo-font",
     ["expo-router", { root: "./src/routes" }],
     ["expo-sqlite", { useSQLCipher: true }],
     [

@@ -1,6 +1,6 @@
 import { reminderSchema } from "@Schemas";
 import { Subject } from "rxjs";
-import { createActions } from "../createActions";
+import { createEntityActions } from "../createActions";
 import getChildren from "./customActions/getChildren";
 
 export type ReminderRowProps = typeof reminderSchema.$inferSelect;
@@ -12,15 +12,10 @@ export type ReminderDataProps = ReminderRowProps & {
 
 const reminderObserver$ = new Subject<{ type: string; payload: any }>();
 
-const reminderActions = createActions<
-  ReminderCreateProps,
-  ReminderUpdateProps,
-  ReminderRowProps,
-  { getChildren: () => Promise<ReminderRowProps[]> }
->({
+const reminderActions = createEntityActions({
   schema: reminderSchema,
   observer: reminderObserver$,
-  customActions: (reminder) => ({
+  rowActions: (reminder) => ({
     getChildren: async () => getChildren(reminder),
   }),
 });

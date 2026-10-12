@@ -1,5 +1,4 @@
 import actions from "@Actions";
-import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
 import BaseListItem from "@Components/bases/ListItem";
 import BaseModal from "@Components/bases/Modal";
@@ -7,11 +6,9 @@ import BaseTypography from "@Components/bases/Typography";
 import SelectInput from "@Components/inputs/SelectInput";
 import { useCurrentModal } from "@Hooks/useCurrentModal";
 import useForm from "@Hooks/useForm";
-import useGetPrinters from "@Hooks/useGetPrinters";
 import useLocale from "@Hooks/useLocale";
 import useTheme from "@Hooks/useTheme";
 import useToast from "@Hooks/useToast";
-import { PAPER_SIZES } from "@Services/PrinterService";
 import { useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import getDefaultValues, { ConfigDefaultValueProps } from "./getDefaultValues";
@@ -24,14 +21,12 @@ export default function ConfigModal() {
   const { isOpen, closeModal } = useCurrentModal("CONFIG");
 
   const [configs] = useGetConfigs();
-  const { printers } = useGetPrinters();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
     control,
-    setValue,
     formState: { errors, isDirty, defaultValues },
   } = useForm<ConfigDefaultValueProps>({
     defaultValues: getDefaultValues(configs),
@@ -58,23 +53,15 @@ export default function ConfigModal() {
         });
       }
 
-      if (defaultValues?.printerId !== data.printerId) {
-        await actions.config.update("PRINTER_ID", {
-          value: String(data.printerId ?? ""),
-        });
-      }
-
-      if (defaultValues?.paperSize !== data?.paperSize) {
-        await actions.config.update("PAPER_SIZE", {
-          value: String(data?.paperSize ?? ""),
+      if (defaultValues?.trashRetentionDays !== data.trashRetentionDays) {
+        await actions.config.update("TRASH_RETENTION_DAYS", {
+          value: String(data.trashRetentionDays),
         });
       }
 
       closeModal();
-
-      toast.success(formatMessage({ id: "messages.success.update-config" }));
     } catch {
-      toast.success(formatMessage({ id: "messages.failure.update-config" }));
+      toast.error(formatMessage({ id: "messages.failure.update-config" }));
     } finally {
       setIsLoading(false);
     }
@@ -99,6 +86,7 @@ export default function ConfigModal() {
     () => Array.from({ length: 11 }, (_, index) => index),
     [],
   );
+  const trashRetentionOptions = useMemo(() => [0, 7, 30, 90], []);
 
   return (
     <BaseModal.Modal
@@ -170,64 +158,49 @@ export default function ConfigModal() {
 
         <Controller
           control={control}
-          name="printerId"
-          render={({ field: { onChange, value, disabled } }) => (
-            <SelectInput
-              value={value}
-              onChange={(itemValue) => onChange(itemValue.id)}
-              label={formatMessage({ id: "modals.config.fields.printer" })}
-              disabled={disabled || printers.length === 0}
-              options={printers}
-              endIcon={
-                value && (
-                  <BaseButton
-                    onPress={() =>
-                      setValue("printerId", "", { shouldDirty: true })
-                    }
-                  >
-                    <BaseIcon name="close" />
-                  </BaseButton>
-                )
-              }
-              renderInputValue={(inputValue) => (
-                <BaseTypography>{inputValue?.name}</BaseTypography>
-              )}
-              getOptionValue={(option) => option.id}
-              renderItem={({ item, selectedItem }) => (
-                <BaseListItem
-                  name={item.name}
-                  Right={item === selectedItem && <BaseIcon name="check" />}
-                  showDivider={false}
-                />
-              )}
-              error={Boolean(errors.printerId?.message)}
-              helpText={errors.printerId?.message}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="paperSize"
+          name="trashRetentionDays"
+          rules={{ required: formatMessage({ id: "validations.required" }) }}
           render={({ field: { onChange, value, disabled } }) => (
             <SelectInput
               value={value}
               onChange={(itemValue) => onChange(itemValue)}
-              label={formatMessage({ id: "modals.config.fields.paper-size" })}
+              label={formatMessage({
+                id: "modals.config.fields.trash-retention",
+              })}
               disabled={disabled}
-              options={Object.keys(PAPER_SIZES)}
+              options={trashRetentionOptions}
               renderInputValue={(inputValue) => (
-                <BaseTypography>{inputValue}</BaseTypography>
+                <BaseTypography>
+                  {inputValue === 0
+                    ? formatMessage({
+                        id: "modals.config.fields.trash-retention-never",
+                      })
+                    : formatMessage(
+                        { id: "modals.config.fields.trash-retention-value" },
+                        { value: inputValue },
+                      )}
+                </BaseTypography>
               )}
               renderItem={({ item, selectedItem }) => (
                 <BaseListItem
-                  name={item}
+                  name={
+                    item === 0
+                      ? formatMessage({
+                          id: "modals.config.fields.trash-retention-never",
+                        })
+                      : formatMessage(
+                          {
+                            id: "modals.config.fields.trash-retention-value",
+                          },
+                          { value: item },
+                        )
+                  }
                   Right={item === selectedItem && <BaseIcon name="check" />}
                   showDivider={false}
                 />
               )}
-              error={Boolean(errors.printerId?.message)}
-              helpText={errors.printerId?.message}
+              error={Boolean(errors.trashRetentionDays?.message)}
+              helpText={errors.trashRetentionDays?.message}
             />
           )}
         />

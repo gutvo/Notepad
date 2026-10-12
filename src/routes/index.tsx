@@ -1,5 +1,5 @@
-import HomeList from "@Pages/Home/List";
+import NotesList from "@Pages/Notes/List";
 
 export default function Routes() {
-  return <HomeList />;
+  return <NotesList />;
 }

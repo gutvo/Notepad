@@ -1,9 +1,10 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { text } from "drizzle-orm/sqlite-core";
+import { addDateColumn, createTable } from "./tableFactory";
 
-const noteSchema = sqliteTable("notes", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+const noteSchema = createTable("notes", {
   description: text("description").notNull(),
-  created_at: integer("created_at", { mode: "timestamp" }).notNull(),
+  created_at: addDateColumn("created_at"),
+  deleted_at: addDateColumn("deleted_at", { nullable: true }),
 });
 
 export default noteSchema;

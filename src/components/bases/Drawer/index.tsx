@@ -1,7 +1,8 @@
 import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import useOnGoBack from "@Hooks/useOnGoBack";
 import useTheme from "@Hooks/useTheme";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import ToastProvider from "@Providers/ToastProvider";
+import { ReactNode, useEffect, useState } from "react";
 import { Animated, Dimensions, Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -29,45 +30,38 @@ export default function BaseDrawer({
 
   useOnGoBack({ onBackPress });
 
-  const [isMounted, setIsMounted] = useState(visible);
-  const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
-  const overlayOpacity = useRef(new Animated.Value(0)).current;
+  const [translateX] = useState(() => new Animated.Value(-DRAWER_WIDTH));
+  const [overlayOpacity] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
-    if (visible) {
-      setIsMounted(true);
+    const isOpenAnimation = visible
+      ? [
+          Animated.timing(translateX, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+          Animated.timing(overlayOpacity, {
+            toValue: 0.4,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+        ]
+      : [
+          Animated.timing(translateX, {
+            toValue: -DRAWER_WIDTH,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+          Animated.timing(overlayOpacity, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+        ];
 
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0.4,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: -DRAWER_WIDTH,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        setIsMounted(false);
-      });
-    }
+    Animated.parallel(isOpenAnimation).start();
   }, [overlayOpacity, translateX, visible]);
-
-  if (!isMounted) return null;
 
   return (
     <BaseModalWrapper
@@ -75,33 +69,35 @@ export default function BaseDrawer({
       animationType="none"
       onRequestClose={onClose}
     >
-      <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: theme.palette.common.black,
-              opacity: overlayOpacity,
-            },
-          ]}
-        />
-      </Pressable>
+      <ToastProvider active={visible}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: theme.palette.common.black,
+                opacity: overlayOpacity,
+              },
+            ]}
+          />
+        </Pressable>
 
-      <Animated.View
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: DRAWER_WIDTH,
-          backgroundColor: theme.palette.background.body,
-          transform: [{ translateX }],
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-        }}
-      >
-        {children}
-      </Animated.View>
+        <Animated.View
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: DRAWER_WIDTH,
+            backgroundColor: theme.palette.background.body,
+            transform: [{ translateX }],
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }}
+        >
+          {children}
+        </Animated.View>
+      </ToastProvider>
     </BaseModalWrapper>
   );
 }

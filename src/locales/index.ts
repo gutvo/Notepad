@@ -19,8 +19,13 @@ const locales = {
   "messages.success.update-note": "Nota atualizada com sucesso!",
   "messages.failure.update-note": "Falha ao atualizar nota!",
 
-  "messages.success.delete-note": "Nota deletada com sucesso!",
+  "messages.success.delete-note": "Nota movida para a lixeira!",
   "messages.failure.delete-note": "Falha ao deletar nota!",
+  "messages.success.restore-note": "Nota restaurada com sucesso!",
+  "messages.failure.restore-note": "Falha ao restaurar nota!",
+  "messages.success.delete-note-permanently": "Nota excluída permanentemente!",
+  "messages.failure.delete-note-permanently":
+    "Falha ao excluir nota permanentemente!",
 
   "messages.success.duplicate-note": "Nota duplicada com sucesso!",
   "messages.failure.duplicate-note": "Falha ao duplicar nota!",
@@ -52,6 +57,7 @@ const locales = {
   "modals.home-actions.action.duplicate": "Duplicar",
   "modals.home-actions.action.add-reminder": "Adicionar Lembrete",
   "modals.home-actions.action.delete": "Deletar",
+  "modals.home-actions.action.trash": "Mover para lixeira",
 
   "modals.reminder-actions.title": "Opções",
   "modals.reminder-actions.action.update": "Atualizar",
@@ -61,18 +67,31 @@ const locales = {
   "modals.sidebar.option.config": "Configurações",
   "modals.sidebar.option.theme": "Temas",
   "modals.sidebar.option.reminder": "Lembretes",
+  "modals.sidebar.option.trash": "Lixeira",
 
   "modals.config.title": "Configurações",
   "modals.config.fields.font-size": "Tamanho da fonte",
   "modals.config.fields.days-before-reminder":
     "Notificar dias antes do lembrete",
   "modals.config.fields.days-before-reminder-value": "{value} dias",
+  "modals.config.fields.trash-retention": "Manter notas na lixeira por",
+  "modals.config.fields.trash-retention-value": "{value} dias",
+  "modals.config.fields.trash-retention-never": "Nunca excluir automaticamente",
   "modals.config.fields.printer": "Impressora térmica",
   "modals.config.fields.paper-size": "Tamanho do papel",
 
   "modals.theme.title": "Temas",
   "modals.theme.fields.theme": "Tema",
-  "modals.theme.fields.theme-value": "Tema {value}",
+  "modals.theme.options.indigo": "Índigo",
+  "modals.theme.options.purple": "Roxo",
+  "modals.theme.options.blue": "Azul",
+  "modals.theme.options.green": "Verde",
+  "modals.theme.options.teal": "Verde-azulado",
+  "modals.theme.options.red": "Vermelho",
+  "modals.theme.options.cyan": "Ciano",
+  "modals.theme.options.pink": "Rosa",
+  "modals.theme.options.amber": "Âmbar",
+  "modals.theme.options.orange": "Laranja",
   "modals.theme.fields.dark-mode": "Modo noturno",
 
   "modals.migration.title": "Migração",
@@ -95,6 +114,13 @@ const locales = {
   "pages.home-list.title": "Página Inicial",
 
   "pages.home-detail.title": "Detalhes",
+  "pages.trash.title": "Lixeira",
+  "pages.trash.empty": "A lixeira está vazia",
+  "pages.trash.actions.restore": "Restaurar",
+  "pages.trash.actions.delete-permanently": "Excluir permanentemente",
+  "pages.trash.confirm-delete.title": "Excluir nota permanentemente",
+  "pages.trash.confirm-delete.message":
+    "Esta ação não pode ser desfeita. Deseja excluir esta nota e seus lembretes?",
 
   "pages.reminder-list.title": "Lembretes",
 

@@ -1,7 +1,7 @@
 import BaseButton from "@Components/bases/Button";
 import BaseTypography from "@Components/bases/Typography";
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import BaseSelectModal from "../SelectModal";
+import { ReactNode, useCallback, useMemo, useState } from "react";
+import BaseSelectModal from "./SelectModal";
 
 export interface BaseSelectInputProps<DataProps, ValueProps> {
   placeholder?: string;
@@ -28,24 +28,20 @@ export default function BaseSelectInput<
   getOptionValue,
 }: BaseSelectInputProps<DataProps, ValueProps>) {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [internalValue, setInternalValue] = useState(value);
-  const [selectedItem, setSelectedItem] = useState<DataProps | undefined>(
-    options.find((option) =>
-      getOptionValue ? getOptionValue(option) === value : option === value,
-    ),
+  const [internalValue, setInternalValue] = useState<ValueProps | undefined>(
+    value,
   );
 
-  useEffect(() => {
-    setSelectedItem(
+  const currentValue = value ?? internalValue;
+  const selectedItem = useMemo(
+    () =>
       options.find((option) =>
-        getOptionValue ? getOptionValue(option) === value : option === value,
+        getOptionValue
+          ? getOptionValue(option) === currentValue
+          : option === currentValue,
       ),
-    );
-  }, [value, options, getOptionValue]);
-
-  useEffect(() => {
-    setInternalValue(value);
-  }, [value]);
+    [currentValue, getOptionValue, options],
+  );
 
   const handleOpenModal = useCallback(() => {
     if (!disabled) {
@@ -91,7 +87,6 @@ export default function BaseSelectInput<
           setInternalValue={setInternalValue}
           getOptionValue={getOptionValue}
           selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
         />
       )}
     </>

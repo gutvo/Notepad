@@ -1,4 +1,4 @@
-import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { BottomSheetFlatList } from "@expo/ui/community/bottom-sheet";
 import useTheme from "@Hooks/useTheme";
 import { StyleProp, ViewStyle } from "react-native";
 import { useBottomModal } from "../context";
@@ -12,7 +12,7 @@ interface RenderItemProps<DataProps> {
 interface BottomModalFlatListProps<DataProps> {
   data: DataProps[];
   renderItem: (item: RenderItemProps<DataProps>) => React.JSX.Element;
-  keyExtractor?: (item: DataProps) => string | number;
+  keyExtractor?: (item: DataProps, index: number) => string;
   contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
@@ -31,9 +31,7 @@ export default function BottomModalFlatList<DataProps>({
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       contentContainerStyle={[
-        {
-          backgroundColor: theme.palette.background.body,
-        },
+        { backgroundColor: theme.palette.background.body },
         contentContainerStyle,
       ]}
       ListHeaderComponent={title ? <BottomModalTitle title={title} /> : null}

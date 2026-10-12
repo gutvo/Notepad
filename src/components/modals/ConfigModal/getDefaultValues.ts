@@ -13,22 +13,13 @@ export default function getDefaultValues(
         accumulator.daysBeforeReminder = config.parsedValue;
       }
 
-      if (config.key === "PRINTER_ID") {
-        accumulator.printerId = config.parsedValue;
-      }
-
-      if (config.key === "PAPER_SIZE") {
-        accumulator.paperSize = config.parsedValue;
+      if (config.key === "TRASH_RETENTION_DAYS") {
+        accumulator.trashRetentionDays = config.parsedValue;
       }
 
       return accumulator;
     },
-    {
-      textFontSize: 20,
-      daysBeforeReminder: 0,
-      printerId: "",
-      paperSize: "80mm",
-    },
+    { textFontSize: 20, daysBeforeReminder: 0, trashRetentionDays: 30 },
   );
 }
 

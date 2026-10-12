@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Animated, PanResponder } from "react-native";
 
 interface UseAnimationProps {
@@ -7,15 +7,11 @@ interface UseAnimationProps {
 }
 
 export default function useAnimation({ duration, onHide }: UseAnimationProps) {
-  const translateY = useRef(new Animated.Value(-150)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [translateY] = useState(() => new Animated.Value(-150));
+  const [opacity] = useState(() => new Animated.Value(0));
+  const [pan] = useState(() => new Animated.ValueXY());
 
   const close = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: -150,
@@ -27,10 +23,12 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
         duration: 250,
         useNativeDriver: false,
       }),
-    ]).start(onHide);
+    ]).start(({ finished }) => {
+      if (finished) onHide();
+    });
   }, [onHide, opacity, translateY]);
 
-  const open = useCallback(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: 0,
@@ -43,37 +41,41 @@ export default function useAnimation({ duration, onHide }: UseAnimationProps) {
         useNativeDriver: false,
       }),
     ]).start();
-
-    timeoutRef.current = setTimeout(() => {
-      close();
-    }, duration);
-  }, [close, duration, opacity, translateY]);
+    return () => {
+      translateY.stopAnimation();
+      opacity.stopAnimation();
+      pan.stopAnimation();
+    };
+  }, [opacity, pan, translateY]);
 
   useEffect(() => {
-    open();
-  }, [open]);
+    const timeout = setTimeout(close, duration);
+    return () => clearTimeout(timeout);
+  }, [close, duration]);
 
-  const pan = useRef(new Animated.ValueXY()).current;
-
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: (_, gestureState) =>
-      Math.abs(gestureState.dx) > 5, // agora olha para o movimento horizontal
-    onPanResponderMove: Animated.event([null, { dx: pan.x }], {
-      useNativeDriver: false,
-    }),
-    onPanResponderRelease: (_, gestureState) => {
-      if (gestureState.dx > 150 || gestureState.dx < -150) {
-        // deslizou para direita ou esquerda
-        onHide();
-      } else {
-        // volta para posição original
-        Animated.spring(pan, {
-          toValue: { x: 0, y: 0 },
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gestureState) =>
+          Math.abs(gestureState.dx) > 10 &&
+          Math.abs(gestureState.dx) > Math.abs(gestureState.dy),
+        onPanResponderMove: Animated.event([null, { dx: pan.x }], {
           useNativeDriver: false,
-        }).start();
-      }
-    },
-  });
+        }),
+        onPanResponderRelease: (_, gestureState) => {
+          if (Math.abs(gestureState.dx) > 100) {
+            close();
+            return;
+          }
+
+          Animated.spring(pan, {
+            toValue: { x: 0, y: 0 },
+            useNativeDriver: false,
+          }).start();
+        },
+      }),
+    [close, pan],
+  );
 
   return { translateY, opacity, close, panResponder, pan };
 }

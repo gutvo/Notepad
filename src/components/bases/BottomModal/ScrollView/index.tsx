@@ -1,5 +1,5 @@
 import useTheme from "@Hooks/useTheme";
-import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { BottomSheetScrollView } from "@expo/ui/community/bottom-sheet";
 import { ReactNode } from "react";
 import BottomModalTitle from "../Title";
 import { useBottomModal } from "../context";

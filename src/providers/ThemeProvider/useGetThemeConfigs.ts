@@ -2,53 +2,54 @@ import {
   getThemeConfig,
   setDarkMode,
   setThemeIndex,
+  ThemeStorageConfigProps,
 } from "@Utils/themeStorage";
 import { useCallback, useEffect, useState } from "react";
 import { Appearance } from "react-native";
 
-const colorScheme = Appearance.getColorScheme();
+const DEFAULT_THEME_CONFIG: ThemeStorageConfigProps = {
+  themeIndex: 0,
+  isDarkMode: Appearance.getColorScheme() === "dark",
+};
 
-interface ThemeConfigProps {
-  THEME_INDEX: number;
-  THEME_IS_DARK_MODE: boolean;
-}
-
-const DEFAULT_THEME_CONFIG = {
-  THEME_INDEX: 0,
-  THEME_IS_DARK_MODE: colorScheme === "dark",
-} as const;
-
-export default function useGetThemeConfigs() {
+export default function useGetThemeConfigs(databaseReady: boolean) {
   const [themeConfigs, setThemeConfigs] =
-    useState<ThemeConfigProps>(DEFAULT_THEME_CONFIG);
+    useState<ThemeStorageConfigProps>(DEFAULT_THEME_CONFIG);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadThemeConfigs = useCallback(async () => {
-    try {
-      const config = await getThemeConfig();
-      setThemeConfigs({
-        THEME_INDEX: config.themeIndex,
-        THEME_IS_DARK_MODE: config.isDarkMode,
-      });
-    } catch {
-      setThemeConfigs(DEFAULT_THEME_CONFIG);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    loadThemeConfigs();
-  }, [loadThemeConfigs]);
+    if (!databaseReady) return;
+
+    let isMounted = true;
+
+    void (async () => {
+      try {
+        const settings = await getThemeConfig();
+        if (isMounted) setThemeConfigs(settings);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(
+          "Failed to load theme settings from the database.",
+          error,
+        );
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [databaseReady]);
 
   const updateThemeIndex = useCallback(async (index: number) => {
-    setThemeConfigs((prev) => ({ ...prev, THEME_INDEX: index }));
     await setThemeIndex(index);
+    setThemeConfigs((previous) => ({ ...previous, themeIndex: index }));
   }, []);
 
   const updateDarkMode = useCallback(async (isDarkMode: boolean) => {
-    setThemeConfigs((prev) => ({ ...prev, THEME_IS_DARK_MODE: isDarkMode }));
     await setDarkMode(isDarkMode);
+    setThemeConfigs((previous) => ({ ...previous, isDarkMode }));
   }, []);
 
   return {

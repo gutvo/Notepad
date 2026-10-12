@@ -9,10 +9,10 @@ interface DeleteNotificationProps {
 export default async function deleteNotification({
   reminderId,
 }: DeleteNotificationProps) {
-  await database.transaction(async (transaction) => {
+  const deletedReminderIds = await database.transaction(async (transaction) => {
     const parenReminder = await actions.reminder.find(reminderId);
 
-    if (!parenReminder) return;
+    if (!parenReminder) return [];
 
     const childrenReminders = await parenReminder.getChildren();
 
@@ -27,5 +27,10 @@ export default async function deleteNotification({
     }
 
     await actions.reminder.delete(allReminderIds, { transaction });
+    return allReminderIds;
   });
+
+  if (deletedReminderIds.length) {
+    actions.reminder.notifyChange("DELETED", deletedReminderIds);
+  }
 }

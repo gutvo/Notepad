@@ -9,6 +9,7 @@ type BaseIconNameProps =
   | "magnify"
   | "eye-outline"
   | "content-copy"
+  | "backup-restore"
   | "trash-can-outline"
   | "cog-outline"
   | "weather-sunny"
@@ -25,4 +26,5 @@ type BaseIconNameProps =
   | "pencil-outline"
   | "printer-outline"
   | "chevron-down"
+  | "dots-vertical"
   | "clock-time-eight-outline";

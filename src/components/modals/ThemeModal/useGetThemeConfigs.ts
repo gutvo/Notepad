@@ -1,18 +1,23 @@
 import { getThemeConfig, ThemeStorageConfigProps } from "@Utils/themeStorage";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useGetThemeConfigs() {
   const [themeConfigs, setThemeConfigs] = useState<ThemeStorageConfigProps>();
 
-  const getThemeConfigs = useCallback(async () => {
-    const settings = await getThemeConfig();
-
-    setThemeConfigs(settings);
-  }, []);
-
   useEffect(() => {
-    getThemeConfigs();
-  }, [getThemeConfigs]);
+    let isMounted = true;
+
+    void (async () => {
+      try {
+        const settings = await getThemeConfig();
+        if (isMounted) setThemeConfigs(settings);
+      } catch {}
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return [themeConfigs, setThemeConfigs] as const;
 }

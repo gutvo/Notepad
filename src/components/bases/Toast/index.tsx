@@ -1,6 +1,5 @@
 import BaseButton from "@Components/bases/Button";
 import BaseIcon from "@Components/bases/Icon";
-import BaseModalWrapper from "@Components/bases/ModalWrapper";
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
 import { Animated, View } from "react-native";
@@ -35,55 +34,53 @@ export default function BaseToast({
 
   const { color, icon, title } = toastConfig[type];
 
-  function resetDuration() {
+  function dismiss() {
     close();
   }
 
   return (
-    <BaseModalWrapper onRequestClose={close} transparent>
-      <Animated.View
-        {...panResponder.panHandlers}
-        style={{
-          top: insets.top + index * 90,
-          transform: [{ translateY }, ...pan.getTranslateTransform()],
-          opacity,
-          position: "absolute",
-          width: "100%",
-          alignItems: "center",
-        }}
-      >
-        <BaseButton onPress={resetDuration}>
-          <View
-            style={{
-              width: "92%",
-              paddingHorizontal: theme.spacing(4),
-              backgroundColor: theme.palette.background.body,
-              borderRadius: 16,
-              padding: theme.spacing(4),
-              flexDirection: "row",
-              gap: theme.spacing(3),
-              alignItems: "center",
-              borderLeftWidth: 6,
-              shadowColor: theme.palette.common.black,
-              shadowOpacity: 0.15,
-              shadowRadius: 10,
-              shadowOffset: { width: 0, height: 4 },
-              elevation: 6,
-              borderLeftColor: color,
-            }}
-          >
-            <BaseIcon name={icon} color={color} />
-            <View style={{ flex: 1 }}>
-              <BaseTypography variant="H6">
-                {title.toUpperCase()}
-              </BaseTypography>
-              <BaseTypography style={{ marginTop: theme.spacing(1) }}>
-                {message}
-              </BaseTypography>
-            </View>
+    <Animated.View
+      {...panResponder.panHandlers}
+      style={{
+        top: insets.top + index * 90,
+        transform: [{ translateY }, ...pan.getTranslateTransform()],
+        opacity,
+        position: "absolute",
+        width: "100%",
+        alignItems: "center",
+      }}
+    >
+      <BaseButton onPress={dismiss} style={{ width: "92%" }}>
+        <View
+          accessibilityRole="alert"
+          accessibilityLiveRegion="polite"
+          style={{
+            width: "100%",
+            paddingHorizontal: theme.spacing(4),
+            backgroundColor: theme.palette.background.body,
+            borderRadius: 16,
+            padding: theme.spacing(4),
+            flexDirection: "row",
+            gap: theme.spacing(3),
+            alignItems: "center",
+            borderLeftWidth: 6,
+            shadowColor: theme.palette.common.black,
+            shadowOpacity: 0.15,
+            shadowRadius: 10,
+            shadowOffset: { width: 0, height: 4 },
+            elevation: 6,
+            borderLeftColor: color,
+          }}
+        >
+          <BaseIcon name={icon} color={color} />
+          <View style={{ flex: 1 }}>
+            <BaseTypography variant="H6">{title.toUpperCase()}</BaseTypography>
+            <BaseTypography style={{ marginTop: theme.spacing(1) }}>
+              {message}
+            </BaseTypography>
           </View>
-        </BaseButton>
-      </Animated.View>
-    </BaseModalWrapper>
+        </View>
+      </BaseButton>
+    </Animated.View>
   );
 }

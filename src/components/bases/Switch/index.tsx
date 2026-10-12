@@ -1,6 +1,6 @@
 import BaseTypography from "@Components/bases/Typography";
 import useTheme from "@Hooks/useTheme";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Animated, View } from "react-native";
 import useCalculateDimensions from "./useCalculateDimensions";
 
@@ -32,12 +32,7 @@ export default function BaseSwitch({
   const theme = useTheme();
 
   const [internalIsEnabled, setInternalIsEnabled] = useState(value ?? false);
-
-  useEffect(() => {
-    if (value !== undefined) {
-      setInternalIsEnabled(value);
-    }
-  }, [value]);
+  const isEnabled = value ?? internalIsEnabled;
 
   const dimensions = useCalculateDimensions({
     height,
@@ -45,7 +40,7 @@ export default function BaseSwitch({
   });
 
   const { backgroundColor, translateX } = useAnimation({
-    internalIsEnabled,
+    internalIsEnabled: isEnabled,
     thumbWidth: dimensions.thumbWidth,
     trackWidth: dimensions.trackWidth,
   });
@@ -53,7 +48,12 @@ export default function BaseSwitch({
   function handleChangeIsEnabled() {
     if (disabled) return;
 
-    onChange?.(!value);
+    if (onChange) {
+      onChange(!isEnabled);
+      return;
+    }
+
+    setInternalIsEnabled(!isEnabled);
   }
 
   return (
@@ -81,7 +81,7 @@ export default function BaseSwitch({
         >
           <Animated.View
             style={{
-              backgroundColor: internalIsEnabled
+              backgroundColor: isEnabled
                 ? theme.palette.primary.dark
                 : theme.palette.grey[700],
               height: dimensions.thumbHeight,
@@ -94,13 +94,13 @@ export default function BaseSwitch({
               justifyContent: "center",
             }}
           >
-            {value && enableIconName ? (
+            {isEnabled && enableIconName ? (
               <BaseIcon
                 name={enableIconName}
                 size={dimensions.iconSize}
                 color={theme.palette.primary.contrast}
               />
-            ) : !value && disableIconName ? (
+            ) : !isEnabled && disableIconName ? (
               <BaseIcon
                 name={disableIconName}
                 size={dimensions.iconSize}
