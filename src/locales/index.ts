@@ -82,7 +82,16 @@ const locales = {
 
   "modals.theme.title": "Temas",
   "modals.theme.fields.theme": "Tema",
-  "modals.theme.fields.theme-value": "Tema {value}",
+  "modals.theme.options.indigo": "Índigo",
+  "modals.theme.options.purple": "Roxo",
+  "modals.theme.options.blue": "Azul",
+  "modals.theme.options.green": "Verde",
+  "modals.theme.options.teal": "Verde-azulado",
+  "modals.theme.options.red": "Vermelho",
+  "modals.theme.options.cyan": "Ciano",
+  "modals.theme.options.pink": "Rosa",
+  "modals.theme.options.amber": "Âmbar",
+  "modals.theme.options.orange": "Laranja",
   "modals.theme.fields.dark-mode": "Modo noturno",
 
   "modals.migration.title": "Migração",

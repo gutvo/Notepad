@@ -53,18 +53,12 @@ export default function ThemeModal() {
 
   const formattedThemes = useMemo(
     () =>
-      themes.reduce<Record<number, { index: number; main: string }>>(
-        (accumulator, themeObject, index) => {
-          accumulator[index] = {
-            index,
-            main: themeObject.main,
-          };
-
-          return accumulator;
-        },
-        {},
-      ),
-    [],
+      themes.map(({ name, palette }, index) => ({
+        index,
+        main: palette.main,
+        label: formatMessage({ id: name }),
+      })),
+    [formatMessage],
   );
 
   return (
@@ -86,27 +80,21 @@ export default function ThemeModal() {
               label={formatMessage({ id: "modals.theme.fields.theme" })}
               disabled={disabled}
               getOptionValue={(item) => item.index}
-              options={Object.values(formattedThemes)}
+              options={formattedThemes}
               renderInputValue={(renderValue) => {
                 if (!renderValue) return;
 
                 return (
                   <ThemeOption
-                    color={formattedThemes[renderValue.index].main}
-                    label={formatMessage(
-                      { id: "modals.theme.fields.theme-value" },
-                      { value: renderValue.index + 1 },
-                    )}
+                    color={renderValue.main}
+                    label={renderValue.label}
                   />
                 );
               }}
-              renderItem={({ item, selectedItem, index }) => (
+              renderItem={({ item, selectedItem }) => (
                 <ThemeOption
                   color={item.main}
-                  label={formatMessage(
-                    { id: "modals.theme.fields.theme-value" },
-                    { value: index + 1 },
-                  )}
+                  label={item.label}
                   selected={item === selectedItem}
                 />
               )}

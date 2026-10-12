@@ -1,6 +1,8 @@
 import defaultColors from "@Theme/defaultColors";
 
-export default function createTheme(colorScale: any) {
+type ColorScale = Record<keyof typeof defaultColors.indigoGrey, string>;
+
+export default function createTheme(colorScale: ColorScale) {
   const main = colorScale[600];
 
   return {
