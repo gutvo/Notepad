@@ -1,7 +1,7 @@
-import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { BottomSheet } from "@expo/ui/community/bottom-sheet";
 import useTheme from "@Hooks/useTheme";
 import ToastProvider from "@Providers/ToastProvider";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode } from "react";
 import BottomModalContext from "../context";
 
 interface BottomModalModalProps {
@@ -18,37 +18,13 @@ export default function BottomModalModal({
   children,
 }: BottomModalModalProps) {
   const theme = useTheme();
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      bottomSheetRef.current?.expand();
-    } else {
-      bottomSheetRef.current?.close();
-    }
-  }, [isOpen]);
 
   return (
     <BottomSheet
-      ref={bottomSheetRef}
       enableDynamicSizing
       enablePanDownToClose
-      enableBlurKeyboardOnGesture={false}
-      keyboardBehavior="extend"
-      keyboardBlurBehavior="none"
-      android_keyboardInputMode="adjustResize"
+      index={isOpen ? 0 : -1}
       onClose={onClose}
-      index={-1}
-      onChange={(index) => {
-        if (index === -1) onClose();
-      }}
-      backdropComponent={(props) => (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-        />
-      )}
       backgroundStyle={{ backgroundColor: theme.palette.background.body }}
       handleIndicatorStyle={{
         backgroundColor: theme.palette.text.secondary,
